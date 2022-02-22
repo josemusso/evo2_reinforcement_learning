@@ -20,6 +20,9 @@ def get_environment(env_name):
         elif env_name in ('frouge'):
             from frouge.envs.frouge import FlammeRougeEnv
             return FlammeRougeEnv
+        elif env_name in ('evolution'):
+            from evolution.envs.evolution import EvolutionEnv
+            return EvolutionEnv
         else:
             raise Exception(f'No environment found for {env_name}')
     except SyntaxError as e:
@@ -48,6 +51,9 @@ def get_network_arch(env_name):
         return CustomPolicy
     elif env_name in ('frouge'):
         from models.frouge.models import CustomPolicy
+        return CustomPolicy
+    elif env_name in ('evolution'):
+        from models.tictactoe.models import CustomPolicy
         return CustomPolicy
     else:
         raise Exception(f'No model architectures found for {env_name}')
