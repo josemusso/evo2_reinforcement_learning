@@ -1,0 +1,93 @@
+{
+    "avance_solucion_inc": {
+        "id":1,
+        "restrictions": [{
+            "var_name":"json.loads(f.read())",
+            "condition":"lower",
+            "value": "5"
+        }],
+        "effects": [{
+            "var_name":"avance_solucion",
+            "operator":"increase",
+            "value":"1"
+        }]
+    },
+    "horas_dedicacion_inc": {
+        "id":2,
+        "restrictions": [{
+            "var_name":"",
+            "condition":"",
+            "value": 0
+        }],
+        "effects": [{
+            "var_name":"horas_dedicacion",
+            "operator":"increase",
+            "value":1
+        }]
+    },
+    "horas_dedicacion_dec": {
+        "id":3,
+        "restrictions": [{
+            "var_name":"",
+            "condition":"",
+            "value": 0
+        }],
+        "effects": [{
+            "var_name":"avance_solucion",
+            "operator":"decrease",
+            "value":1
+        }]
+    },
+    "total_fundadores_inc": {
+        "id":4,
+        "restrictions": [{
+            "var_name":"",
+            "condition":"",
+            "value": 0
+        }],
+        "effects": [{
+            "var_name":"total_fundadores",
+            "operator":"increase",
+            "value":1
+        }]
+    },
+    "total_fundadores_dec": {
+        "id":5,
+        "restrictions": [{
+            "var_name":"",
+            "condition":"",
+            "value": 0
+        }],
+        "effects": [{
+            "var_name":"total_fundadores",
+            "operator":"decrease",
+            "value":1
+        }]
+    },
+    "punto_equilibrio_on": {
+        "id":6,
+        "restrictions": [{
+            "var_name":"",
+            "condition":"",
+            "value": 0
+        }],
+        "effects": [{
+            "var_name":"punto_equilibrio",
+            "operator":"set",
+            "value":1
+        }]
+    },
+    "punto_equilibrio_off": {
+        "id":7,
+        "restrictions": [{
+            "var_name":"",
+            "condition":"",
+            "value": 0
+        }],
+        "effects": [{
+            "var_name":"avance_solucion",
+            "operator":"set",
+            "value":1
+        }]
+    }
+}

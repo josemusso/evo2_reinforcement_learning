@@ -47,7 +47,10 @@ class TicTacToeEnv(gym.Env):
             position = np.array([-x.number for x in self.board]).reshape(self.grid_shape)
 
         la_grid = np.array(self.legal_actions).reshape(self.grid_shape)
+        # print(position)
+        # print(la_grid)
         out = np.stack([position,la_grid], axis = -1)
+        # print(out)
         return out
 
     @property

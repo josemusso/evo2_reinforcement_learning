@@ -2,6 +2,7 @@
 
 import gym
 import numpy as np
+import json   
 
 import config
 
@@ -42,28 +43,75 @@ class EvolutionEnv(gym.Env):
         self.m1_colnames = ['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento']
         self.m1_rownames = ['producto', 'servicio', 'plataforma', 'ecosistema']
         
+        # import premes json
+        f=open('/app/environments/evolution/evolution/envs/premes.json', "r")
+        self.premes = json.loads(f.read())
+
 
     @property
     def observation(self):
-        if self.players[self.current_player_num].token.number == 1:
-            position = np.array([x.number for x in self.board]).reshape(self.grid_shape)
-        else:
-            position = np.array([-x.number for x in self.board]).reshape(self.grid_shape)
+        position = {"avance_solucion":0,
+                    "modelos_negocio":0,
+                    "total_fundadores":0,
+                    "horas_dedicacion":0,
+                    "problema_organico":0,
+                    "punto_equilibrio":0
+                    }
+        position_grid = np.array([x.number for x in self.board]).reshape(self.grid_shape)
+        print(position_grid)
 
-        la_grid = np.array(self.legal_actions).reshape(self.grid_shape)
-        out = np.stack([position,la_grid], axis = -1)
+        # in board se t 1 to legal positions
+        print(self.legal_positions)
+        la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)
+        # update with legal positions
+        for y in self.legal_positions["avance_solucion"]:
+            x = position["modelos_negocio"]
+            la_grid[x,y] = 1
+        for x in self.legal_positions["modelos_negocio"]:
+            y = position["avance_solucion"]
+            la_grid[x,y] = 1
+        print(la_grid)
+        out = np.stack([position_grid,la_grid], axis = -1)
+        #print(out)
         return out
 
     @property
     def legal_actions(self):
         legal_actions = []
-        for action_num in range(len(self.board)):
-            if self.board[action_num].number==0: #empty square
-                legal_actions.append(1)
-            else:
-                legal_actions.append(0)
+        for preme_name in list(self.premes.keys()):
+            # TODO check if restriction is complete
+            legal_actions.append(self.premes[preme_name])
         return np.array(legal_actions)
-
+    
+    @property
+    def legal_positions(self):
+        # position = [board1_x,board1_y,board2_x,board2_y,board3_x,board3_y]
+        position = {"avance_solucion":0,
+                    "modelos_negocio":0,
+                    "total_fundadores":0,
+                    "horas_dedicacion":0,
+                    "problema_organico":0,
+                    "punto_equilibrio":0
+                    }
+        legal_positions = {"avance_solucion":[],
+                    "modelos_negocio":[],
+                    "total_fundadores":[],
+                    "horas_dedicacion":[],
+                    "problema_organico":[],
+                    "punto_equilibrio":[]
+                    }
+        for legal_preme in self.legal_actions:
+            for preme_effect in legal_preme["effects"]:
+                preme_effect["value"]=int(preme_effect["value"])
+                if preme_effect["operator"] == "increase":
+                    legal_positions[preme_effect["var_name"]].append(position[preme_effect["var_name"]]+preme_effect["value"])
+                elif preme_effect["operator"] == "decrease":
+                    legal_positions[preme_effect["var_name"]].append(position[preme_effect["var_name"]]-preme_effect["value"])
+                else: # "set"
+                    legal_positions[preme_effect["var_name"]].append(preme_effect["value"])
+        # keep only set of positions
+        legal_positions = {k:list(set(v)) for k, v in legal_positions.items()}
+        return legal_positions
 
 
 
@@ -127,7 +175,11 @@ class EvolutionEnv(gym.Env):
 
     def reset(self):
         self.board = [Token('.', 0)] * self.num_squares
-        self.players = [Player('1', Token('0', 1))]
+        self.players = [Player('Startup1', Token('X', 4))]
+
+        # start player at certain default position
+        self.board[0] = self.players[0].token
+
         self.current_player_num = 0
         self.turns_taken = 0
         self.done = False
