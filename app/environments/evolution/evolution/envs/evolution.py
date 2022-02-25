@@ -80,7 +80,7 @@ class EvolutionEnv(gym.Env):
         legal_actions = []
         for preme_name in list(self.premes.keys()):
             # TODO check if restriction is complete
-            legal_actions.append(self.premes[preme_name])
+            legal_actions.append({preme_name:self.premes[preme_name]})
         return np.array(legal_actions)
     
     @property
@@ -101,6 +101,7 @@ class EvolutionEnv(gym.Env):
                     "punto_equilibrio":[]
                     }
         for legal_preme in self.legal_actions:
+            legal_preme=list(legal_preme.values())[0]
             for preme_effect in legal_preme["effects"]:
                 preme_effect["value"]=int(preme_effect["value"])
                 if preme_effect["operator"] == "increase":
@@ -175,7 +176,7 @@ class EvolutionEnv(gym.Env):
 
     def reset(self):
         self.board = [Token('.', 0)] * self.num_squares
-        self.players = [Player('Startup1', Token('X', 4))]
+        self.players = [Player('Startup1', Token('*', 4))]
 
         # start player at certain default position
         self.board[0] = self.players[0].token
@@ -197,23 +198,28 @@ class EvolutionEnv(gym.Env):
             logger.debug(f"It is Player {self.current_player.id}'s turn to move")
             
         # colnames
-        logger.debug(' '.join([x for x in self.m1_colnames]))
+        logger.debug(' '.join(['\t\t'] +[x for x in self.m1_colnames]))
         # rownames
         # logger.debug(' '.join([x.symbol for x in self.board[:self.grid_length]]))
         
         # board
-        logger.debug(' '.join([x.symbol for x in self.board[:self.grid_length]]))
-        logger.debug(' '.join([x.symbol for x in self.board[self.grid_length:self.grid_length*2]]))
-        logger.debug(' '.join([x.symbol for x in self.board[(self.grid_length*2):(self.grid_length*3)]]))
-        logger.debug(' '.join([x.symbol for x in self.board[(self.grid_length*3):(self.grid_length*4)]]))
-        logger.debug(' '.join([x.symbol for x in self.board[(self.grid_length*4):(self.grid_length*5)]]))
-        logger.debug(' '.join([x.symbol for x in self.board[(self.grid_length*5):(self.grid_length*6)]]))
+        logger.debug('\t '.join([self.m1_rownames[0]] +[x.symbol for x in self.board[:self.grid_length]]))
+        logger.debug('\t '.join([self.m1_rownames[1]] +[x.symbol for x in self.board[self.grid_length:self.grid_length*2]]))
+        logger.debug('\t '.join([self.m1_rownames[2]] +[x.symbol for x in self.board[(self.grid_length*2):(self.grid_length*3)]]))
+        logger.debug('\t '.join([self.m1_rownames[3]] +[x.symbol for x in self.board[(self.grid_length*3):(self.grid_length*4)]]))
+        # logger.debug('\t '.join([self.m1_rownames[4]] +[x.symbol for x in self.board[(self.grid_length*4):(self.grid_length*5)]]))
+        # logger.debug('\t '.join([self.m1_rownames[5]] +[x.symbol for x in self.board[(self.grid_length*5):(self.grid_length*6)]]))
 
         if self.verbose:
             logger.debug(f'\nObservation: \n{self.observation}')
         
         if not self.done:
-            logger.debug(f'\nLegal actions: {[i for i,o in enumerate(self.legal_actions) if o != 0]}')
+            legal_actions_ui_list = []
+            for legal_preme in self.legal_actions:
+                id = list(legal_preme.values())[0]['id']
+                name = list(legal_preme.keys())[0]
+                legal_actions_ui_list.append(str(id)+': '+name)
+            logger.debug(f"\nLegal actions: {legal_actions_ui_list}")
 
 
     def rules_move(self):

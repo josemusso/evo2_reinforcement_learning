@@ -2,7 +2,7 @@
     "avance_solucion_inc": {
         "id":1,
         "restrictions": [{
-            "var_name":"json.loads(f.read())",
+            "var_name":"",
             "condition":"lower",
             "value": "5"
         }],
@@ -33,7 +33,7 @@
             "value": 0
         }],
         "effects": [{
-            "var_name":"avance_solucion",
+            "var_name":"horas_dedicacion",
             "operator":"decrease",
             "value":1
         }]
@@ -87,7 +87,7 @@
         "effects": [{
             "var_name":"avance_solucion",
             "operator":"set",
-            "value":1
+            "value":0
         }]
     }
 }
