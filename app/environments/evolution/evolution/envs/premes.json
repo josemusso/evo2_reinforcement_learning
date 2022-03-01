@@ -2,14 +2,14 @@
     "avance_solucion_inc": {
         "id":1,
         "restrictions": [{
-            "var_name":"",
+            "var_name":"avance_solucion",
             "condition":"lower",
-            "value": "5"
+            "value": 5
         }],
         "effects": [{
             "var_name":"avance_solucion",
             "operator":"increase",
-            "value":"1"
+            "value":1
         }]
     },
     "horas_dedicacion_inc": {

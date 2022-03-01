@@ -47,16 +47,17 @@ class EvolutionEnv(gym.Env):
         f=open('/app/environments/evolution/evolution/envs/premes.json', "r")
         self.premes = json.loads(f.read())
 
+        # define attribute that contains position coords
+        self.position = {"avance_solucion":0,
+                        "modelo_negocio":0,
+                        "total_fundadores":0,
+                        "horas_dedicacion":0,
+                        "problema_organico":0,
+                        "punto_equilibrio":0
+                        }
 
     @property
     def observation(self):
-        position = {"avance_solucion":0,
-                    "modelos_negocio":0,
-                    "total_fundadores":0,
-                    "horas_dedicacion":0,
-                    "problema_organico":0,
-                    "punto_equilibrio":0
-                    }
         position_grid = np.array([x.number for x in self.board]).reshape(self.grid_shape)
         print(position_grid)
 
@@ -65,10 +66,10 @@ class EvolutionEnv(gym.Env):
         la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)
         # update with legal positions
         for y in self.legal_positions["avance_solucion"]:
-            x = position["modelos_negocio"]
+            x = self.position["modelo_negocio"]
             la_grid[x,y] = 1
-        for x in self.legal_positions["modelos_negocio"]:
-            y = position["avance_solucion"]
+        for x in self.legal_positions["modelo_negocio"]:
+            y = self.position["avance_solucion"]
             la_grid[x,y] = 1
         print(la_grid)
         out = np.stack([position_grid,la_grid], axis = -1)
@@ -80,21 +81,25 @@ class EvolutionEnv(gym.Env):
         legal_actions = []
         for preme_name in list(self.premes.keys()):
             # TODO check if restriction is complete
-            legal_actions.append({preme_name:self.premes[preme_name]})
+            preme_legality = True
+            restrictions = self.premes[preme_name]["restrictions"]
+            for restriction in restrictions:
+                if restriction["var_name"] == "":
+                    continue 
+                if restriction["condition"] == "lower":
+                    preme_legality = preme_legality and self.position[restriction["var_name"]]<restriction["value"]
+                else: #restriction["condition"] == "higher"
+                    preme_legality = preme_legality and self.position[restriction["var_name"]]>restriction["value"]
+
+            if preme_legality:
+                legal_actions.append({preme_name:self.premes[preme_name]})
         return np.array(legal_actions)
     
     @property
     def legal_positions(self):
         # position = [board1_x,board1_y,board2_x,board2_y,board3_x,board3_y]
-        position = {"avance_solucion":0,
-                    "modelos_negocio":0,
-                    "total_fundadores":0,
-                    "horas_dedicacion":0,
-                    "problema_organico":0,
-                    "punto_equilibrio":0
-                    }
         legal_positions = {"avance_solucion":[],
-                    "modelos_negocio":[],
+                    "modelo_negocio":[],
                     "total_fundadores":[],
                     "horas_dedicacion":[],
                     "problema_organico":[],
@@ -105,9 +110,9 @@ class EvolutionEnv(gym.Env):
             for preme_effect in legal_preme["effects"]:
                 preme_effect["value"]=int(preme_effect["value"])
                 if preme_effect["operator"] == "increase":
-                    legal_positions[preme_effect["var_name"]].append(position[preme_effect["var_name"]]+preme_effect["value"])
+                    legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]+preme_effect["value"])
                 elif preme_effect["operator"] == "decrease":
-                    legal_positions[preme_effect["var_name"]].append(position[preme_effect["var_name"]]-preme_effect["value"])
+                    legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]-preme_effect["value"])
                 else: # "set"
                     legal_positions[preme_effect["var_name"]].append(preme_effect["value"])
         # keep only set of positions
@@ -151,21 +156,50 @@ class EvolutionEnv(gym.Env):
 
     def step(self, action):
         
-        reward = [0,0]
+        reward = [0]
         
         # check move legality
-        board = self.board
+        old_x = self.position["avance_solucion"]
+        old_y = self.position["modelo_negocio"]
+
+        # check effect of selected action
+        ids = []
+        names = []
+        for i,legal_preme in enumerate(self.legal_actions):
+            ids.append(list(legal_preme.values())[0]['id'])
+            names.append(list(legal_preme.keys())[0])
+            pos = i if action == list(legal_preme.values())[0]['id'] else 0
         
-        if (board[action].number != 0):  # not empty
+        action_preme_name = names[pos]
+
+        if action not in ids:  # ilegal action, ends game, punishment
+            print("Action not in list")
             done = True
-            reward = [1, 1]
-            reward[self.current_player_num] = -1
-        else:
-            board[action] = self.current_player.token
+            reward = [-1]
+        else: # legal action proceed
+            print("Action in list")
+            # apply all effects related to chosen action preme
+            effects = self.premes[action_preme_name]["effects"] 
+            for effect in effects:
+                print(effect["operator"])
+                if effect["operator"] == "increase":
+                    self.position[effect["var_name"]]=self.position[effect["var_name"]]+effect["value"]
+                elif effect["operator"] == "decrease":
+                    self.position[effect["var_name"]]=self.position[effect["var_name"]]-effect["value"]
+                else:
+                    self.position[effect["var_name"]]=effect["value"]
             self.turns_taken += 1
             r, done = self.check_game_over()
-            reward = [-r,-r]
-            reward[self.current_player_num] = r
+            reward = [r]
+        
+        # update board
+        new_x = self.position["avance_solucion"]
+        new_y = self.position["modelo_negocio"]
+        print(old_x,old_y)
+        print(new_x,new_y)
+
+        self.board[old_x*(old_y+1)] = Token('🔳', 0)
+        self.board[new_x*(new_y+1)] = self.players[0].token
 
         self.done = done
 
@@ -175,8 +209,9 @@ class EvolutionEnv(gym.Env):
         return self.observation, reward, done, {}
 
     def reset(self):
-        self.board = [Token('.', 0)] * self.num_squares
-        self.players = [Player('Startup1', Token('*', 4))]
+        # cambiard board de lista a matriz xy
+        self.board = [Token('🔳', 0)] * self.num_squares
+        self.players = [Player('Startup1', Token('🟠', 1))]
 
         # start player at certain default position
         self.board[0] = self.players[0].token
