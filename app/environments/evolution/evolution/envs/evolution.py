@@ -17,11 +17,46 @@ class Player():
 
 class Token():
     def __init__(self, symbol, number):
-        self.number = number
+        self.number = number  #vacio number 0, solo para player
         self.symbol = symbol
-        
 
-    
+class Board():
+        def __init__(self, empty_token, number, var_x, var_y, vals_x, vals_y):
+
+        #vals_x, vals_y -> valores que pueden tomar x e y
+        #var_x, var_y -> variables x e y del tablero
+        self.empty_token = empty_token  #token vacio que se le pasa por parametro cuando se inicializa
+        self.number = number
+        self.var_x = var_x
+        self.var_y = var_y
+        self.vals_x = vals_x
+        self.vals_y = vals_y
+        #self.player_x = player_x
+        #self.player_y = player_y
+
+        def get_grid(self):
+            grid = [self.token] * self.num_squares #se inicializa board con tokens vacios
+            grid_shape = (len(self.vals_x),len(self.vals_y))
+            grid = np.array([token.number for token in grid]).reshape(grid_shape) #board de posicion actual 
+            return grid
+
+        def get_player_x(self):
+            return self._player_x 
+
+        def get_player_y(self):
+            return self._player_y
+
+        def set_player_x(self, value):
+            self._player_x = value
+
+        def set_player_y(self, value):
+            self._player_y = value
+
+        def set_player_position(self, x,y, token):
+            self._player_x = x
+            self._player_y = y
+            self.player_token = token
+
 
 class EvolutionEnv(gym.Env):
     metadata = {'render.modes': ['human']}
@@ -57,13 +92,13 @@ class EvolutionEnv(gym.Env):
                         }
 
     @property
-    def observation(self):
-        position_grid = np.array([x.number for x in self.board]).reshape(self.grid_shape)
+    def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
+        position_grid = np.array([x.number for x in self.board]).reshape(self.grid_shape) #board de posicion actual 
         print(position_grid)
 
         # in board se t 1 to legal positions
         print(self.legal_positions)
-        la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)
+        la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)  #board de legal actions, a que posiciones te puedes mover 
         # update with legal positions
         for y in self.legal_positions["avance_solucion"]:
             x = self.position["modelo_negocio"]
@@ -74,7 +109,7 @@ class EvolutionEnv(gym.Env):
         print(la_grid)
         out = np.stack([position_grid,la_grid], axis = -1)
         #print(out)
-        return out
+        return out  #
 
     @property
     def legal_actions(self):
@@ -123,6 +158,7 @@ class EvolutionEnv(gym.Env):
 
     def square_is_player(self, square, player):
         return self.board[square].number == self.players[player].token.number
+
 
     def check_game_over(self):
 
@@ -210,15 +246,22 @@ class EvolutionEnv(gym.Env):
 
     def reset(self):
         # cambiard board de lista a matriz xy
-        self.board = [Token('🔳', 0)] * self.num_squares
-        self.players = [Player('Startup1', Token('🟠', 1))]
+
+        self.board = Board(Token('🔳', 0), 1, 'avance_solucion', 'modelo_negocio', 
+                    ['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'],
+                    ['producto', 'servicio', 'plataforma', 'ecosistema'])
+        #self.board = [Token('🔳', 0)] * self.num_squares #se inicializa board con tokens vacios
+
+        self.players = [Player('Startup1', Token('🟠', 1))] #se inicializan los players con su toquen y numero de jugador
 
         # start player at certain default position
-        self.board[0] = self.players[0].token
+        self.board.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
+        #self.board[0] = self.players[0].token #board se ocupa con un puro indice 
+        #board de 0 a 35 
 
-        self.current_player_num = 0
-        self.turns_taken = 0
-        self.done = False
+        self.current_player_num = 0  #player que esta en el turno
+        self.turns_taken = 0  #la cantidad de turnos 
+        self.done = False #cuando se acabo el juego total 
         logger.debug(f'\n\n---- NEW GAME ----')
         return self.observation
 
@@ -238,10 +281,14 @@ class EvolutionEnv(gym.Env):
         # logger.debug(' '.join([x.symbol for x in self.board[:self.grid_length]]))
         
         # board
+        '''
         logger.debug('\t '.join([self.m1_rownames[0]] +[x.symbol for x in self.board[:self.grid_length]]))
         logger.debug('\t '.join([self.m1_rownames[1]] +[x.symbol for x in self.board[self.grid_length:self.grid_length*2]]))
         logger.debug('\t '.join([self.m1_rownames[2]] +[x.symbol for x in self.board[(self.grid_length*2):(self.grid_length*3)]]))
         logger.debug('\t '.join([self.m1_rownames[3]] +[x.symbol for x in self.board[(self.grid_length*3):(self.grid_length*4)]]))
+        '''
+
+        logger.debug(self.board.get_grid())
         # logger.debug('\t '.join([self.m1_rownames[4]] +[x.symbol for x in self.board[(self.grid_length*4):(self.grid_length*5)]]))
         # logger.debug('\t '.join([self.m1_rownames[5]] +[x.symbol for x in self.board[(self.grid_length*5):(self.grid_length*6)]]))
 
@@ -258,11 +305,14 @@ class EvolutionEnv(gym.Env):
 
 
     def rules_move(self):
+        grid = self.board.get_grid() 
+        #grid = grid.flatten()
         if self.current_player.token.number == 1:
-            b = [x.number for x in self.board]
+            b = [token.number for token in grid]
         else:
-            b = [-x.number for x in self.board]
+            b = [-token.number for token in grid]
 
+    
         # Check computer win moves
         for i in range(0, self.num_squares):
             if b[i] == 0 and testWinMove(b, 1, i):
@@ -331,26 +381,25 @@ def checkDraw(b):
 def getBoardCopy(b):
     # Make a duplicate of the board. When testing moves we don't want to 
     # change the actual board
-    dupeBoard = []
-    for j in b:
-        dupeBoard.append(j)
+    dupeBoard = b.copy()
     return dupeBoard
 
-def testWinMove(b, mark, i):
+def testWinMove(b, mark, x, y):
     # b = the board
     # mark = 0 or X
     # i = the square to check if makes a win 
     bCopy = getBoardCopy(b)
-    bCopy[i] = mark
+    bCopy[x][y] = mark
     return checkWin(bCopy, mark)
 
-
-def testForkMove(b, mark, i):
+'''    #Tenemos que arreglarlo para que considere que b es una matriz 
+def testForkMove(b, mark, x, y):
     # Determines if a move opens up a fork
     bCopy = getBoardCopy(b)
-    bCopy[i] = mark
+    bCopy[x][y] = mark
     winningMoves = 0
     for j in range(0, 9):
         if testWinMove(bCopy, mark, j) and bCopy[j] == 0:
             winningMoves += 1
     return winningMoves >= 2
+    '''
