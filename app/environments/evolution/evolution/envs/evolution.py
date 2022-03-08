@@ -7,7 +7,8 @@ import json
 import config
 
 from stable_baselines import logger
-
+import pandas as pd
+from tabulate import tabulate
 
 class Player():
     def __init__(self, id, token):
@@ -36,52 +37,46 @@ class Board():
 
 
         def get_grid(self):
-            grid_shape = (len(self.vals_x),len(self.vals_y))
+            grid_shape = (len(self.vals_y),len(self.vals_x))
             #grid = np.ones(grid_shape) * self.empty_token
 
-            grid = [self.empty_token] * (len(self.vals_x) * len(self.vals_y))#se inicializa board con tokens vacios
+            grid = [self.empty_token] * (len(self.vals_y)*len(self.vals_x)) #se inicializa board con tokens vacios
             grid = np.array(grid).reshape(grid_shape) #board de posicion actual 
-            print('posicion x: ', self.player_x)
-            print('posicion y: ', self.player_y)
             #if(self.player_x is not None):
             grid[self.player_y,self.player_x] = self.player_token
 
             return grid
 
         def get_symbol_grid(self):
-            grid_shape = (len(self.vals_x),len(self.vals_y))
+            grid_shape = (len(self.vals_y),len(self.vals_x))
             #grid = np.ones(grid_shape) * self.empty_token
 
-            grid = [self.empty_token.symbol] * (len(self.vals_x) * len(self.vals_y))#se inicializa board con tokens vacios
+            grid = [self.empty_token.symbol] * (len(self.vals_y)*len(self.vals_x)) #se inicializa board con tokens vacios
             grid = np.array(grid).reshape(grid_shape) #board de posicion actual 
             #if(self.player_x is not None):
-            print('posicion x: ', self.player_x)
-            print('posicion y: ', self.player_y)
             
-            grid[self.player_y][self.player_x] = self.player_token.symbol
+            grid[self.player_y,self.player_x] = self.player_token.symbol
 
             return grid
 
         def get_position_grid(self):
-            grid_shape = (len(self.vals_x),len(self.vals_y))
+            grid_shape = (len(self.vals_y),len(self.vals_x))
             position_grid = np.zeros(grid_shape) #se inicializa board con tokens vacios
             #if(self.player_x is not None):
 
-            print('posicion x: ', self.player_x)
-            print('posicion y: ', self.player_y)
-            position_grid[self.player_y][self.player_x] = self.player_token.number
+            position_grid[self.player_y,self.player_x] = self.player_token.number
           
             return position_grid
 
         def get_la_grid(self, legal_positions):
-            grid_shape = (len(self.vals_x),len(self.vals_y))
+            grid_shape = (len(self.vals_y),len(self.vals_x))
             la_grid = np.zeros(grid_shape)  #board de legal actions, a que posiciones te puedes mover 
             # update with legal positions
-            for y in legal_positions["avance_solucion"]:
-                x = self.player_x
-                la_grid[y,x] = 1
-            for x in legal_positions["modelo_negocio"]:
+            for x in legal_positions[self.var_x]:
                 y = self.player_y
+                la_grid[y,x] = 1
+            for y in legal_positions[self.var_y]:
+                x = self.player_x
                 la_grid[y,x] = 1
             return la_grid
 
@@ -138,16 +133,22 @@ class EvolutionEnv(gym.Env):
 
     @property
     def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
-        position_grid = self.board.get_position_grid()
+        position_grid_board1 = self.board1.get_position_grid()
+        position_grid_board2 = self.board2.get_position_grid()
+        position_grid_board3 = self.board3.get_position_grid()
         #position_grid = np.array([token.number for token in self.board]).reshape(self.grid_shape) #board de posicion actual 
-        print(position_grid)
+        print('position_grids')
+        print(position_grid_board1,position_grid_board2,position_grid_board3)
 
         # in board se t 1 to legal positions
         print(self.legal_positions)
-        la_grid = self.board.get_la_grid(self.legal_positions)
+        la_grid_board1 = self.board1.get_la_grid(self.legal_positions)
+        la_grid_board2 = self.board2.get_la_grid(self.legal_positions)
+        la_grid_board3 = self.board3.get_la_grid(self.legal_positions)
+        print(la_grid_board1)
         #la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)  #board de legal actions, a que posiciones te puedes mover 
         # update with legal positions
-        out = np.stack([position_grid,la_grid], axis = -1)
+        out = np.stack([position_grid_board1,la_grid_board1], axis = -1)
         #print(out)
         return out  #
 
@@ -186,10 +187,10 @@ class EvolutionEnv(gym.Env):
                 preme_effect["value"]=int(preme_effect["value"])
                 if preme_effect["operator"] == "increase":
                     legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]+preme_effect["value"])
-                elif preme_effect["operator"] == "decrease":
+                if preme_effect["operator"] == "decrease":
                     legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]-preme_effect["value"])
-                else: # "set"
-                    legal_positions[preme_effect["var_name"]].append(preme_effect["value"])
+                if preme_effect["operator"] == "set":
+                   legal_positions[preme_effect["var_name"]].append(preme_effect["value"])
         # keep only set of positions
         legal_positions = {k:list(set(v)) for k, v in legal_positions.items()}
         return legal_positions
@@ -197,14 +198,14 @@ class EvolutionEnv(gym.Env):
 
 
     def square_is_player(self, square, player):
-        return self.board[square].number == self.players[player].token.number
+        return self.board1[square].number == self.players[player].token.number
 
 
     def check_game_over(self):
 
         '''
 
-        board = self.board
+        board = self.board1
         current_player_num = self.current_player_num
         players = self.players
 
@@ -241,8 +242,7 @@ class EvolutionEnv(gym.Env):
         reward = [0]
         
         # check move legality
-        old_x = self.position["avance_solucion"]
-        old_y = self.position["modelo_negocio"]
+        print('old position dict: ',self.position)
 
         # check effect of selected action
         ids = []
@@ -275,15 +275,20 @@ class EvolutionEnv(gym.Env):
             reward = [r]
         
         # update board
-        new_x = self.position["avance_solucion"]
-        new_y = self.position["modelo_negocio"]
-        print(old_x,old_y)
-        print(new_x,new_y)
+        print('new position dict: ',self.position)
 
         #self.board[old_x*(old_y+1)] = Token('🔳', 0)
         #self.board[new_x*(new_y+1)] = self.players[0].token
 
-        self.board.set_player_position(new_x, new_y, self.players[0].token)
+        self.board1.set_player_position(self.position["avance_solucion"],
+                                        self.position["modelo_negocio"], 
+                                        self.players[0].token)
+        self.board2.set_player_position(self.position["total_fundadores"],
+                                        self.position["horas_dedicacion"], 
+                                        self.players[0].token)
+        self.board3.set_player_position(self.position["problema_organico"],
+                                        self.position["punto_equilibrio"], 
+                                        self.players[0].token)
 
         self.done = done
 
@@ -295,15 +300,26 @@ class EvolutionEnv(gym.Env):
     def reset(self):
         # cambiard board de lista a matriz xy
 
-        self.board = Board(Token('🔳', 0), 1, 'avance_solucion', 'modelo_negocio', 
-                    ['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'],
-                    ['producto', 'servicio', 'plataforma', 'ecosistema'])
+        self.board1 = Board(Token('⬜', 0), 1, 
+                            'avance_solucion', 'modelo_negocio', 
+                            ['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'],
+                            ['producto', 'servicio', 'plataforma', 'ecosistema'])
+        self.board2 = Board(Token('⬜', 0), 2, 
+                            'total_fundadores', 'horas_dedicacion', 
+                            ['1', '2', '3', '4', '5', '6'],
+                            ['0-5', '6-10', '10-30', '30-45'])
+        self.board3 = Board(Token('⬜', 0), 3, 
+                            'problema_organico', 'punto_equilibrio', 
+                            ['no', 'si'],
+                            ['no', 'si'])
         #self.board = [Token('🔳', 0)] * self.num_squares #se inicializa board con tokens vacios
 
-        self.players = [Player('Startup1', Token('🟠', 1))] #se inicializan los players con su toquen y numero de jugador
+        self.players = [Player('Startup1', Token('🔴', 1))] #se inicializan los players con su toquen y numero de jugador
 
         # start player at certain default position
-        self.board.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
+        self.board1.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
+        self.board2.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
+        self.board3.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         #self.board[0] = self.players[0].token #board se ocupa con un puro indice 
         #board de 0 a 35 
 
@@ -324,19 +340,32 @@ class EvolutionEnv(gym.Env):
             logger.debug(f"It is Player {self.current_player.id}'s turn to move")
             
         # colnames
-        logger.debug(' '.join(['\t\t'] +[x for x in self.m1_colnames]))
+        # logger.debug(' '.join(['\t\t'] +[x for x in self.m1_colnames]))
         # rownames
         # logger.debug(' '.join([x.symbol for x in self.board[:self.grid_length]]))
         
         # board
-        '''
-        logger.debug('\t '.join([self.m1_rownames[0]] +[x.symbol for x in self.board[:self.grid_length]]))
-        logger.debug('\t '.join([self.m1_rownames[1]] +[x.symbol for x in self.board[self.grid_length:self.grid_length*2]]))
-        logger.debug('\t '.join([self.m1_rownames[2]] +[x.symbol for x in self.board[(self.grid_length*2):(self.grid_length*3)]]))
-        logger.debug('\t '.join([self.m1_rownames[3]] +[x.symbol for x in self.board[(self.grid_length*3):(self.grid_length*4)]]))
-        '''
-
-        logger.debug(self.board.get_symbol_grid())
+        # logger.debug('\t '.join([self.m1_rownames[0]] +[x.symbol for x in self.board[:self.grid_length]]))
+        # logger.debug('\t '.join([self.m1_rownames[1]] +[x.symbol for x in self.board[self.grid_length:self.grid_length*2]]))
+        # logger.debug('\t '.join([self.m1_rownames[2]] +[x.symbol for x in self.board[(self.grid_length*2):(self.grid_length*3)]]))
+        # logger.debug('\t '.join([self.m1_rownames[3]] +[x.symbol for x in self.board[(self.grid_length*3):(self.grid_length*4)]]))
+        board1 = self.board1.get_symbol_grid()
+        board2 = self.board2.get_symbol_grid()
+        board3 = self.board3.get_symbol_grid()
+        
+        board1_df = pd.DataFrame(data =board1,
+                                    index=['producto', 'servicio', 'plataforma', 'ecosistema'],
+                                    columns=['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'])
+        board2_df = pd.DataFrame(data =board2,
+                                    index=['0-5', '6-10', '10-30', '30-45'],
+                                    columns=['1', '2', '3', '4', '5', '6'])
+        board3_df = pd.DataFrame(data =board3,
+                                    index=['no', 'si'],
+                                    columns=['no', 'si'])
+                                    
+        print(tabulate(board1_df, headers='keys', tablefmt='psql'))
+        print(tabulate(board2_df, headers='keys', tablefmt='psql'))
+        print(tabulate(board3_df, headers='keys', tablefmt='psql'))
         # logger.debug('\t '.join([self.m1_rownames[4]] +[x.symbol for x in self.board[(self.grid_length*4):(self.grid_length*5)]]))
         # logger.debug('\t '.join([self.m1_rownames[5]] +[x.symbol for x in self.board[(self.grid_length*5):(self.grid_length*6)]]))
 
@@ -353,12 +382,14 @@ class EvolutionEnv(gym.Env):
 
 
     def rules_move(self):
-        grid = self.board.get_grid() 
+        grid_board1 = self.board1.get_grid() 
+        grid_board2 = self.board1.get_grid() 
+        grid_board3 = self.board1.get_grid() 
         #grid = grid.flatten()
         if self.current_player.token.number == 1:
-            b = [token.number for token in grid]
+            b = [token.number for token in grid_board1]
         else:
-            b = [-token.number for token in grid]
+            b = [-token.number for token in grid_board1]
 
     
         # Check computer win moves

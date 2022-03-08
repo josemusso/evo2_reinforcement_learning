@@ -85,7 +85,7 @@
             "value": 0
         }],
         "effects": [{
-            "var_name":"avance_solucion",
+            "var_name":"punto_equilibrio",
             "operator":"set",
             "value":0
         }]
