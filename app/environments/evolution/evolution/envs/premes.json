@@ -15,9 +15,9 @@
     "horas_dedicacion_inc": {
         "id":2,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
-            "value": 0
+            "var_name":"horas_dedicacion",
+            "condition":"lower",
+            "value": 3
         }],
         "effects": [{
             "var_name":"horas_dedicacion",
@@ -28,8 +28,8 @@
     "horas_dedicacion_dec": {
         "id":3,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
+            "var_name":"horas_dedicacion",
+            "condition":"higher",
             "value": 0
         }],
         "effects": [{
@@ -41,9 +41,9 @@
     "total_fundadores_inc": {
         "id":4,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
-            "value": 0
+            "var_name":"total_fundadores",
+            "condition":"lower",
+            "value": 5
         }],
         "effects": [{
             "var_name":"total_fundadores",
@@ -54,8 +54,8 @@
     "total_fundadores_dec": {
         "id":5,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
+            "var_name":"total_fundadores",
+            "condition":"higher",
             "value": 0
         }],
         "effects": [{
@@ -67,8 +67,8 @@
     "punto_equilibrio_on": {
         "id":6,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
+            "var_name":"punto_equilibrio",
+            "condition":"equal",
             "value": 0
         }],
         "effects": [{
@@ -80,9 +80,9 @@
     "punto_equilibrio_off": {
         "id":7,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
-            "value": 0
+            "var_name":"punto_equilibrio",
+            "condition":"equal",
+            "value": 1
         }],
         "effects": [{
             "var_name":"punto_equilibrio",

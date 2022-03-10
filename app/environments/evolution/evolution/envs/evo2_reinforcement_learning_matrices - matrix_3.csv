@@ -1,0 +1,12 @@
+problema_organico y punto_equilibrio,,
+REWARDS PE y PO,,
+,problema_organico_no,problema_organico_si
+punto_equilibrio_no,1,5
+punto_equilibrio_si,101,105
+,,
+,,
+,,
+ACCIONES/PREMES DISPONIBLES,,
+,problema_organico_no,problema_organico_si
+punto_equilibrio_no,punto_equilibrio_on,punto_equilibrio_on
+punto_equilibrio_si,-,-

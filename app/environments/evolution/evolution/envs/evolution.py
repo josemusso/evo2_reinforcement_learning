@@ -22,7 +22,7 @@ class Token():
         self.symbol = symbol
 
 class Board():
-        def __init__(self, empty_token, number, var_x, var_y, vals_x, vals_y):
+        def __init__(self, empty_token, number, var_x, var_y, vals_x, vals_y, rewards_csv_filepath):
 
             #vals_x, vals_y -> valores que pueden tomar x e y
             #var_x, var_y -> variables x e y del tablero
@@ -34,7 +34,9 @@ class Board():
             self.vals_y = vals_y
             self.player_x = 0
             self.player_y = 0
-
+            self.rewards_grid = read_reward_board_csv(rewards_csv_filepath, 
+                                                            width=len(vals_x),
+                                                            height=len(vals_y))
 
         def get_grid(self):
             grid_shape = (len(self.vals_y),len(self.vals_x))
@@ -85,6 +87,9 @@ class Board():
 
         def get_player_y(self):
             return self.player_y
+
+        def get_rewards_grid(self):
+            return self.rewards_grid
 
         def set_player_x(self, value):
             self.player_x = value
@@ -137,15 +142,18 @@ class EvolutionEnv(gym.Env):
         position_grid_board2 = self.board2.get_position_grid()
         position_grid_board3 = self.board3.get_position_grid()
         #position_grid = np.array([token.number for token in self.board]).reshape(self.grid_shape) #board de posicion actual 
-        print('position_grids')
-        print(position_grid_board1,position_grid_board2,position_grid_board3)
+        print('## position_grids ##')
+        print(position_grid_board1,'\n')
+        print(position_grid_board2,'\n')
+        print(position_grid_board3,'\n')
 
         # in board se t 1 to legal positions
-        print(self.legal_positions)
+        print('## legal_positions ##')
+        print(self.legal_positions,'\n')
         la_grid_board1 = self.board1.get_la_grid(self.legal_positions)
         la_grid_board2 = self.board2.get_la_grid(self.legal_positions)
         la_grid_board3 = self.board3.get_la_grid(self.legal_positions)
-        print(la_grid_board1)
+        print(la_grid_board1,'\n')
         #la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)  #board de legal actions, a que posiciones te puedes mover 
         # update with legal positions
         out = np.stack([position_grid_board1,la_grid_board1], axis = -1)
@@ -201,9 +209,11 @@ class EvolutionEnv(gym.Env):
         return self.board1[square].number == self.players[player].token.number
 
 
-    def check_game_over(self):
-
-        '''
+    '''
+    function to look into all the boards and returns a reward vector with the 
+    corresponding reward for each board position
+    '''
+    def get_new_position_reward(self):
 
         board = self.board1
         current_player_num = self.current_player_num
@@ -228,7 +238,6 @@ class EvolutionEnv(gym.Env):
         if self.turns_taken == self.num_squares:
             logger.debug("Board full")
             return  0, True
-        '''
 
         return 0, False
 
@@ -237,6 +246,10 @@ class EvolutionEnv(gym.Env):
         return self.players[self.current_player_num]
 
 
+    '''
+    function to execute one movement
+    handles rewards received for the action taken
+    '''
     def step(self, action):
         
         reward = [0]
@@ -271,7 +284,7 @@ class EvolutionEnv(gym.Env):
                 else:
                     self.position[effect["var_name"]]=effect["value"]
             self.turns_taken += 1
-            r, done = self.check_game_over()
+            r, done = self.get_new_position_reward()
             reward = [r]
         
         # update board
@@ -298,30 +311,35 @@ class EvolutionEnv(gym.Env):
         return self.observation, reward, done, {}
 
     def reset(self):
-        # cambiard board de lista a matriz xy
-
+        # paths de matrices de rewards etiquetadas por expertos
+        board_1_rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - matrix_1.csv'
+        board_2_rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - matrix_2.csv'
+        board_3_rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - matrix_3.csv'
+        
+        # inicializar boards
         self.board1 = Board(Token('⬜', 0), 1, 
                             'avance_solucion', 'modelo_negocio', 
                             ['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'],
-                            ['producto', 'servicio', 'plataforma', 'ecosistema'])
+                            ['producto', 'servicio', 'plataforma', 'ecosistema'],
+                            rewards_csv_filepath=board_1_rewards_csv_filepath)
         self.board2 = Board(Token('⬜', 0), 2, 
                             'total_fundadores', 'horas_dedicacion', 
                             ['1', '2', '3', '4', '5', '6'],
-                            ['0-5', '6-10', '10-30', '30-45'])
+                            ['0-5', '6-10', '10-30', '30-45'],
+                            rewards_csv_filepath=board_2_rewards_csv_filepath)
         self.board3 = Board(Token('⬜', 0), 3, 
                             'problema_organico', 'punto_equilibrio', 
                             ['no', 'si'],
-                            ['no', 'si'])
-        #self.board = [Token('🔳', 0)] * self.num_squares #se inicializa board con tokens vacios
+                            ['no', 'si'],
+                            rewards_csv_filepath=board_3_rewards_csv_filepath)
+        
 
         self.players = [Player('Startup1', Token('🔴', 1))] #se inicializan los players con su toquen y numero de jugador
 
-        # start player at certain default position
+        # start player at certain default position in vevery board
         self.board1.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         self.board2.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         self.board3.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
-        #self.board[0] = self.players[0].token #board se ocupa con un puro indice 
-        #board de 0 a 35 
 
         self.current_player_num = 0  #player que esta en el turno
         self.turns_taken = 0  #la cantidad de turnos 
@@ -362,10 +380,15 @@ class EvolutionEnv(gym.Env):
         board3_df = pd.DataFrame(data =board3,
                                     index=['no', 'si'],
                                     columns=['no', 'si'])
-                                    
-        print(tabulate(board1_df, headers='keys', tablefmt='psql'))
-        print(tabulate(board2_df, headers='keys', tablefmt='psql'))
-        print(tabulate(board3_df, headers='keys', tablefmt='psql'))
+
+        print("## REWARD BOARDS ##")
+        print(self.board1.get_rewards_grid(),'\n')                            
+        print(self.board2.get_rewards_grid(),'\n')                            
+        print(self.board3.get_rewards_grid(),'\n')                            
+        print("## GAME BOARDS ##")
+        print(tabulate(board1_df, headers='keys', tablefmt='grid'))
+        print(tabulate(board2_df, headers='keys', tablefmt='grid'))
+        print(tabulate(board3_df, headers='keys', tablefmt='grid'))
         # logger.debug('\t '.join([self.m1_rownames[4]] +[x.symbol for x in self.board[(self.grid_length*4):(self.grid_length*5)]]))
         # logger.debug('\t '.join([self.m1_rownames[5]] +[x.symbol for x in self.board[(self.grid_length*5):(self.grid_length*6)]]))
 
@@ -482,3 +505,13 @@ def testForkMove(b, mark, x, y):
             winningMoves += 1
     return winningMoves >= 2
     '''
+
+def read_reward_board_csv(filepath,width,height):
+    board_array = [line.split(',') for line in open(filepath)]
+    new_board = []
+    for line in board_array:
+        new_line = [word.replace('\n','') for word in line]
+        new_board.append(new_line)
+    board_array=new_board
+    board_array=np.array(board_array[3:3+height])[:,1:] # start reading in line 2
+    return board_array
