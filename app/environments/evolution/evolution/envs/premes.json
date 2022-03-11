@@ -15,9 +15,9 @@
     "horas_dedicacion_inc": {
         "id":2,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
-            "value": 0
+            "var_name":"horas_dedicacion",
+            "condition":"lower",
+            "value": 3
         }],
         "effects": [{
             "var_name":"horas_dedicacion",
@@ -41,9 +41,9 @@
     "total_fundadores_inc": {
         "id":4,
         "restrictions": [{
-            "var_name":"",
-            "condition":"",
-            "value": 0
+            "var_name":"total_fundadores",
+            "condition":"lower",
+            "value": 5
         }],
         "effects": [{
             "var_name":"total_fundadores",

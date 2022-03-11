@@ -74,10 +74,12 @@ class Board():
             # update with legal positions
             for x in legal_positions[self.var_x]:
                 y = self.player_y
-                la_grid[y,x] = 1
+
+                la_grid[y,(x-1)] = 1
             for y in legal_positions[self.var_y]:
                 x = self.player_x
-                la_grid[y,x] = 1
+
+                la_grid[(y-1),x] = 1
             return la_grid
 
         def get_player_x(self):
@@ -138,7 +140,7 @@ class EvolutionEnv(gym.Env):
         position_grid_board3 = self.board3.get_position_grid()
         #position_grid = np.array([token.number for token in self.board]).reshape(self.grid_shape) #board de posicion actual 
         print('position_grids')
-        print(position_grid_board1,position_grid_board2,position_grid_board3)
+        print(position_grid_board1, "\n \n",position_grid_board2,"\n \n",position_grid_board3, "\n")
 
         # in board se t 1 to legal positions
         print(self.legal_positions)
@@ -238,33 +240,43 @@ class EvolutionEnv(gym.Env):
 
 
     def step(self, action):
-        
+
         reward = [0]
         
         # check move legality
         print('old position dict: ',self.position)
+        print('')
 
         # check effect of selected action
         ids = []
         names = []
+
         for i,legal_preme in enumerate(self.legal_actions):
+            print('LEGALQ PREME' ,legal_preme)
             ids.append(list(legal_preme.values())[0]['id'])
             names.append(list(legal_preme.keys())[0])
-            pos = i if action == list(legal_preme.values())[0]['id'] else 0
-        
-        action_preme_name = names[pos]
+            if(action == list(legal_preme.values())[0]['id']):
+                pos = i
+
+
+            #pos = i if action == list(legal_preme.values())[0]['id'] else 0  #modifique esto por lo de arriba
+
+
 
         if action not in ids:  # ilegal action, ends game, punishment
             print("Action not in list")
             done = True
             reward = [-1]
-        else: # legal action proceed
-            print("Action in list")
+        else: # legal action proceed 
+
             # apply all effects related to chosen action preme
+            action_preme_name = names[pos]
+
             effects = self.premes[action_preme_name]["effects"] 
             for effect in effects:
-                print(effect["operator"])
+                print('VAR NAME', effect["var_name"])
                 if effect["operator"] == "increase":
+
                     self.position[effect["var_name"]]=self.position[effect["var_name"]]+effect["value"]
                 elif effect["operator"] == "decrease":
                     self.position[effect["var_name"]]=self.position[effect["var_name"]]-effect["value"]
@@ -279,6 +291,7 @@ class EvolutionEnv(gym.Env):
 
         #self.board[old_x*(old_y+1)] = Token('🔳', 0)
         #self.board[new_x*(new_y+1)] = self.players[0].token
+        print("POSICION", self.position["avance_solucion"])
 
         self.board1.set_player_position(self.position["avance_solucion"],
                                         self.position["modelo_negocio"], 
@@ -383,8 +396,8 @@ class EvolutionEnv(gym.Env):
 
     def rules_move(self):
         grid_board1 = self.board1.get_grid() 
-        grid_board2 = self.board1.get_grid() 
-        grid_board3 = self.board1.get_grid() 
+        grid_board2 = self.board2.get_grid() 
+        grid_board3 = self.board3.get_grid() 
         #grid = grid.flatten()
         if self.current_player.token.number == 1:
             b = [token.number for token in grid_board1]
