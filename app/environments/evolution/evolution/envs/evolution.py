@@ -170,15 +170,14 @@ class EvolutionEnv(gym.Env):
             preme_legality = True
             restrictions = self.premes[preme_name]["restrictions"]
             for restriction in restrictions:
-                if restriction["var_name"] == "":
-                    continue 
+                # if restriction["var_name"] == "":
+                #     continue 
                 if restriction["condition"] == "lower":
                     preme_legality = preme_legality and self.position[restriction["var_name"]]<restriction["value"]
-                if restriction["condition"] == "equal":
+                elif restriction["condition"] == "equal":
                     preme_legality = preme_legality and self.position[restriction["var_name"]]==restriction["value"]
                 else: #restriction["condition"] == "higher"
                     preme_legality = preme_legality and self.position[restriction["var_name"]]>restriction["value"]
-
             if preme_legality:
                 legal_actions.append({preme_name:self.premes[preme_name]})
         return np.array(legal_actions)
@@ -187,12 +186,12 @@ class EvolutionEnv(gym.Env):
     def legal_positions(self):
         # position = [board1_x,board1_y,board2_x,board2_y,board3_x,board3_y]
         legal_positions = {"avance_solucion":[],
-                    "modelo_negocio":[],
-                    "total_fundadores":[],
-                    "horas_dedicacion":[],
-                    "problema_organico":[],
-                    "punto_equilibrio":[]
-                    }
+                            "modelo_negocio":[],
+                            "total_fundadores":[],
+                            "horas_dedicacion":[],
+                            "problema_organico":[],
+                            "punto_equilibrio":[]
+                            }
         for legal_preme in self.legal_actions:
             legal_preme=list(legal_preme.values())[0]
             for preme_effect in legal_preme["effects"]:
@@ -224,24 +223,24 @@ class EvolutionEnv(gym.Env):
         players = self.players
 
 
-        # check game over
-        for i in range(self.grid_length):
-            # horizontals and verticals
+        # # check game over
+        # for i in range(self.grid_length):
+        #     # horizontals and verticals
 
-            #grid = self.get_grid()
-            #grid[0,:] == 
-            if ((self.square_is_player(i*self.grid_length,current_player_num) and self.square_is_player(i*self.grid_length+1,current_player_num) and self.square_is_player(i*self.grid_length+2,current_player_num))
-                or (self.square_is_player(i+0,current_player_num) and self.square_is_player(i+self.grid_length,current_player_num) and self.square_is_player(i+self.grid_length*2,current_player_num))):
-                return  1, True
+        #     #grid = self.get_grid()
+        #     #grid[0,:] == 
+        #     if ((self.square_is_player(i*self.grid_length,current_player_num) and self.square_is_player(i*self.grid_length+1,current_player_num) and self.square_is_player(i*self.grid_length+2,current_player_num))
+        #         or (self.square_is_player(i+0,current_player_num) and self.square_is_player(i+self.grid_length,current_player_num) and self.square_is_player(i+self.grid_length*2,current_player_num))):
+        #         return  1, True
 
-        # diagonals
-        if((self.square_is_player(0,current_player_num) and self.square_is_player(4,current_player_num) and self.square_is_player(8,current_player_num))
-            or (self.square_is_player(2,current_player_num) and self.square_is_player(4,current_player_num) and self.square_is_player(6,current_player_num))):
-                return  1, True
+        # # diagonals
+        # if((self.square_is_player(0,current_player_num) and self.square_is_player(4,current_player_num) and self.square_is_player(8,current_player_num))
+        #     or (self.square_is_player(2,current_player_num) and self.square_is_player(4,current_player_num) and self.square_is_player(6,current_player_num))):
+        #         return  1, True
 
-        if self.turns_taken == self.num_squares:
-            logger.debug("Board full")
-            return  0, True
+        # if self.turns_taken == self.num_squares:
+        #     logger.debug("Board full")
+        #     return  0, True
 
         return 0, False
 
