@@ -172,6 +172,8 @@ class EvolutionEnv(gym.Env):
                     continue 
                 if restriction["condition"] == "lower":
                     preme_legality = preme_legality and self.position[restriction["var_name"]]<restriction["value"]
+                if restriction["condition"] == "equal":
+                    preme_legality = preme_legality and self.position[restriction["var_name"]]==restriction["value"]
                 else: #restriction["condition"] == "higher"
                     preme_legality = preme_legality and self.position[restriction["var_name"]]>restriction["value"]
 
