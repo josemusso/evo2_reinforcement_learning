@@ -216,33 +216,22 @@ class EvolutionEnv(gym.Env):
     function to look into all the boards and returns a reward vector with the 
     corresponding reward for each board position
     '''
+    # TODO generalizar para los 3 boards
+    # TODO collect rewards from starting position
     def get_new_position_reward(self):
 
-        board = self.board1
-        current_player_num = self.current_player_num
-        players = self.players
+        game_over = False
+        all_boards_rewards = 0
+        for board in self.boards:
+            # get board position
+            x = self.position[board.var_x]
+            y = self.position[board.var_y]
+            # get reward in actual position
+            all_boards_rewards+=int(board.rewards_grid[y,x])
+            # consume reward: set actual position reward to 0
+            board.rewards_grid[y,x] = 0
 
-
-        # # check game over
-        # for i in range(self.grid_length):
-        #     # horizontals and verticals
-
-        #     #grid = self.get_grid()
-        #     #grid[0,:] == 
-        #     if ((self.square_is_player(i*self.grid_length,current_player_num) and self.square_is_player(i*self.grid_length+1,current_player_num) and self.square_is_player(i*self.grid_length+2,current_player_num))
-        #         or (self.square_is_player(i+0,current_player_num) and self.square_is_player(i+self.grid_length,current_player_num) and self.square_is_player(i+self.grid_length*2,current_player_num))):
-        #         return  1, True
-
-        # # diagonals
-        # if((self.square_is_player(0,current_player_num) and self.square_is_player(4,current_player_num) and self.square_is_player(8,current_player_num))
-        #     or (self.square_is_player(2,current_player_num) and self.square_is_player(4,current_player_num) and self.square_is_player(6,current_player_num))):
-        #         return  1, True
-
-        # if self.turns_taken == self.num_squares:
-        #     logger.debug("Board full")
-        #     return  0, True
-
-        return 0, False
+        return all_boards_rewards, game_over
 
     @property
     def current_player(self):
@@ -266,7 +255,6 @@ class EvolutionEnv(gym.Env):
         names = []
 
         for i,legal_preme in enumerate(self.legal_actions):
-            print('LEGALQ PREME' ,legal_preme)
             ids.append(list(legal_preme.values())[0]['id'])
             names.append(list(legal_preme.keys())[0])
             if(action == list(legal_preme.values())[0]['id']):
@@ -280,23 +268,22 @@ class EvolutionEnv(gym.Env):
         if action not in ids:  # ilegal action, ends game, punishment
             print("Action not in list")
             done = True
-            reward = [-1]
+            reward = [-1] # TODO dejar en -1 o cambiar
         else: # legal action proceed 
-
             # apply all effects related to chosen action preme
             action_preme_name = names[pos]
-
             effects = self.premes[action_preme_name]["effects"] 
             for effect in effects:
                 print('VAR NAME', effect["var_name"])
                 if effect["operator"] == "increase":
-
                     self.position[effect["var_name"]]=self.position[effect["var_name"]]+effect["value"]
                 elif effect["operator"] == "decrease":
                     self.position[effect["var_name"]]=self.position[effect["var_name"]]-effect["value"]
                 else:
                     self.position[effect["var_name"]]=effect["value"]
             self.turns_taken += 1
+
+            # get rewards from new position in all grids
             r, done = self.get_new_position_reward()
             reward = [r]
         
@@ -347,7 +334,7 @@ class EvolutionEnv(gym.Env):
                             ['no', 'si'],
                             rewards_csv_filepath=board_3_rewards_csv_filepath)
         
-
+        self.boards = [self.board1,self.board2,self.board3]
         self.players = [Player('Startup1', Token('🔴', 1))] #se inicializan los players con su toquen y numero de jugador
 
         # start player at certain default position in vevery board

@@ -105,9 +105,14 @@ def main(args):
 
       obs, reward, done, _ = env.step(action)
 
+      # add rewards to bag
       for r, player in zip(reward, players):
         total_rewards[player.id] += r
         player.points += r
+
+      logger.debug(f'\nObtained rewards: {reward}')
+      logger.debug(f'\nTotal rewards: {players[0].points}')
+
 
       if args.cont:
         input('Press any key to continue')
