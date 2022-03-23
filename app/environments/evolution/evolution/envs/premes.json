@@ -64,28 +64,55 @@
             "value":1
         }]
     },
-    "punto_equilibrio_on": {
+
+    "punto_equilibrio_inc": {
         "id":6,
         "restrictions": [{
             "var_name":"punto_equilibrio",
-            "condition":"equal",
+            "condition":"lower",
+            "value": 2
+        }],
+        "effects": [{
+            "var_name":"punto_equilibrio",
+            "operator":"increase",
+            "value":1
+        }]
+    },
+    "punto_equilibrio_dec": {
+        "id":7,
+        "restrictions": [{
+            "var_name":"punto_equilibrio",
+            "condition":"higher",
             "value": 0
         }],
         "effects": [{
             "var_name":"punto_equilibrio",
+            "operator":"decrease",
+            "value":1
+        }]
+    },
+    "problema_organico_on": {
+        "id":8,
+        "restrictions": [{
+            "var_name":"problema_organico",
+            "condition":"equal",
+            "value": 0
+        }],
+        "effects": [{
+            "var_name":"problema_organico",
             "operator":"set",
             "value":1
         }]
     },
-    "punto_equilibrio_off": {
-        "id":7,
+    "problema_organico_off": {
+        "id":9,
         "restrictions": [{
-            "var_name":"punto_equilibrio",
+            "var_name":"problema_organico",
             "condition":"equal",
             "value": 1
         }],
         "effects": [{
-            "var_name":"punto_equilibrio",
+            "var_name":"problema_organico",
             "operator":"set",
             "value":0
         }]

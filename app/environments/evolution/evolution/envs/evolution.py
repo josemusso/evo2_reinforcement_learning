@@ -344,7 +344,7 @@ class EvolutionEnv(gym.Env):
         self.board3 = Board(Token('⬜', 0), 3, 
                             'problema_organico', 'punto_equilibrio', 
                             ['no', 'si'],
-                            ['no', 'si'],
+                            ['no','aun no', 'si'],
                             rewards_csv_filepath=board_3_rewards_csv_filepath)
         
 
@@ -392,8 +392,8 @@ class EvolutionEnv(gym.Env):
                                     index=['0-5', '6-10', '10-30', '30-45'],
                                     columns=['1', '2', '3', '4', '5', '6'])
         board3_df = pd.DataFrame(data =board3,
-                                    index=['no', 'si'],
-                                    columns=['no', 'si'])
+                                    index=['no','aun no','si'],
+                                    columns=['no','si'])
 
         print("## REWARD BOARDS ##")
         print(self.board1.get_rewards_grid(),'\n')                            
