@@ -10,7 +10,8 @@
             "var_name":"avance_solucion",
             "operator":"increase",
             "value":1
-        }]
+        }],
+        "repetitive": false
     },
     "horas_dedicacion_inc": {
         "id":2,
@@ -23,7 +24,8 @@
             "var_name":"horas_dedicacion",
             "operator":"increase",
             "value":1
-        }]
+        }],
+        "repetitive": false
     },
     "horas_dedicacion_dec": {
         "id":3,
@@ -36,7 +38,8 @@
             "var_name":"horas_dedicacion",
             "operator":"decrease",
             "value":1
-        }]
+        }],
+        "repetitive": false
     },
     "total_fundadores_inc": {
         "id":4,
@@ -49,7 +52,8 @@
             "var_name":"total_fundadores",
             "operator":"increase",
             "value":1
-        }]
+        }],
+        "repetitive": false
     },
     "total_fundadores_dec": {
         "id":5,
@@ -62,7 +66,8 @@
             "var_name":"total_fundadores",
             "operator":"decrease",
             "value":1
-        }]
+        }],
+        "repetitive": false
     },
     "punto_equilibrio_on": {
         "id":6,
@@ -75,7 +80,8 @@
             "var_name":"punto_equilibrio",
             "operator":"set",
             "value":1
-        }]
+        }],
+        "repetitive": false
     },
     "punto_equilibrio_off": {
         "id":7,
@@ -88,6 +94,7 @@
             "var_name":"punto_equilibrio",
             "operator":"set",
             "value":0
-        }]
+        }],
+        "repetitive": false
     }
 }
