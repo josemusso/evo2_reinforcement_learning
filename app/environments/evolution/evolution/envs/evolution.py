@@ -352,13 +352,8 @@ class EvolutionEnv(gym.Env):
         self.board3 = Board(Token('⬜', 0), 3, 
                             'problema_organico', 'punto_equilibrio', 
                             ['no', 'si'],
-<<<<<<< HEAD
-                            ['no','aun no', 'si'],
-                            rewards_csv_filepath=board_3_rewards_csv_filepath)
-=======
                             ['no', 'pronto', 'si'],
                             rewards_csv_filepath=rewards_csv_filepath)
->>>>>>> JM
         
         self.boards = [self.board1,self.board2,self.board3]
         self.players = [Player('Startup1', Token('🔴', 1))] #se inicializan los players con su toquen y numero de jugador
@@ -408,13 +403,8 @@ class EvolutionEnv(gym.Env):
                                     index=['0-5', '6-10', '10-30', '30-45'],
                                     columns=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
         board3_df = pd.DataFrame(data =board3,
-<<<<<<< HEAD
-                                    index=['no','aun no','si'],
-                                    columns=['no','si'])
-=======
                                     index=['no', 'pronto', 'si'],
                                     columns=['no', 'si'])
->>>>>>> JM
 
         print("## REWARD BOARDS ##")
         print(self.board1.get_rewards_grid(),'\n')                            
