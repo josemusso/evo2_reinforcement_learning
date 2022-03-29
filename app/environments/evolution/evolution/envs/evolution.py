@@ -124,15 +124,7 @@ class EvolutionEnv(gym.Env):
         # self.observation_space = gym.spaces.Box(0, 1, (self.total_positions * self.total_tiles + self.squares + 4 + self.n_players + self.action_space.n ,))
         
         # find way to automatize shapes
-        self.observation_space = gym.spaces.Dict(
-            spaces={
-                "position_grids": gym.spaces.Tuple([gym.spaces.Box(low=0, high=1, shape=(6,4), dtype=np.int32),
-                                                    gym.spaces.Box(low=0, high=1, shape=(6,4), dtype=np.int32),
-                                                    gym.spaces.Box(low=0, high=1, shape=(3,2), dtype=np.int32)]),
-                "la_grid": gym.spaces.Tuple([gym.spaces.Box(low=0, high=1, shape=(6,4), dtype=np.int32),
-                                                    gym.spaces.Box(low=0, high=1, shape=(6,4), dtype=np.int32),
-                                                    gym.spaces.Box(low=0, high=1, shape=(3,2), dtype=np.int32)])
-                 })
+        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3,12,6), dtype=np.int32)
         
         self.verbose = verbose
         
@@ -140,7 +132,6 @@ class EvolutionEnv(gym.Env):
         f=open('/app/environments/evolution/evolution/envs/premes.json', "r")
         self.premes = json.loads(f.read())
         self.premes_quantity = len(list(self.premes.keys()))
-        print(self.premes_quantity)
         self.action_space = gym.spaces.Discrete(self.premes_quantity) # number of premes
 
         # define attribute that contains position coords
@@ -158,10 +149,13 @@ class EvolutionEnv(gym.Env):
         position_grid_board2 = self.board2.get_position_grid()
         position_grid_board3 = self.board3.get_position_grid()
         #position_grid = np.array([token.number for token in self.board]).reshape(self.grid_shape) #board de posicion actual 
-        print('## position_grids ##')
-        print(position_grid_board1,'\n')
-        print(position_grid_board2,'\n')
-        print(position_grid_board3,'\n')
+        position_grid_board1=np.lib.pad(position_grid_board1, ((0,6-position_grid_board1.shape[0]),(0,6-position_grid_board1.shape[1])), 'constant', constant_values=(0))
+        position_grid_board2=np.lib.pad(position_grid_board2, ((0,6-position_grid_board2.shape[0]),(0,6-position_grid_board2.shape[1])), 'constant', constant_values=(0))
+        position_grid_board3=np.lib.pad(position_grid_board3, ((0,6-position_grid_board3.shape[0]),(0,6-position_grid_board3.shape[1])), 'constant', constant_values=(0))
+        print('## RESHAPED position_grids ##')
+        final_position_grid = np.block([[[position_grid_board1]],[[position_grid_board2]],[[position_grid_board3]]])
+        print(final_position_grid.shape)
+        print(final_position_grid)
 
         # in board se t 1 to legal positions
         print('## legal_positions ##')
@@ -169,9 +163,18 @@ class EvolutionEnv(gym.Env):
         la_grid_board1 = self.board1.get_la_grid(self.legal_positions)
         la_grid_board2 = self.board2.get_la_grid(self.legal_positions)
         la_grid_board3 = self.board3.get_la_grid(self.legal_positions)
-        print(la_grid_board1,'\n')
-        print(la_grid_board2,'\n')
-        print(la_grid_board3,'\n')
+        la_grid_board1=np.lib.pad(la_grid_board1, ((0,6-la_grid_board1.shape[0]),(0,6-la_grid_board1.shape[1])), 'constant', constant_values=(0))
+        la_grid_board2=np.lib.pad(la_grid_board2, ((0,6-la_grid_board2.shape[0]),(0,6-la_grid_board2.shape[1])), 'constant', constant_values=(0))
+        la_grid_board3=np.lib.pad(la_grid_board3, ((0,6-la_grid_board3.shape[0]),(0,6-la_grid_board3.shape[1])), 'constant', constant_values=(0))
+
+        final_la_grid = np.block([[[la_grid_board1]],[[la_grid_board2]],[[la_grid_board3]]])
+        print(final_la_grid.shape)
+        print(final_la_grid)
+
+        print('## TOTAL OBSERVATION ##')
+        total_observation = np.hstack((final_position_grid,final_la_grid))
+        print(total_observation.shape)
+        print(total_observation)
         #la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)  #board de legal actions, a que posiciones te puedes mover 
         # update with legal positions
         # se hasce vstack de las rows del grid y luego transpose para que sean dos columnas
@@ -179,9 +182,7 @@ class EvolutionEnv(gym.Env):
         # print(out)
         # observation changed to dict format
 
-        return {"position_grids": (position_grid_board1,position_grid_board2,position_grid_board3),
-                "la_grid": (la_grid_board1,la_grid_board2,la_grid_board3)
-                 }
+        return total_observation
 
     @property
     def legal_actions(self):
@@ -346,7 +347,7 @@ class EvolutionEnv(gym.Env):
                             rewards_csv_filepath=rewards_csv_filepath)
         self.board2 = Board(Token('⬜', 0), 2, 
                             'total_fundadores', 'horas_dedicacion', 
-                            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                            ['1', '2', '3', '4', '5', '6'],
                             ['0-5', '6-10', '10-30', '30-45'],
                             rewards_csv_filepath=rewards_csv_filepath)
         self.board3 = Board(Token('⬜', 0), 3, 
@@ -401,7 +402,7 @@ class EvolutionEnv(gym.Env):
                                     columns=['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'])
         board2_df = pd.DataFrame(data =board2,
                                     index=['0-5', '6-10', '10-30', '30-45'],
-                                    columns=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
+                                    columns=['1', '2', '3', '4', '5', '6'])
         board3_df = pd.DataFrame(data =board3,
                                     index=['no', 'pronto', 'si'],
                                     columns=['no', 'si'])

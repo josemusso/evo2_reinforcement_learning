@@ -14,6 +14,7 @@ from shutil import copyfile
 from mpi4py import MPI
 
 from stable_baselines.ppo1 import PPO1
+from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common.callbacks import EvalCallback
 
 from stable_baselines.common.vec_env import DummyVecEnv
@@ -80,7 +81,9 @@ def main(args):
 
   if args.reset or not os.path.exists(os.path.join(model_dir, 'best_model.zip')):
     logger.info('\nLoading the base PPO agent to train...')
-    model = PPO1.load(os.path.join(model_dir, 'base.zip'), env, **params)
+    # model = PPO1.load(os.path.join(model_dir, 'base.zip'), env, **params)
+    model = PPO1(MlpPolicy, env, **params)
+    logger.info('\nModel generated succesfully...')
   else:
     logger.info('\nLoading the best_model.zip PPO agent to continue training...')
     model = PPO1.load(os.path.join(model_dir, 'best_model.zip'), env, **params)

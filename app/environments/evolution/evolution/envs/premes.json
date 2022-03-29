@@ -5,70 +5,70 @@
             "var_name":"avance_solucion",
             "condition":"lower",
             "value": 5
-        }],
+            }],
         "effects": [{
             "var_name":"avance_solucion",
             "operator":"increase",
             "value":1
-        }],
+            }],
         "repetitive": false
-    },
+        },
     "horas_dedicacion_inc": {
         "id":2,
         "restrictions": [{
             "var_name":"horas_dedicacion",
             "condition":"lower",
             "value": 3
-        }],
+            }],
         "effects": [{
             "var_name":"horas_dedicacion",
             "operator":"increase",
             "value":1
-        }],
+            }],
         "repetitive": false
-    },
+        },
     "horas_dedicacion_dec": {
         "id":3,
         "restrictions": [{
             "var_name":"horas_dedicacion",
             "condition":"higher",
             "value": 0
-        }],
+            }],
         "effects": [{
             "var_name":"horas_dedicacion",
             "operator":"decrease",
             "value":1
-        }],
+            }],
         "repetitive": false
-    },
+        },
     "total_fundadores_inc": {
         "id":4,
         "restrictions": [{
             "var_name":"total_fundadores",
             "condition":"lower",
             "value": 5
-        }],
+            }],
         "effects": [{
             "var_name":"total_fundadores",
             "operator":"increase",
             "value":1
-        }],
+            }],
         "repetitive": false
-    },
+        },
     "total_fundadores_dec": {
         "id":5,
         "restrictions": [{
             "var_name":"total_fundadores",
             "condition":"higher",
             "value": 0
-        }],
+            }],
         "effects": [{
             "var_name":"total_fundadores",
             "operator":"decrease",
             "value":1
-        }],
+            }],
         "repetitive": false
-    },
+        },
 
     "punto_equilibrio_inc": {
         "id":6,
@@ -76,52 +76,52 @@
             "var_name":"punto_equilibrio",
             "condition":"lower",
             "value": 2
-        }],
+            }],
         "effects": [{
             "var_name":"punto_equilibrio",
             "operator":"increase",
             "value":1
-        }],
+            }],
         "repetitive": false
-    },
+        },
     "punto_equilibrio_dec": {
         "id":7,
         "restrictions": [{
             "var_name":"punto_equilibrio",
             "condition":"higher",
             "value": 0
-        }],
+            }],
         "effects": [{
             "var_name":"punto_equilibrio",
             "operator":"decrease",
             "value":1
-        }]
-    },
+            }]
+        },
     "problema_organico_on": {
         "id":8,
         "restrictions": [{
             "var_name":"problema_organico",
             "condition":"equal",
             "value": 0
-        }],
+            }],
         "effects": [{
             "var_name":"problema_organico",
             "operator":"set",
             "value":1
-        }]
-    },
+            }]
+        },
     "problema_organico_off": {
         "id":9,
         "restrictions": [{
             "var_name":"problema_organico",
             "condition":"equal",
             "value": 1
-        }],
+            }],
         "effects": [{
             "var_name":"problema_organico",
             "operator":"set",
             "value":0
-        }],
+            }],
         "repetitive": false
-    }
+        }
 }
