@@ -152,14 +152,14 @@ class EvolutionEnv(gym.Env):
         position_grid_board1=np.lib.pad(position_grid_board1, ((0,6-position_grid_board1.shape[0]),(0,6-position_grid_board1.shape[1])), 'constant', constant_values=(0))
         position_grid_board2=np.lib.pad(position_grid_board2, ((0,6-position_grid_board2.shape[0]),(0,6-position_grid_board2.shape[1])), 'constant', constant_values=(0))
         position_grid_board3=np.lib.pad(position_grid_board3, ((0,6-position_grid_board3.shape[0]),(0,6-position_grid_board3.shape[1])), 'constant', constant_values=(0))
-        print('## RESHAPED position_grids ##')
+        # print('## RESHAPED position_grids ##')
         final_position_grid = np.block([[[position_grid_board1]],[[position_grid_board2]],[[position_grid_board3]]])
-        print(final_position_grid.shape)
-        print(final_position_grid)
+        # print(final_position_grid.shape)
+        # print(final_position_grid)
 
         # in board se t 1 to legal positions
-        print('## legal_positions ##')
-        print(self.legal_positions,'\n')
+        # print('## legal_positions ##')
+        # print(self.legal_positions,'\n')
         la_grid_board1 = self.board1.get_la_grid(self.legal_positions)
         la_grid_board2 = self.board2.get_la_grid(self.legal_positions)
         la_grid_board3 = self.board3.get_la_grid(self.legal_positions)
@@ -168,19 +168,13 @@ class EvolutionEnv(gym.Env):
         la_grid_board3=np.lib.pad(la_grid_board3, ((0,6-la_grid_board3.shape[0]),(0,6-la_grid_board3.shape[1])), 'constant', constant_values=(0))
 
         final_la_grid = np.block([[[la_grid_board1]],[[la_grid_board2]],[[la_grid_board3]]])
-        print(final_la_grid.shape)
-        print(final_la_grid)
+        # print(final_la_grid.shape)
+        # print(final_la_grid)
 
         print('## TOTAL OBSERVATION ##')
         total_observation = np.hstack((final_position_grid,final_la_grid))
-        print(total_observation.shape)
+        # print(total_observation.shape)
         print(total_observation)
-        #la_grid = np.array([0 for x in self.board]).reshape(self.grid_shape)  #board de legal actions, a que posiciones te puedes mover 
-        # update with legal positions
-        # se hasce vstack de las rows del grid y luego transpose para que sean dos columnas
-        # out = np.stack([position_grid_board1,la_grid_board1], axis = -1)
-        # print(out)
-        # observation changed to dict format
 
         return total_observation
 
@@ -228,19 +222,11 @@ class EvolutionEnv(gym.Env):
         legal_positions = {k:list(set(v)) for k, v in legal_positions.items()}
         return legal_positions
 
-
-
-    def square_is_player(self, square, player):
-        return self.board1[square].number == self.players[player].token.number
-
-
     '''
     function to look into all the boards and returns a reward vector with the 
     corresponding reward for each board position
     '''
-    # TODO collect rewards from starting position
     def get_new_position_reward(self):
-
         game_over = False
         all_boards_rewards = 0
         for board in self.boards:
@@ -266,21 +252,16 @@ class EvolutionEnv(gym.Env):
     def step(self, action):
 
         reward = [0]
-        
-        # check move legality
-        print('old position dict: ',self.position)
-        print('')
-
         # check effect of selected action
         ids = []
         names = []
-
         for i,legal_preme in enumerate(self.legal_actions):
+            preme_name = list(legal_preme.keys())[0]
             ids.append(list(legal_preme.values())[0]['id'])
-            names.append(list(legal_preme.keys())[0])
+            names.append(preme_name)
             if(action == list(legal_preme.values())[0]['id']):
                 pos = i
-
+                break
 
             #pos = i if action == list(legal_preme.values())[0]['id'] else 0  #modifique esto por lo de arriba
 
@@ -290,12 +271,12 @@ class EvolutionEnv(gym.Env):
             print("Action not in list")
             done = True
             reward = [-1] # TODO dejar en -1 o cambiar
+            return self.observation, reward, done, {}
         else: # legal action proceed 
             # apply all effects related to chosen action preme
             action_preme_name = names[pos]
             effects = self.premes[action_preme_name]["effects"] 
             for effect in effects:
-                print('VAR NAME', effect["var_name"])
                 if effect["operator"] == "increase":
                     self.position[effect["var_name"]]=self.position[effect["var_name"]]+effect["value"]
                 elif effect["operator"] == "decrease":
@@ -308,35 +289,34 @@ class EvolutionEnv(gym.Env):
             r, done = self.get_new_position_reward()
             reward = [r]
         
-        # update board
-        print('new position dict: ',self.position)
+            # update board
+            print('new position dict: ',self.position)
 
-        #self.board[old_x*(old_y+1)] = Token('🔳', 0)
-        #self.board[new_x*(new_y+1)] = self.players[0].token
-        print("POSICION", self.position["avance_solucion"])
+            #self.board[old_x*(old_y+1)] = Token('🔳', 0)
+            #self.board[new_x*(new_y+1)] = self.players[0].token
+            self.board1.set_player_position(self.position["avance_solucion"],
+                                            self.position["modelo_negocio"], 
+                                            self.players[0].token)
+            self.board2.set_player_position(self.position["total_fundadores"],
+                                            self.position["horas_dedicacion"], 
+                                            self.players[0].token)
+            self.board3.set_player_position(self.position["problema_organico"],
+                                            self.position["punto_equilibrio"], 
+                                            self.players[0].token)
+            self.done = done
+            # remove preme once used if not repetitive
+            if not list(legal_preme.values())[0]['repetitive']:
+                self.premes.pop(preme_name, None)
 
-        self.board1.set_player_position(self.position["avance_solucion"],
-                                        self.position["modelo_negocio"], 
-                                        self.players[0].token)
-        self.board2.set_player_position(self.position["total_fundadores"],
-                                        self.position["horas_dedicacion"], 
-                                        self.players[0].token)
-        self.board3.set_player_position(self.position["problema_organico"],
-                                        self.position["punto_equilibrio"], 
-                                        self.players[0].token)
+            # game over condition: no more premes for now
+            if not self.premes:
+                print('## GAME OVER: NO MORE PREMES ##')
+                done = True
 
-        self.done = done
-
-        if not done:
-            self.current_player_num = self.current_player_num
-
-        return self.observation, reward, done, {}
+            return self.observation, reward, done, {}
 
     def reset(self):
         # paths de matrices de rewards etiquetadas por expertos
-        # board_1_rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - matrix_1.csv'
-        # board_2_rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - matrix_2.csv'
-        # board_3_rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - matrix_3.csv'
         rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - rewards de exploracion 20.csv'
         
         # inicializar boards
@@ -374,7 +354,7 @@ class EvolutionEnv(gym.Env):
         return self.observation
 
 
-    def render(self, mode='human', close=False, verbose = True):
+    def render(self, mode='human', close=False, verbose = False):
         logger.debug('')
         if close:
             return
@@ -382,17 +362,6 @@ class EvolutionEnv(gym.Env):
             logger.debug(f'GAME OVER')
         else:
             logger.debug(f"It is Player {self.current_player.id}'s turn to move")
-            
-        # colnames
-        # logger.debug(' '.join(['\t\t'] +[x for x in self.m1_colnames]))
-        # rownames
-        # logger.debug(' '.join([x.symbol for x in self.board[:self.grid_length]]))
-        
-        # board
-        # logger.debug('\t '.join([self.m1_rownames[0]] +[x.symbol for x in self.board[:self.grid_length]]))
-        # logger.debug('\t '.join([self.m1_rownames[1]] +[x.symbol for x in self.board[self.grid_length:self.grid_length*2]]))
-        # logger.debug('\t '.join([self.m1_rownames[2]] +[x.symbol for x in self.board[(self.grid_length*2):(self.grid_length*3)]]))
-        # logger.debug('\t '.join([self.m1_rownames[3]] +[x.symbol for x in self.board[(self.grid_length*3):(self.grid_length*4)]]))
         board1 = self.board1.get_symbol_grid()
         board2 = self.board2.get_symbol_grid()
         board3 = self.board3.get_symbol_grid()
@@ -431,109 +400,6 @@ class EvolutionEnv(gym.Env):
                 name = list(legal_preme.keys())[0]
                 legal_actions_ui_list.append(str(id)+': '+name)
             logger.debug(f"\nLegal actions: {legal_actions_ui_list}")
-
-
-    def rules_move(self):
-        grid_board1 = self.board1.get_grid() 
-        grid_board2 = self.board2.get_grid() 
-        grid_board3 = self.board3.get_grid() 
-        #grid = grid.flatten()
-        if self.current_player.token.number == 1:
-            b = [token.number for token in grid_board1]
-        else:
-            b = [-token.number for token in grid_board1]
-
-    
-        # Check computer win moves
-        for i in range(0, self.num_squares):
-            if b[i] == 0 and testWinMove(b, 1, i):
-                logger.debug('Winning move')
-                return self.create_action_probs(i)
-        # Check player win moves
-        for i in range(0, self.num_squares):
-            if b[i] == 0 and testWinMove(b, -1, i):
-                logger.debug('Block move')
-                return self.create_action_probs(i)
-        # Check computer fork opportunities
-        for i in range(0, self.num_squares):
-            if b[i] == 0 and testForkMove(b, 1, i):
-                logger.debug('Create Fork')
-                return self.create_action_probs(i)
-        # Check player fork opportunities, incl. two forks
-        playerForks = 0
-        for i in range(0, self.num_squares):
-            if b[i] == 0 and testForkMove(b, -1, i):
-                playerForks += 1
-                tempMove = i
-        if playerForks == 1:
-            logger.debug('Block One Fork')
-            return self.create_action_probs(tempMove)
-        elif playerForks == 2:
-            for j in [1, 3, 5, 7]:
-                if b[j] == 0:
-                    logger.debug('Block 2 Forks')
-                    return self.create_action_probs(j)
-        # Play center
-        if b[4] == 0:
-            logger.debug('Play Centre')
-            return self.create_action_probs(4)
-        # Play a corner
-        for i in [0, 2, 6, 8]:
-            if b[i] == 0:
-                logger.debug('Play Corner')
-                return self.create_action_probs(i)
-        #Play a side
-        for i in [1, 3, 5, 7]:
-            if b[i] == 0:
-                logger.debug('Play Side')
-                return self.create_action_probs(i)
-
-
-    def create_action_probs(self, action):
-        action_probs = [0.01] * self.action_space.n
-        action_probs[action] = 0.92
-        return action_probs   
-
-
-def checkWin(b, m):
-    return ((b[0] == m and b[1] == m and b[2] == m) or  # H top
-            (b[3] == m and b[4] == m and b[5] == m) or  # H mid
-            (b[6] == m and b[7] == m and b[8] == m) or  # H bot
-            (b[0] == m and b[3] == m and b[6] == m) or  # V left
-            (b[1] == m and b[4] == m and b[7] == m) or  # V centre
-            (b[2] == m and b[5] == m and b[8] == m) or  # V right
-            (b[0] == m and b[4] == m and b[8] == m) or  # LR diag
-            (b[2] == m and b[4] == m and b[6] == m))  # RL diag
-
-
-def checkDraw(b):
-    return 0 not in b
-
-def getBoardCopy(b):
-    # Make a duplicate of the board. When testing moves we don't want to 
-    # change the actual board
-    dupeBoard = b.copy()
-    return dupeBoard
-
-def testWinMove(b, mark, x, y):
-    # b = the board
-    # mark = 0 or X
-    # i = the square to check if makes a win 
-    bCopy = getBoardCopy(b)
-    bCopy[x][y] = mark
-    return checkWin(bCopy, mark)
-
-'''    #Tenemos que arreglarlo para que considere que b es una matriz 
-def testForkMove(b, mark, x, y):
-    # Determines if a move opens up a fork
-    bCopy = getBoardCopy(b)
-    bCopy[x][y] = mark
-    winningMoves = 0
-    for j in range(0, 9):
-        if testWinMove(bCopy, mark, j) and bCopy[j] == 0:
-            winningMoves += 1
-    return winningMoves >= 2
-    '''
 
 def read_reward_board_csv(filepath,varx_name, vary_name,width,height):
     board_array = [line.split(',') for line in open(filepath)]

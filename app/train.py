@@ -79,14 +79,9 @@ def main(args):
 
   time.sleep(5) # allow time for the base model to be saved out when the environment is created
 
-  if args.reset or not os.path.exists(os.path.join(model_dir, 'best_model.zip')):
-    logger.info('\nLoading the base PPO agent to train...')
-    # model = PPO1.load(os.path.join(model_dir, 'base.zip'), env, **params)
-    model = PPO1(MlpPolicy, env, **params)
-    logger.info('\nModel generated succesfully...')
-  else:
-    logger.info('\nLoading the best_model.zip PPO agent to continue training...')
-    model = PPO1.load(os.path.join(model_dir, 'best_model.zip'), env, **params)
+  logger.info('\Creating model to train...')
+  model = PPO1(MlpPolicy, env, **params)
+  logger.info('\nModel generated succesfully...')
 
   #Callbacks
   logger.info('\nSetting up the selfplay evaluation environment opponents...')
@@ -100,19 +95,6 @@ def main(args):
     'render' : True,
     'verbose' : 0
   }
-
-  if args.rules:  
-    logger.info('\nSetting up the evaluation environment against the rules-based agent...')
-    # Evaluate against a 'rules' agent as well
-    eval_actual_callback = EvalCallback(
-      eval_env = selfplay_wrapper(base_env)(opponent_type = 'rules', verbose = args.verbose),
-      eval_freq=1,
-      n_eval_episodes=args.n_eval_episodes,
-      deterministic = args.best,
-      render = True,
-      verbose = 0
-    )
-    callback_args['callback_on_new_best'] = eval_actual_callback
     
   # Evaluate the agent against previous versions
   eval_callback = SelfPlayCallback(args.opponent_type, args.threshold, args.env_name, **callback_args)

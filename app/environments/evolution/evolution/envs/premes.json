@@ -95,8 +95,9 @@
             "var_name":"punto_equilibrio",
             "operator":"decrease",
             "value":1
-            }]
-        },
+            }],
+        "repetitive": false
+    },
     "problema_organico_on": {
         "id":8,
         "restrictions": [{
@@ -108,8 +109,9 @@
             "var_name":"problema_organico",
             "operator":"set",
             "value":1
-            }]
-        },
+            }],
+        "repetitive": false
+    },
     "problema_organico_off": {
         "id":9,
         "restrictions": [{

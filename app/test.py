@@ -52,8 +52,6 @@ def main(args):
   for i, agent in enumerate(args.agents):
     if agent == 'human':
       agent_obj = Agent('human')
-    elif agent == 'rules':
-      agent_obj = Agent('rules')
     elif agent == 'base':
       base_model = load_model(env, 'base.zip')
       agent_obj = Agent('base', base_model)   
@@ -81,7 +79,6 @@ def main(args):
 
       current_player = players[env.current_player_num]
       env.render()
-      logger.debug(f'\nCurrent player name: {current_player.name}')
 
       if args.recommend and current_player.name in ['human', 'rules']:
         # show recommendation from last loaded model
@@ -90,19 +87,8 @@ def main(args):
 
       if current_player.name == 'human':
         action = input('\nPlease choose an action: ')
-        try:
-          # for int actions
-          action = int(action)
-        except:
-          # for MulitDiscrete action input as list TODO
-          action = eval(action)
-      elif current_player.name == 'rules':
-        logger.debug(f'\n{current_player.name} model choices')
-        action = current_player.choose_action(env, choose_best_action = False, mask_invalid_actions = True)
-      else:
-        logger.debug(f'\n{current_player.name} model choices')
-        action = current_player.choose_action(env, choose_best_action = args.best, mask_invalid_actions = True)
-
+        # for int actions
+        action = int(action)
       obs, reward, done, _ = env.step(action)
 
       # add rewards to bag
@@ -121,8 +107,7 @@ def main(args):
 
     logger.info(f"Played {game + 1} games: {total_rewards}")
 
-    if args.write_results:
-      write_results(players, game, args.games, env.turns_taken)
+    write_results(players, game, args.games, env.turns_taken)
 
     for p in players:
       p.points = 0

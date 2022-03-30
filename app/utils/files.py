@@ -26,9 +26,7 @@ def write_results(players, game, games, episode_length):
     , 'games': games
     , 'episode_length': episode_length
     , 'p1': players[0].name
-    , 'p2': players[1].name
     , 'p1_points': players[0].points
-    , 'p2_points': np.sum([x.points for x in players[1:]])
     }
 
     if not os.path.exists(config.RESULTSPATH):
