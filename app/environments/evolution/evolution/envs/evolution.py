@@ -4,6 +4,9 @@ import gym
 import numpy as np
 import json   
 
+import os
+import time
+
 import config
 
 from stable_baselines import logger
@@ -116,13 +119,7 @@ class EvolutionEnv(gym.Env):
         self.manual = manual
         
         self.n_players = 1
-        
-        # observation_space describe el estado del juego: grids + premes
-        # self.grid_shape = (6, 6)
-        # print(self.grid_shape+(2,))
-        # self.observation_space = gym.spaces.Box(low=-1,high=1, shape=self.grid_shape+(2,))
-        # self.observation_space = gym.spaces.Box(0, 1, (self.total_positions * self.total_tiles + self.squares + 4 + self.n_players + self.action_space.n ,))
-        
+            
         # find way to automatize shapes
         self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3,12,6), dtype=np.int32)
         
@@ -130,18 +127,9 @@ class EvolutionEnv(gym.Env):
         
         # import premes json
         f=open('/app/environments/evolution/evolution/envs/premes.json', "r")
-        self.premes = json.loads(f.read())
-        self.premes_quantity = len(list(self.premes.keys()))
+        self.all_premes = json.loads(f.read())
+        self.premes_quantity = len(list(self.all_premes.keys()))
         self.action_space = gym.spaces.Discrete(self.premes_quantity) # number of premes
-
-        # define attribute that contains position coords
-        self.position = {"avance_solucion":0,
-                        "modelo_negocio":0,
-                        "total_fundadores":0,
-                        "horas_dedicacion":0,
-                        "problema_organico":0,
-                        "punto_equilibrio":0
-                        }
 
     @property
     def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
@@ -170,11 +158,12 @@ class EvolutionEnv(gym.Env):
         final_la_grid = np.block([[[la_grid_board1]],[[la_grid_board2]],[[la_grid_board3]]])
         # print(final_la_grid.shape)
         # print(final_la_grid)
-
-        print('## TOTAL OBSERVATION ##')
         total_observation = np.hstack((final_position_grid,final_la_grid))
+        if self.verbose:
+            print('## Total Observation ##')
+            print(total_observation)
         # print(total_observation.shape)
-        print(total_observation)
+        # print(total_observation)
 
         return total_observation
 
@@ -250,6 +239,8 @@ class EvolutionEnv(gym.Env):
     handles rewards received for the action taken
     '''
     def step(self, action):
+        # write executed action to actions_log.txt
+        self.actions_logs.append(action)
 
         reward = [0]
         # check effect of selected action
@@ -268,10 +259,10 @@ class EvolutionEnv(gym.Env):
 
 
         if action not in ids:  # ilegal action, ends game, punishment
-            print("Action not in list")
+            if self.verbose:
+                print("Action not in list")
             done = True
-            reward = [-1] # TODO dejar en -1 o cambiar
-            return self.observation, reward, done, {}
+            reward = [-100] # TODO dejar en -1 o cambiar
         else: # legal action proceed 
             # apply all effects related to chosen action preme
             action_preme_name = names[pos]
@@ -290,7 +281,8 @@ class EvolutionEnv(gym.Env):
             reward = [r]
         
             # update board
-            print('new position dict: ',self.position)
+            if self.verbose:
+                print('new position dict: ',self.position)
 
             #self.board[old_x*(old_y+1)] = Token('🔳', 0)
             #self.board[new_x*(new_y+1)] = self.players[0].token
@@ -310,10 +302,19 @@ class EvolutionEnv(gym.Env):
 
             # game over condition: no more premes for now
             if not self.premes:
-                print('## GAME OVER: NO MORE PREMES ##')
+                if self.verbose:
+                    print('## GAME OVER: NO MORE PREMES ##')
                 done = True
 
-            return self.observation, reward, done, {}
+        # if done write self.actions_log to file
+        if done:
+            # timestr = time.strftime("%Y%m%d-%H%M%S")
+            # f = open(timestr+"-actions_log.txt", "a")
+            f = open("actions_log.txt", "a")
+            f.write("\n"+str(self.actions_logs))
+            f.close()
+
+        return self.observation, reward, done, {}
 
     def reset(self):
         # paths de matrices de rewards etiquetadas por expertos
@@ -335,11 +336,21 @@ class EvolutionEnv(gym.Env):
                             ['no', 'si'],
                             ['no', 'pronto', 'si'],
                             rewards_csv_filepath=rewards_csv_filepath)
-        
         self.boards = [self.board1,self.board2,self.board3]
         self.players = [Player('Startup1', Token('🔴', 1))] #se inicializan los players con su toquen y numero de jugador
 
         # start player at certain default position in vevery board
+        # define attribute that contains position coords
+        self.position = {"avance_solucion":0,
+                        "modelo_negocio":0,
+                        "total_fundadores":0,
+                        "horas_dedicacion":0,
+                        "problema_organico":0,
+                        "punto_equilibrio":0
+        
+                        }
+        if self.verbose:                        
+            print(self.position)
         self.board1.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         self.board2.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         self.board3.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
@@ -349,7 +360,9 @@ class EvolutionEnv(gym.Env):
 
         self.current_player_num = 0  #player que esta en el turno
         self.turns_taken = 0  #la cantidad de turnos 
-        self.done = False #cuando se acabo el juego total 
+        self.done = False #cuando se acabo el juego total
+        self.actions_logs=[] # reset actions log
+        self.premes = self.all_premes.copy()
         logger.debug(f'\n\n---- NEW GAME ----')
         return self.observation
 
@@ -376,19 +389,18 @@ class EvolutionEnv(gym.Env):
                                     index=['no', 'pronto', 'si'],
                                     columns=['no', 'si'])
 
-        print("## REWARD BOARDS ##")
-        print(self.board1.get_rewards_grid(),'\n')                            
-        print(self.board2.get_rewards_grid(),'\n')                            
-        print(self.board3.get_rewards_grid(),'\n')                            
-        print("## GAME BOARDS ##")
-        print("X: avance_solucion, Y: modelo_negocio")
-        print(tabulate(board1_df, headers='keys', tablefmt='grid'))
-        print("X: total_fundadores, Y: horas_dedicacion")
-        print(tabulate(board2_df, headers='keys', tablefmt='grid'))
-        print("X: problema_organico, Y: punto_equilibrio")
-        print(tabulate(board3_df, headers='keys', tablefmt='grid'))
-        # logger.debug('\t '.join([self.m1_rownames[4]] +[x.symbol for x in self.board[(self.grid_length*4):(self.grid_length*5)]]))
-        # logger.debug('\t '.join([self.m1_rownames[5]] +[x.symbol for x in self.board[(self.grid_length*5):(self.grid_length*6)]]))
+        if self.verbose:
+            print("## Reward Boards ##")
+            print(self.board1.get_rewards_grid(),'\n')                            
+            print(self.board2.get_rewards_grid(),'\n')                            
+            print(self.board3.get_rewards_grid(),'\n')                            
+        # print("## Game Boards ##")
+        # print("X: avance_solucion, Y: modelo_negocio")
+        # print(tabulate(board1_df, headers='keys', tablefmt='grid'))
+        # print("X: total_fundadores, Y: horas_dedicacion")
+        # print(tabulate(board2_df, headers='keys', tablefmt='grid'))
+        # print("X: problema_organico, Y: punto_equilibrio")
+        # print(tabulate(board3_df, headers='keys', tablefmt='grid'))
 
         if self.verbose:
             logger.debug(f'\nObservation: \n{self.observation}')
