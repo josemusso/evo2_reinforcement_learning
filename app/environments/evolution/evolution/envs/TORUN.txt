@@ -1,5 +1,0 @@
-
-sudo chmod 666 /var/run/docker.sock
-docker-compose up -d
-docker-compose exec app python3 test.py -d -g 1 -a human -e evolution
-docker-compose exec app python3 train.py -v -r -e evolution
