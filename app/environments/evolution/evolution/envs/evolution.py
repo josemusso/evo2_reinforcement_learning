@@ -13,122 +13,104 @@ from stable_baselines import logger
 import pandas as pd
 from tabulate import tabulate
 
-from pyglet.gl import *
-from pyglet.window import mouse
-from pyglet.window import key
-from pyglet import shapes
+os.environ["DISPLAY"] = ":0"
+
+import pygame, sys
+from pygame.locals import *
+import time
+import pygame
+
+def grid(window, size, rows, cols):
+
+    offset = size #offset grilla
+
+    total_y = size * rows #tamano total eje y
+    total_x = size * cols #tamano total eje x
+    # distanceBtwRows = size // rows  esto es size ahora
+
+    x = offset
+    y = offset
+
+    print('dibujando lineas horizontales')
+    cont_cols = 0
+    cont_rows = 0
+    for l in range(rows+1):
+        print('x1', 'y1',x, y)
+        print('x2', 'y2',total_x, y)
 
 
-os.system('echo "export DISPLAY=:0"  >> /etc/profile')
+        pygame.draw.line(window, (0,0,0), (x,y), (offset + total_x, y))
+        y += size
+        cont_cols+=1
 
-#from render import draw_grid, draw_player, draw_axis_names
+    x = offset
+    y = offset
 
+    print('dibujando lineas verticales')
 
-def draw_grid(group, batch, opt1, opt2):
+    for z in range(cols+1):
 
-    #dibujar lineas verticales dearriba hacia abajo
+        print('x1', 'y1',x, y)
+        print('x2', 'y2',x, total_y)
 
-    y_1 = offset
-    y_2 = offset + options_var_2*square_size
-    width = 2
- 
-    # color = green
-    color_list = ([0.3, 0.3, 0.3] * 2)
-    #line = shapes.Line(1, 1, 2, 2, width, color=color, batch=batch) 
-
-    for vertical in range(options_var_1+1):
-        #x1 y x2 es igual, pero va cammbiando
-        x_1 = offset + square_size*vertical
-        x_2 = offset + square_size*vertical
-        #batch.add(shapes.Line(x_1, y_1, x_2, y_2, width, color=color, batch=batch)) 
-        batch.add(2, pyglet.gl.GL_LINES, group,
-              ('v2i/static', (x_1, y_1, x_2, y_2)), ('c3f/static', color_list))
-
-    x_1 = offset
-    x_2 = offset + options_var_1*square_size
-
-    for horizontal in range(options_var_2+1): 
-        y_1 = offset + square_size*horizontal
-        y_2 = offset + square_size*horizontal
-        #line2 = shapes.Line(x_1, y_1, x_2, y_2, width, color=color, batch=batch) 
-        batch.add(2, pyglet.gl.GL_LINES, group,
-              ('v2i/static', (x_1, y_1, x_2, y_2)), ('c3f/static', color_list))
-
-def draw_player(group,batch, var_1, var_2):
+        pygame.draw.line(window, (0,0,0), (x,y), (x, offset + total_y))
+        x += size
+        cont_rows+=1
 
 
-    circle_x = offset + var_1*square_size + (square_size/2)
-    circle_y = offset + var_2*square_size + (square_size/2)
-    
-    # size of circle
-    # color = green
-    size_circle = (square_size/2) - 30
-    
-    # creating a circle
-    circle1 = shapes.Circle(circle_x, circle_y, size_circle, color =(0, 0, 0), batch = batch, group=group)
-    
-    # changing opacity of the circle1
-    # opacity is visibility (0 = invisible, 255 means visible)
-    circle1.opacity = 250
-    circle1.circle_x = offset + 2*square_size + (square_size/2)
 
-    circle1.draw()
+def circle(window, var_1, var_2):
 
+    global size
 
-def draw_axis_names(group,batch, var_name_1, var_name_2):
+    circle_x = size + var_2*size + (size/2)
+    circle_y = size + var_1*size + (size/2)
+    pygame.draw.circle(window, (0, 255, 0),
+                   [circle_x, circle_y], 10, 2)
 
-    label = pyglet.text.Label(var_name_1,
-                          font_name='Times New Roman',
-                          font_size=12,
-                          x=window_width//2, y=window_height-100,
-                          anchor_x='center', anchor_y='center',
-                          color=(0, 0, 0, 0), batch=batch, group=group)
+def label (window, rows_name, cols_name):
+    global size
+    myfont = pygame.font.SysFont("monospace", 15)
 
-    label1 = pyglet.text.Label(var_name_2,
-                          font_name='Times New Roman',
-                          font_size=12,
-                          x=window_width-100, y=window_height//2,
-                          anchor_x='center', anchor_y='center',
-                          color=(255, 255, 255, 255), batch=batch, group=group)
+    # render text
+    label = myfont.render(cols_name, 1, (0,0,0))
+    label2 = myfont.render(rows_name, 2, (0,0,0))
+    window.blit(label, (size, size/4))
+    window.blit(label2, (0, size))
 
-    label.draw()
+def options(window, options_1, options_2):
 
-#render classes, mover despues
-class MainWindow(pyglet.window.Window):
-    def __init__(self, board, *args, **kwargs):
-        super().__init__(*args, **kwargs) #inicializa una clase superior window para acceder a sus metodos
-        #self.set_minimum_size(400,300)
-        self.board = board; 
+    global size
+    myfont =  pygame.font.SysFont("monospace", 10)
+    x = size
+    y = size/2
+    for i, value in enumerate(options_2):
+        label = myfont.render(value, 1, (0,0,0))
+        window.blit(label, (x*(i+1) + size/2, y))
 
-    def on_draw(self):
-        var_1 = self.board.get_var_1
-        var_2 = self.board.get_var_2
+    x = size/2
+    y = size
 
-        options_var_1 = self.board.get_options_var_1
-        options_var_2 = self.board.get_options_var_2
-        offset = 100
-        square_size = 100
-        window_width = square_size*options_var_1 + 2*offset
-        window_height = square_size*options_var_2 + 2*offset
-        #screen = pyglet.canvas.get_display().get_default_screen()
-        #window_width = int(min(screen.width, screen.height) * 2 / 3)
+    for i, value in enumerate(options_1):
+        label = myfont.render(value, 1, (0,0,0))
+        window.blit(label, (x, y*(i+1) + size/2))
 
-        pyglet.gl.glClearColor(255, 255, 255, 255)
-        window.clear()
+def draw_grid(window, size, row, cols, labels, opt1, opt2, x, y):
 
-        #pyglet.gl.glLineWidth(3)
-        batch = pyglet.graphics.Batch()
-        grid = pyglet.graphics.OrderedGroup(0)
-        labels = pyglet.graphics.OrderedGroup(1)
-        player = pyglet.graphics.OrderedGroup(2)
+    window.fill((255,255,255))
+    grid(window, size, rows, cols)
+    circle(window, x, y)
+    label(window,labels[0], labels[1])
+    options(window, opt1, opt2)
+    pygame.display.update()
 
-        # draw the grid and labels
+'''
+def redraw(window, x, y):
 
-        draw_grid(grid,batch, options_var_1, options_var_2)
-        draw_axis_names(labels, batch,var_1, var_2)
-        draw_player(player, batch, self.board.get_player_x, self.board.get_player_y)
+    circle(window, x, y)
+    pygame.display.update()
 
-        batch.draw()
+'''
 
 class Player():
     def __init__(self, id, token):
@@ -227,32 +209,23 @@ class Board():
             self.player_token = token
 
         def get_options_var_1(self):
-            return len(self.vals_x)
+            return self.vals_x
 
         def get_options_var_2(self):
-            return len(self.vals_y)
+            return self.vals_y
 
         def get_var_1(self):
-            return self.var_1
+            return self.var_x
 
         def get_var_2(self):
-            return self.var_2
+            return self.var_y
         
-
-
-
-
 
 class EvolutionEnv(gym.Env):
 
 
     def __init__(self, verbose = False, manual = False):
-        #cambiar para mas de un tablero, se pondran fija mientras
-        #window_width = square_size*self.options_var_1 + 2*offset
-        #window_height = square_size*options_var_2 + 2*offset
-        window_width = 1000
-        window_width = 1000
-        self.window = MainWindow(window_width, window_height, "Darwin")
+
 
         super(EvolutionEnv, self).__init__()
         self.name = 'evolution'
@@ -266,10 +239,11 @@ class EvolutionEnv(gym.Env):
         self.verbose = verbose
         
         # import premes json
-        f=open('/app/environments/evolution/evolution/envs/premes.json', "r")
+        f=open('./environments/evolution/evolution/envs/premes.json', "r")
         self.all_premes = json.loads(f.read())
         self.premes_quantity = len(list(self.all_premes.keys()))
         self.action_space = gym.spaces.Discrete(self.premes_quantity) # number of premes
+
 
     @property
     def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
@@ -457,8 +431,10 @@ class EvolutionEnv(gym.Env):
         return self.observation, reward, done, {}
 
     def reset(self):
+
+
         # paths de matrices de rewards etiquetadas por expertos
-        rewards_csv_filepath='/app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - rewards de exploracion 20.csv'
+        rewards_csv_filepath='./environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - rewards de exploracion 20.csv'
         
         # inicializar boards
         
@@ -495,6 +471,31 @@ class EvolutionEnv(gym.Env):
         self.board1.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         self.board2.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         self.board3.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
+        
+        
+        # Start grid 
+
+        global rows, cols, size
+        size = 100
+        rows = len(self.board1.get_options_var_1())
+        cols = len(self.board1.get_options_var_2())
+
+        print(rows)
+        print(cols)
+
+        window_width = cols*size + 2*size
+        window_height = rows*size + 2*size 
+        pygame.init()
+
+        self.window = pygame.display.set_mode((window_width, window_height))
+        labels = [self.board1.get_var_1(), self.board1.get_var_2()]
+        opt1 = self.board1.get_options_var_1()
+        opt2 = self.board1.get_options_var_2()
+        draw_grid(self.window, size, rows, cols, labels, opt1, opt2, 0,0)
+        play = True
+        pygame.event.get()
+
+
 
         # set starting position rewards to 0
         r, done = self.get_new_position_reward()
@@ -510,6 +511,7 @@ class EvolutionEnv(gym.Env):
 
 
     def render(self, mode='human', close=False, verbose = False):
+        global cols, rows, size
         logger.debug('')
         if close:
             return
@@ -530,14 +532,13 @@ class EvolutionEnv(gym.Env):
         board3_df = pd.DataFrame(data =board3,
                                     index=['no', 'pronto', 'si'],
                                     columns=['no', 'si'])
+        #Render on window
+        labels = [self.board1.get_var_1(), self.board1.get_var_2()]
+        opt1 = self.board1.get_options_var_1()
+        opt2 = self.board1.get_options_var_2()
 
-        self.window.on_draw()
-        self.window.clear()
-        #label.draw()
-
-        #window2 = MainWindow(300, 200, "hola")
-
-        pyglet.app.run()
+        draw_grid(self.window, size, rows, cols, labels, opt1, opt2, self.board1.get_player_x(),self.board1.get_player_y())
+        pygame.event.get()
 
         if self.verbose:
             print("## Reward Boards ##")
