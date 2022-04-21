@@ -20,6 +20,8 @@ from pygame.locals import *
 import time
 import pygame
 
+import random
+
 def grid(window, size, rows, cols):
 
     offset = size #offset grilla
@@ -321,6 +323,9 @@ class EvolutionEnv(gym.Env):
                     legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]-preme_effect["value"])
                 if preme_effect["operator"] == "set":
                    legal_positions[preme_effect["var_name"]].append(preme_effect["value"])
+                if preme_effect["operator"] == "random":
+                    legal_positions[preme_effect["var_name"]].append(random.randint(preme_effect["start"], preme_effect["stop"]))
+
         # keep only set of positions
         legal_positions = {k:list(set(v)) for k, v in legal_positions.items()}
         return legal_positions
