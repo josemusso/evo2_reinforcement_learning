@@ -61,17 +61,16 @@ def grid(window, size, rows, cols):
 
 
 
-def circle(window, var_1, var_2):
+def circle(window, size, var_1, var_2):
 
-    global size
 
     circle_x = size + var_2*size + (size/2)
     circle_y = size + var_1*size + (size/2)
     pygame.draw.circle(window, (0, 255, 0),
                    [circle_x, circle_y], 10, 2)
 
-def label (window, rows_name, cols_name):
-    global size
+def label (window, size, rows_name, cols_name):
+
     myfont = pygame.font.SysFont("monospace", 15)
 
     # render text
@@ -80,9 +79,9 @@ def label (window, rows_name, cols_name):
     window.blit(label, (size, size/4))
     window.blit(label2, (0, size))
 
-def options(window, options_1, options_2):
+def options(window, size, options_1, options_2):
 
-    global size
+
     myfont =  pygame.font.SysFont("monospace", 10)
     x = size
     y = size/2
@@ -101,10 +100,35 @@ def draw_grid(window, size, row, cols, labels, opt1, opt2, x, y):
 
     window.fill((255,255,255))
     grid(window, size, rows, cols)
-    circle(window, x, y)
-    label(window,labels[0], labels[1])
-    options(window, opt1, opt2)
+    circle(window, size, x, y)
+    label(window, size, labels[0], labels[1])
+    options(window, size, opt1, opt2)
     pygame.display.update()
+
+
+def game(running,size, rows, cols, x, y):
+    window_width = cols*size + 2*size
+    window_height = rows*size + 2*size 
+    pygame.init()
+
+    self.window = pygame.display.set_mode((window_width, window_height))
+    labels = [self.board1.get_var_1(), self.board1.get_var_2()]
+    opt1 = self.board1.get_options_var_1()
+    opt2 = self.board1.get_options_var_2()
+    draw_grid(self.window, size, rows, cols, labels, opt1, opt2, 0,0)
+
+    while running.value:
+    
+        # Check for event if user has pushed
+        # any event in queue
+        for event in pygame.event.get():
+        
+            # if event is of type quit then set
+            # running bool to false
+            if event.type == pygame.QUIT:
+                print('finalizado')
+                running.value = False
+        draw_grid(self.window, size, rows, cols, labels, opt1, opt2, x.value,y.value)
 
 '''
 def redraw(window, x, y):
@@ -485,20 +509,20 @@ class EvolutionEnv(gym.Env):
         rows = len(self.board1.get_options_var_1())
         cols = len(self.board1.get_options_var_2())
 
+        x = multiprocessing.Value('i')
+        y = multiprocessing.Value('i')
+        running = multiprocessing.Value('i')
+
+        x.value = 0
+        y.value = 0
+        running.value = 1
+
         print(rows)
         print(cols)
 
-        window_width = cols*size + 2*size
-        window_height = rows*size + 2*size 
-        pygame.init()
+        game = multiprocessing.Process(target=game, args(running,size, rows, cols, x, y))
 
-        self.window = pygame.display.set_mode((window_width, window_height))
-        labels = [self.board1.get_var_1(), self.board1.get_var_2()]
-        opt1 = self.board1.get_options_var_1()
-        opt2 = self.board1.get_options_var_2()
-        draw_grid(self.window, size, rows, cols, labels, opt1, opt2, 0,0)
-        play = True
-        pygame.event.get()
+
 
 
 
@@ -522,6 +546,7 @@ class EvolutionEnv(gym.Env):
             return
         if self.done:
             logger.debug(f'GAME OVER')
+            running.value = 0 #se finaliza render
         else:
             logger.debug(f"It is Player {self.current_player.id}'s turn to move")
         board1 = self.board1.get_symbol_grid()
@@ -538,12 +563,16 @@ class EvolutionEnv(gym.Env):
                                     index=['no', 'pronto', 'si'],
                                     columns=['no', 'si'])
         #Render on window
-        labels = [self.board1.get_var_1(), self.board1.get_var_2()]
-        opt1 = self.board1.get_options_var_1()
-        opt2 = self.board1.get_options_var_2()
 
-        draw_grid(self.window, size, rows, cols, labels, opt1, opt2, self.board1.get_player_x(),self.board1.get_player_y())
-        pygame.event.get()
+        #labels = [self.board1.get_var_1(), self.board1.get_var_2()]
+        #opt1 = self.board1.get_options_var_1()
+        #opt2 = self.board1.get_options_var_2()
+
+        x.value = self.board1.get_player_x()
+        y.value = self.board1.get_player_y()
+
+        #draw_grid(self.window, size, rows, cols, labels, opt1, opt2, self.board1.get_player_x(),self.board1.get_player_y())
+        #pygame.event.get()
 
         if self.verbose:
             print("## Reward Boards ##")
