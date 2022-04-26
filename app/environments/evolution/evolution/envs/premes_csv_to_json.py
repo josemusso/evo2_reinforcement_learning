@@ -8,6 +8,8 @@ import ast
 def premes_csv_to_json(filepath):
 
     df = pd.read_csv(filepath,header=1, encoding='utf-8')
+
+    # dejar solo las que tienen el flag en_uso
     df = df[df['en_uso']==1]
 
     # fill nans produced by merging cells with previous values
