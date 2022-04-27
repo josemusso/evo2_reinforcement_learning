@@ -126,7 +126,7 @@ class EvolutionEnv(gym.Env):
         self.verbose = verbose
         
         # import premes json
-        f=open('./app/environments/evolution/evolution/envs/premes.json', "r")
+        f=open('./environments/evolution/evolution/envs/premes.json', "r")
         self.all_premes = json.loads(f.read())
         self.premes_quantity = len(list(self.all_premes.keys()))
         self.action_space = gym.spaces.Discrete(self.premes_quantity) # number of premes
@@ -321,7 +321,7 @@ class EvolutionEnv(gym.Env):
 
     def reset(self):
         # paths de matrices de rewards etiquetadas por expertos
-        rewards_csv_filepath='./app/environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - rewards de exploracion 20.csv'
+        rewards_csv_filepath='./environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - rewards de exploracion 20.csv'
         
         # inicializar boards
         self.board1 = Board(Token('⬜', 0), 1, 
