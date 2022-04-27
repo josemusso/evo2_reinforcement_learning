@@ -17,6 +17,7 @@ from pygame.locals import *
 import time
 import pygame
 import random
+import multiprocessing
 
 os.environ["DISPLAY"] = ":0"
 
