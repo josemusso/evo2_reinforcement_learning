@@ -163,11 +163,8 @@ class EvolutionEnv(gym.Env):
         self.premes_quantity = len(list(self.all_premes.keys()))
         self.action_space = gym.spaces.Discrete(self.premes_quantity) # number of premes
 
-<<<<<<< HEAD
-=======
         # if self.verbose:
             # inicializar tablero
->>>>>>> JM
 
     @property
     def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
