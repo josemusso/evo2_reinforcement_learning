@@ -413,7 +413,7 @@ class EvolutionEnv(gym.Env):
         print(rows)
         print(cols)
 
-        game = multiprocessing.Process(target=game, args(running,size, rows, cols, x, y))
+        game = multiprocessing.Process(target=game, args=(running,size, rows, cols, x, y))
 
 
 
