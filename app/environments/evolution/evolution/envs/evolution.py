@@ -163,6 +163,11 @@ class EvolutionEnv(gym.Env):
         self.premes_quantity = len(list(self.all_premes.keys()))
         self.action_space = gym.spaces.Discrete(self.premes_quantity) # number of premes
 
+<<<<<<< HEAD
+=======
+        # if self.verbose:
+            # inicializar tablero
+>>>>>>> JM
 
     @property
     def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
@@ -471,7 +476,10 @@ class EvolutionEnv(gym.Env):
             print("## Reward Boards ##")
             print(self.board1.get_rewards_grid(),'\n')                            
             print(self.board2.get_rewards_grid(),'\n')                            
-            print(self.board3.get_rewards_grid(),'\n')                            
+            print(self.board3.get_rewards_grid(),'\n')   
+
+            # actualizar tablero
+
         # print("## Game Boards ##")
         # print("X: avance_solucion, Y: modelo_negocio")
         # print(tabulate(board1_df, headers='keys', tablefmt='grid'))
