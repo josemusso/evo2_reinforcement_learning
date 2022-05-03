@@ -504,7 +504,10 @@ class EvolutionEnv(gym.Env):
 
         boards = [resized_1,resized_2,resized_3]
 
-        # draw lines
+        # draw lines on every board
+        # TODO add axis labels
+        # TODO differentiate one grid from another
+        # TODO differentiate usable squares vs padding
         for board in boards:
             for i in range(0,200,20):
                 # horizontal
@@ -515,7 +518,9 @@ class EvolutionEnv(gym.Env):
         # concatenate
         concat_boards = np.hstack((resized_1,resized_2,resized_3))
 
+        # inverse to show black square over white grid
         inverse = (255-concat_boards)
+
 
         # cv2.waitKey(10) & 0XFF
         # cv2.waitKey(0)
@@ -523,7 +528,8 @@ class EvolutionEnv(gym.Env):
         # keep window open and wait to update
         cv2.imshow('grid',inverse)
         cv2.setWindowProperty('grid', cv2.WND_PROP_TOPMOST, 1)
-        k=cv2.waitKey(500) & 0XFF
+        # if test waitKey(100)
+        k=cv2.waitKey(1) & 0XFF
             # if k== 27 :
             #     break
 
