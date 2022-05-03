@@ -3,6 +3,7 @@
 import gym
 import numpy as np
 import json   
+import cv2
 
 import os
 import time
@@ -19,9 +20,10 @@ import pygame
 import random
 import multiprocessing
 
-os.environ["DISPLAY"] = ":0"
+# enable if render with pygame
+# os.environ["DISPLAY"] = ":0"
 
-from render import grid, circle, label, options, draw_grid, game
+# from render import grid, circle, label, options, draw_grid, game
 
 '''
 def redraw(window, x, y):
@@ -149,6 +151,7 @@ class EvolutionEnv(gym.Env):
         super(EvolutionEnv, self).__init__()
         self.name = 'evolution'
         self.manual = manual
+        self.render_lib = 'opencv'
         
         self.n_players = 1
             
@@ -168,6 +171,7 @@ class EvolutionEnv(gym.Env):
 
     @property
     def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
+        # TODO refactor with FOR to visit all boards one by one
         position_grid_board1 = self.board1.get_position_grid()
         position_grid_board2 = self.board2.get_position_grid()
         position_grid_board3 = self.board3.get_position_grid()
@@ -224,6 +228,7 @@ class EvolutionEnv(gym.Env):
     
     @property
     def legal_positions(self):
+        # TODO add new boards vars
         # position = [board1_x,board1_y,board2_x,board2_y,board3_x,board3_y]
         legal_positions = {"avance_solucion":[],
                             "modelo_negocio":[],
@@ -322,8 +327,7 @@ class EvolutionEnv(gym.Env):
             if self.verbose:
                 print('new position dict: ',self.position)
 
-            #self.board[old_x*(old_y+1)] = Token('🔳', 0)
-            #self.board[new_x*(new_y+1)] = self.players[0].token
+            # TODO refactor to set player position in all boards
             self.board1.set_player_position(self.position["avance_solucion"],
                                             self.position["modelo_negocio"], 
                                             self.players[0].token)
@@ -360,8 +364,8 @@ class EvolutionEnv(gym.Env):
         # paths de matrices de rewards etiquetadas por expertos
         rewards_csv_filepath='./environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - rewards de exploracion 20.csv'
         
+        # TODO initialize all 10 boards
         # inicializar boards
-        
         self.board1 = Board(Token('⬜', 0), 1, 
                             'avance_solucion', 'modelo_negocio', 
                             ['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'],
@@ -380,6 +384,7 @@ class EvolutionEnv(gym.Env):
         self.boards = [self.board1,self.board2,self.board3]
         self.players = [Player('Startup1', Token('🔴', 1))] #se inicializan los players con su toquen y numero de jugador
 
+        # TODO set starting position for every variable of the 10 boards
         # start player at certain default position in vevery board
         # define attribute that contains position coords
         self.position = {"avance_solucion":0,
@@ -397,34 +402,29 @@ class EvolutionEnv(gym.Env):
         self.board3.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
         
         
-        # Start grid 
+        if self.render_lib == 'pygame':
+            # Start grid 
+            global rows, cols, size, x, y, running
+            size = 100
+            rows = len(self.board1.get_options_var_1())
+            cols = len(self.board1.get_options_var_2())
 
-        global rows, cols, size
-        size = 100
-        rows = len(self.board1.get_options_var_1())
-        cols = len(self.board1.get_options_var_2())
+            x = multiprocessing.Value('i')
+            y = multiprocessing.Value('i')
+            running = multiprocessing.Value('i')
 
-        x = multiprocessing.Value('i')
-        y = multiprocessing.Value('i')
-        running = multiprocessing.Value('i')
+            x.value = 0
+            y.value = 0
+            running.value = 1
 
-        x.value = 0
-        y.value = 0
-        running.value = 1
+            print(rows)
+            print(cols)
 
-        print(rows)
-        print(cols)
-
-        game = multiprocessing.Process(target=game, args=(running,size, rows, cols, x, y))
-
-
-
-
+            game = multiprocessing.Process(target=game, args=(running,size, rows, cols, x, y))
 
         # set starting position rewards to 0
         r, done = self.get_new_position_reward()
 
-        
         self.current_player_num = 0  #player que esta en el turno
         self.turns_taken = 0  #la cantidad de turnos 
         self.done = False #cuando se acabo el juego total
@@ -441,9 +441,12 @@ class EvolutionEnv(gym.Env):
             return
         if self.done:
             logger.debug(f'GAME OVER')
-            running.value = 0 #se finaliza render
+            if self.render_lib == 'pygame':
+                running.value = 0 #se finaliza render
         else:
             logger.debug(f"It is Player {self.current_player.id}'s turn to move")
+
+        # TODO refactor to render all boards independentrly of number of boards
         board1 = self.board1.get_symbol_grid()
         board2 = self.board2.get_symbol_grid()
         board3 = self.board3.get_symbol_grid()
@@ -458,13 +461,13 @@ class EvolutionEnv(gym.Env):
                                     index=['no', 'pronto', 'si'],
                                     columns=['no', 'si'])
         #Render on window
-
         #labels = [self.board1.get_var_1(), self.board1.get_var_2()]
         #opt1 = self.board1.get_options_var_1()
         #opt2 = self.board1.get_options_var_2()
 
-        x.value = self.board1.get_player_x()
-        y.value = self.board1.get_player_y()
+        if self.render_lib == 'pygame':
+            x.value = self.board1.get_player_x()
+            y.value = self.board1.get_player_y()
 
         #draw_grid(self.window, size, rows, cols, labels, opt1, opt2, self.board1.get_player_x(),self.board1.get_player_y())
         #pygame.event.get()
@@ -484,6 +487,45 @@ class EvolutionEnv(gym.Env):
         # print(tabulate(board2_df, headers='keys', tablefmt='grid'))
         # print("X: problema_organico, Y: punto_equilibrio")
         # print(tabulate(board3_df, headers='keys', tablefmt='grid'))
+
+        # OPENCV render approach
+        # get three boards
+        pos_grid_1 = self.board1.get_position_grid()*255
+        pos_grid_1 = np.lib.pad(pos_grid_1, ((0,10-pos_grid_1.shape[0]),(0,10-pos_grid_1.shape[1])), 'constant', constant_values=(0))
+        pos_grid_2 = self.board2.get_position_grid()*255
+        pos_grid_2 = np.lib.pad(pos_grid_2, ((0,10-pos_grid_2.shape[0]),(0,10-pos_grid_2.shape[1])), 'constant', constant_values=(0))
+        pos_grid_3 = self.board3.get_position_grid()*255
+        pos_grid_3 = np.lib.pad(pos_grid_3, ((0,10-pos_grid_3.shape[0]),(0,10-pos_grid_3.shape[1])), 'constant', constant_values=(0))
+        
+        # resize and inverse to show position in black
+        resized_1 = cv2.resize(pos_grid_1, (200,200), interpolation = cv2.INTER_AREA)
+        resized_2 = cv2.resize(pos_grid_2, (200,200), interpolation = cv2.INTER_AREA)
+        resized_3 = cv2.resize(pos_grid_3, (200,200), interpolation = cv2.INTER_AREA)
+
+        boards = [resized_1,resized_2,resized_3]
+
+        # draw lines
+        for board in boards:
+            for i in range(0,200,20):
+                # horizontal
+                cv2.line(board, (0, i), (200, i), (255, 255, 255), thickness=1)
+                # vertical
+                cv2.line(board, (i, 0), (i, 200), (255, 255, 255), thickness=1)
+
+        # concatenate
+        concat_boards = np.hstack((resized_1,resized_2,resized_3))
+
+        inverse = (255-concat_boards)
+
+        # cv2.waitKey(10) & 0XFF
+        # cv2.waitKey(0)
+        # cv2.destroyWindow('grid')
+        # keep window open and wait to update
+        cv2.imshow('grid',inverse)
+        cv2.setWindowProperty('grid', cv2.WND_PROP_TOPMOST, 1)
+        k=cv2.waitKey(500) & 0XFF
+            # if k== 27 :
+            #     break
 
         if self.verbose:
             logger.debug(f'\nObservation: \n{self.observation}')
