@@ -1,208 +1,201 @@
 # Adapted from https://mblogscode.com/2016/06/03/python-naughts-crossestic-tac-toe-coding-unbeatable-ai/
 
+from matplotlib.pyplot import xlabel
 import gym
 import numpy as np
-import json   
+import json
 import cv2
 
 import os
 import time
 
-import config
-
 from stable_baselines import logger
 import pandas as pd
 from tabulate import tabulate
-import pygame, sys
+import pygame
+import sys
 from pygame.locals import *
 import time
 import pygame
 import random
 import multiprocessing
 
-# enable if render with pygame
-# os.environ["DISPLAY"] = ":0"
-
-# from render import grid, circle, label, options, draw_grid, game
-
-'''
-def redraw(window, x, y):
-
-    circle(window, x, y)
-    pygame.display.update()
-
-'''
-
 class Player():
     def __init__(self, id, token):
         self.id = id
         self.token = token
-        
+
 
 class Token():
     def __init__(self, symbol, number):
-        self.number = number  #vacio number 0, solo para player
+        self.number = number #vacio number 0, solo para player
         self.symbol = symbol
 
+
 class Board():
-        def __init__(self, empty_token, number, var_x, var_y, vals_x, vals_y, rewards_csv_filepath):
+    def __init__(self, empty_token, number, var_x, var_y, vals_x, vals_y, rewards_csv_filepath):
 
-            #vals_x, vals_y -> valores que pueden tomar x e y
-            #var_x, var_y -> variables x e y del tablero
-            self.empty_token = empty_token  #token vacio que se le pasa por parametro cuando se inicializa
-            self.number = number
-            self.var_x = var_x
-            self.var_y = var_y
-            self.vals_x = vals_x
-            self.vals_y = vals_y
-            self.player_x = 0
-            self.player_y = 0
-            self.rewards_grid = read_reward_board_csv(rewards_csv_filepath,
-                                                            varx_name=self.var_x, 
-                                                            vary_name=self.var_y,
-                                                            width=len(vals_x),
-                                                            height=len(vals_y))
+        self.empty_token = empty_token #token vacio que se le pasa por parametro cuando se inicializa
+        self.number = number
+        self.var_x = var_x #var_x -> variables x del tablero
+        self.var_y = var_y #var_y -> variables y del tablero
+        self.vals_x = vals_x #vals_x-> valores que pueden tomar x
+        self.vals_y = vals_y #vals_y-> valores que pueden tomar y
+        self.player_x = 0
+        self.player_y = 0
+        self.rewards_grid = read_reward_board_csv(rewards_csv_filepath,
+                                                  varx_name=self.var_x,
+                                                  vary_name=self.var_y,
+                                                  width=len(vals_x),
+                                                  height=len(vals_y))
 
-        def get_grid(self):
-            grid_shape = (len(self.vals_y),len(self.vals_x))
-            #grid = np.ones(grid_shape) * self.empty_token
+    def get_grid(self):
+        grid_shape = (len(self.vals_y), len(self.vals_x))
 
-            grid = [self.empty_token] * (len(self.vals_y)*len(self.vals_x)) #se inicializa board con tokens vacios
-            grid = np.array(grid).reshape(grid_shape) #board de posicion actual 
-            #if(self.player_x is not None):
-            grid[self.player_y,self.player_x] = self.player_token
-
-            return grid
-
-        def get_symbol_grid(self):
-            grid_shape = (len(self.vals_y),len(self.vals_x))
-            #grid = np.ones(grid_shape) * self.empty_token
-
-            grid = [self.empty_token.symbol] * (len(self.vals_y)*len(self.vals_x)) #se inicializa board con tokens vacios
-            grid = np.array(grid).reshape(grid_shape) #board de posicion actual 
-            #if(self.player_x is not None):
-            
-            grid[self.player_y,self.player_x] = self.player_token.symbol
-
-            return grid
-
-        def get_position_grid(self):
-            grid_shape = (len(self.vals_y),len(self.vals_x))
-            position_grid = np.zeros(grid_shape) #se inicializa board con tokens vacios
+        grid = [self.empty_token] * (len(self.vals_y)*len(self.vals_x)) #se inicializa board con tokens vacios
+        grid = np.array(grid).reshape(grid_shape)  #board de posicion actual 
             #if(self.player_x is not None):
 
-            position_grid[self.player_y,self.player_x] = self.player_token.number
-          
-            return position_grid
+        grid[self.player_y, self.player_x] = self.player_token
 
-        def get_la_grid(self, legal_positions):
-            grid_shape = (len(self.vals_y),len(self.vals_x))
-            la_grid = np.zeros(grid_shape)  #board de legal actions, a que posiciones te puedes mover 
-            # update with legal positions
-            for x in legal_positions[self.var_x]:
-                y = self.player_y
+        return grid
 
-                la_grid[y,x] = 1
-            for y in legal_positions[self.var_y]:
-                x = self.player_x
+    def get_symbol_grid(self):
+        grid_shape = (len(self.vals_y), len(self.vals_x))
+ 
+        grid = [self.empty_token.symbol] * (len(self.vals_y)*len(self.vals_x)) #se inicializa board con tokens vacios
+        grid = np.array(grid).reshape(grid_shape) #board de posicion actual 
+            #if(self.player_x is not None):
 
-                la_grid[y,x] = 1
-            return la_grid
+        grid[self.player_y, self.player_x] = self.player_token.symbol
 
-        def get_player_x(self):
-            return self.player_x 
+        return grid
 
-        def get_player_y(self):
-            return self.player_y
+    def get_position_grid(self):
+        grid_shape = (len(self.vals_y), len(self.vals_x))
 
-        def get_rewards_grid(self):
-            return self.rewards_grid
+        position_grid = np.zeros(grid_shape) #se inicializa board con tokens vacios
 
-        def set_player_x(self, value):
-            self.player_x = value
+        position_grid[self.player_y, self.player_x] = self.player_token.number
 
-        def set_player_y(self, value):
-            self.player_y = value
+        return position_grid
 
-        def set_player_position(self, x,y, token):
-            self.player_x = x
-            self.player_y = y
-            self.player_token = token
+    def get_la_grid(self, legal_positions):
+        grid_shape = (len(self.vals_y), len(self.vals_x))
 
-        def get_options_var_1(self):
-            return self.vals_x
+        la_grid = np.zeros(grid_shape) #board de legal actions, a que posiciones te puedes mover 
 
-        def get_options_var_2(self):
-            return self.vals_y
+        for x in legal_positions[self.var_x]: # update with legal positions for var_x
+            y = self.player_y
 
-        def get_var_1(self):
-            return self.var_x
+            la_grid[y, x] = 1
+        for y in legal_positions[self.var_y]: # update with legal positions for var_y
+            x = self.player_x
 
-        def get_var_2(self):
-            return self.var_y
-        
+            la_grid[y, x] = 1
+        return la_grid
+
+    def get_player_x(self):
+        return self.player_x
+
+    def get_player_y(self):
+        return self.player_y
+
+    def get_rewards_grid(self):
+        return self.rewards_grid
+
+    def set_player_x(self, value):
+        self.player_x = value
+
+    def set_player_y(self, value):
+        self.player_y = value
+
+    def set_player_position(self, x, y, token):
+        self.player_x = x
+        self.player_y = y
+        self.player_token = token
+
+    def get_options_var_1(self):
+        return self.vals_x
+
+    def get_options_var_2(self):
+        return self.vals_y
+
+    def get_var_1(self):
+        return self.var_x
+
+    def get_var_2(self):
+        return self.var_y
+
 
 class EvolutionEnv(gym.Env):
 
-
-    def __init__(self, verbose = False, manual = False):
-
+    def __init__(self, verbose=False, manual=False, env_test=False):
 
         super(EvolutionEnv, self).__init__()
         self.name = 'evolution'
         self.manual = manual
         self.render_lib = 'opencv'
-        
+
+        self.env_test = env_test
+
         self.n_players = 1
-            
-        # find way to automatize shapes
-        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(3,12,6), dtype=np.int32)
-        
+
+        f = open('logs/current_actions_log.txt', 'w')
+        f.close()
+
+        with open('./environments/evolution/evolution/envs/evo2.csv') as csv:
+            lines = csv.readlines()
+
+        self.data = lines
+
+        self.tableros = int((len(lines)+1)/6) 
+        self.max_features = int(len(lines[0].split(',')))
+
+        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(
+            self.tableros, self.max_features*2, self.max_features), dtype=np.int32)  
+
         self.verbose = verbose
-        
-        # import premes json
-        f=open('./environments/evolution/evolution/envs/premes.json', "r")
+
+        f = open('./environments/evolution/evolution/envs/premes.json', "r") # import premes json
         self.all_premes = json.loads(f.read())
         self.premes_quantity = len(list(self.all_premes.keys()))
-        self.action_space = gym.spaces.Discrete(self.premes_quantity) # number of premes
-
-        # if self.verbose:
-            # inicializar tablero
+        self.action_space = gym.spaces.Discrete(
+            self.premes_quantity)  # number of premes
 
     @property
-    def observation(self):  #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions. 
-        # TODO refactor with FOR to visit all boards one by one
-        position_grid_board1 = self.board1.get_position_grid()
-        position_grid_board2 = self.board2.get_position_grid()
-        position_grid_board3 = self.board3.get_position_grid()
-        #position_grid = np.array([token.number for token in self.board]).reshape(self.grid_shape) #board de posicion actual 
-        position_grid_board1=np.lib.pad(position_grid_board1, ((0,6-position_grid_board1.shape[0]),(0,6-position_grid_board1.shape[1])), 'constant', constant_values=(0))
-        position_grid_board2=np.lib.pad(position_grid_board2, ((0,6-position_grid_board2.shape[0]),(0,6-position_grid_board2.shape[1])), 'constant', constant_values=(0))
-        position_grid_board3=np.lib.pad(position_grid_board3, ((0,6-position_grid_board3.shape[0]),(0,6-position_grid_board3.shape[1])), 'constant', constant_values=(0))
-        # print('## RESHAPED position_grids ##')
-        final_position_grid = np.block([[[position_grid_board1]],[[position_grid_board2]],[[position_grid_board3]]])
-        # print(final_position_grid.shape)
-        # print(final_position_grid)
+    def observation(self): #metodos de la clase, toma estado del juego y actualiza tablero posicion y legal positions.
+        board_size = self.max_features
 
-        # in board se t 1 to legal positions
-        # print('## legal_positions ##')
-        # print(self.legal_positions,'\n')
-        la_grid_board1 = self.board1.get_la_grid(self.legal_positions)
-        la_grid_board2 = self.board2.get_la_grid(self.legal_positions)
-        la_grid_board3 = self.board3.get_la_grid(self.legal_positions)
-        la_grid_board1=np.lib.pad(la_grid_board1, ((0,6-la_grid_board1.shape[0]),(0,6-la_grid_board1.shape[1])), 'constant', constant_values=(0))
-        la_grid_board2=np.lib.pad(la_grid_board2, ((0,6-la_grid_board2.shape[0]),(0,6-la_grid_board2.shape[1])), 'constant', constant_values=(0))
-        la_grid_board3=np.lib.pad(la_grid_board3, ((0,6-la_grid_board3.shape[0]),(0,6-la_grid_board3.shape[1])), 'constant', constant_values=(0))
+        position_grid = {} #board de posicion actual
+        for number in range(1, self.tableros+1):
+            position_grid["position_grid_board{0}".format(
+                number)] = self.boards_dict["board{0}".format(number)].get_position_grid()
+            position_grid["position_grid_board{0}".format(number)] = np.lib.pad(position_grid["position_grid_board{0}".format(number)], ((
+                0, board_size-position_grid["position_grid_board{0}".format(number)].shape[0]), (0, board_size-position_grid["position_grid_board{0}".format(number)].shape[1])), 'constant', constant_values=(0))
 
-        final_la_grid = np.block([[[la_grid_board1]],[[la_grid_board2]],[[la_grid_board3]]])
-        # print(final_la_grid.shape)
-        # print(final_la_grid)
-        total_observation = np.hstack((final_position_grid,final_la_grid))
+        grid_list = []
+        for position_grid_value in position_grid.values():
+            grid_list.append([[position_grid_value]])
+        final_position_grid = np.block(grid_list)
+
+        la_grid = {} # in board set 1 to legal positions
+        for number in range(1, self.tableros+1):
+            la_grid["la_grid_board{0}".format(number)] = self.boards_dict["board{0}".format(
+                number)].get_la_grid(self.legal_positions)
+            la_grid["la_grid_board{0}".format(number)] = np.lib.pad(la_grid["la_grid_board{0}".format(number)], ((
+                0, board_size-la_grid["la_grid_board{0}".format(number)].shape[0]), (0, board_size-la_grid["la_grid_board{0}".format(number)].shape[1])), 'constant', constant_values=(0))
+
+        la_list = []
+        for la_value in la_grid.values():
+            la_list.append([[la_value]])
+
+        final_la_grid = np.block(la_list)
+  
+        total_observation = np.hstack((final_position_grid, final_la_grid))
         if self.verbose:
             print('## Total Observation ##')
             print(total_observation)
-        # print(total_observation.shape)
-        # print(total_observation)
 
         return total_observation
 
@@ -217,43 +210,44 @@ class EvolutionEnv(gym.Env):
                 # if restriction["var_name"] == "":
                 #     continue 
                 if restriction["condition"] == "lower":
-                    preme_legality = preme_legality and self.position[restriction["var_name"]]<restriction["value"]
+                    preme_legality = preme_legality and self.position[
+                        restriction["var_name"]] < restriction["value"]
                 elif restriction["condition"] == "equal":
-                    preme_legality = preme_legality and self.position[restriction["var_name"]]==restriction["value"]
-                else: #restriction["condition"] == "higher"
-                    preme_legality = preme_legality and self.position[restriction["var_name"]]>restriction["value"]
+                    preme_legality = preme_legality and self.position[
+                        restriction["var_name"]] == restriction["value"]
+                else:  #restriction["condition"] == "higher"
+                    preme_legality = preme_legality and self.position[
+                        restriction["var_name"]] > restriction["value"]
             if preme_legality:
-                legal_actions.append({preme_name:self.premes[preme_name]})
+                legal_actions.append({preme_name: self.premes[preme_name]})
         return np.array(legal_actions)
-    
+
     @property
     def legal_positions(self):
-        # TODO add new boards vars
-        # position = [board1_x,board1_y,board2_x,board2_y,board3_x,board3_y]
-        legal_positions = {"avance_solucion":[],
-                            "modelo_negocio":[],
-                            "total_fundadores":[],
-                            "horas_dedicacion":[],
-                            "problema_organico":[],
-                            "punto_equilibrio":[]
-                            }
+
+        legal_positions = {}
+        for label_name in self.label_list:
+            legal_positions[label_name] = []
+
         for legal_preme in self.legal_actions:
-            legal_preme=list(legal_preme.values())[0]
+            legal_preme = list(legal_preme.values())[0]
             for preme_effect in legal_preme["effects"]:
-                preme_effect["value"]=int(preme_effect["value"])
+                preme_effect["value"] = int(preme_effect["value"])
                 if preme_effect["operator"] == "increase":
-                    legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]+preme_effect["value"])
+                    legal_positions[preme_effect["var_name"]].append(
+                        self.position[preme_effect["var_name"]]+preme_effect["value"])
                 if preme_effect["operator"] == "decrease":
-                    legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]-preme_effect["value"])
+                    legal_positions[preme_effect["var_name"]].append(
+                        self.position[preme_effect["var_name"]]-preme_effect["value"])
                 if preme_effect["operator"] == "set":
-                   legal_positions[preme_effect["var_name"]].append(preme_effect["value"])
+                    legal_positions[preme_effect["var_name"]].append(
+                        preme_effect["value"])
                 if preme_effect["operator"] == "random":
-                    legal_positions[preme_effect["var_name"]].append(random.randint(preme_effect["start"], preme_effect["stop"]))
+                    legal_positions[preme_effect["var_name"]].append(
+                        random.randint(preme_effect["start"], preme_effect["stop"]))
 
-        # keep only set of positions
-        legal_positions = {k:list(set(v)) for k, v in legal_positions.items()}
+        legal_positions = {k: list(set(v)) for k, v in legal_positions.items()} # keep only set of positions
         return legal_positions
-
     '''
     function to look into all the boards and returns a reward vector with the 
     corresponding reward for each board position
@@ -261,35 +255,31 @@ class EvolutionEnv(gym.Env):
     def get_new_position_reward(self):
         game_over = False
         all_boards_rewards = 0
-        for board in self.boards:
-            # get board position
+        for board in self.boards: # get board position
+
             x = self.position[board.var_x]
             y = self.position[board.var_y]
-            # get reward in actual position
-            all_boards_rewards+=int(board.rewards_grid[y,x])
-            # consume reward: set actual position reward to 0
-            board.rewards_grid[y,x] = 0
+
+            all_boards_rewards += int(board.rewards_grid[y, x]) # get reward in actual position
+
+            board.rewards_grid[y, x] = 0 # consume reward: set actual position reward to 0
 
         return all_boards_rewards, game_over
 
     @property
     def current_player(self):
         return self.players[self.current_player_num]
-
-
     '''
     function to execute one movement
     handles rewards received for the action taken
     '''
     def step(self, action):
-        # write executed action to actions_log.txt
-        self.actions_logs.append(action)
+        self.actions_logs.append(action) # write executed action to actions_log.txt
 
         reward = [0]
-        # check effect of selected action
         ids = []
         names = []
-        for i,legal_preme in enumerate(self.legal_actions):
+        for i, legal_preme in enumerate(self.legal_actions): # check effect of selected action
             preme_name = list(legal_preme.keys())[0]
             ids.append(list(legal_preme.values())[0]['id'])
             names.append(preme_name)
@@ -297,113 +287,113 @@ class EvolutionEnv(gym.Env):
                 pos = i
                 break
 
-            #pos = i if action == list(legal_preme.values())[0]['id'] else 0  #modifique esto por lo de arriba
-
-
-
         if action not in ids:  # ilegal action, ends game, punishment
             if self.verbose:
                 print("Action not in list")
             done = True
-            reward = [-100] # TODO dejar en -1 o cambiar
-        else: # legal action proceed 
-            # apply all effects related to chosen action preme
+            reward = [-100]  # TODO dejar en -1 o cambiar
+        else:  # legal action proceed, apply all effects related to chosen action preme
             action_preme_name = names[pos]
-            effects = self.premes[action_preme_name]["effects"] 
+            effects = self.premes[action_preme_name]["effects"]
             for effect in effects:
                 if effect["operator"] == "increase":
-                    self.position[effect["var_name"]]=self.position[effect["var_name"]]+effect["value"]
+                    self.position[effect["var_name"]
+                                  ] = self.position[effect["var_name"]]+effect["value"]
                 elif effect["operator"] == "decrease":
-                    self.position[effect["var_name"]]=self.position[effect["var_name"]]-effect["value"]
+                    self.position[effect["var_name"]
+                                  ] = self.position[effect["var_name"]]-effect["value"]
                 else:
-                    self.position[effect["var_name"]]=effect["value"]
+                    self.position[effect["var_name"]] = effect["value"]
             self.turns_taken += 1
 
-            # get rewards from new position in all grids
-            r, done = self.get_new_position_reward()
+            r, done = self.get_new_position_reward() # get rewards from new position in all grids
             reward = [r]
-        
-            # update board
-            if self.verbose:
-                print('new position dict: ',self.position)
 
-            # TODO refactor to set player position in all boards
-            self.board1.set_player_position(self.position["avance_solucion"],
-                                            self.position["modelo_negocio"], 
-                                            self.players[0].token)
-            self.board2.set_player_position(self.position["total_fundadores"],
-                                            self.position["horas_dedicacion"], 
-                                            self.players[0].token)
-            self.board3.set_player_position(self.position["problema_organico"],
-                                            self.position["punto_equilibrio"], 
-                                            self.players[0].token)
+            if self.verbose: # update board
+                print('new position dict: ', self.position)
+
+            for number in range(1, self.tableros+1):
+                self.boards_dict["board{0}".format(number)].set_player_position(self.position[self.label_list[2*number-2]],
+                                                                                self.position[self.label_list[2*number-1]],
+                                                                                self.players[0].token)
+
             self.done = done
-            # remove preme once used if not repetitive
-            if not list(legal_preme.values())[0]['repetitive']:
+   
+            if not list(legal_preme.values())[0]['repetitive']: # remove preme once used if not repetitive
                 self.premes.pop(preme_name, None)
 
-            # game over condition: no more premes for now
-            if not self.premes:
+            if not self.premes: # game over condition: no more premes for now
                 if self.verbose:
                     print('## GAME OVER: NO MORE PREMES ##')
                 done = True
 
-        # if done write self.actions_log to file
-        if done:
-            # timestr = time.strftime("%Y%m%d-%H%M%S")
-            # f = open(timestr+"-actions_log.txt", "a")
+        if done: # if done write self.actions_log to file
             f = open("actions_log.txt", "a")
             f.write("\n"+str(self.actions_logs))
             f.close()
 
+            with open('logs/current_actions_log.txt', 'a') as new_log:
+                new_log.write("\n"+str(self.actions_logs))
+
         return self.observation, reward, done, {}
 
     def reset(self):
+        rewards_csv_filepath = './environments/evolution/evolution/envs/evo2.csv' # paths de matrices de rewards etiquetadas por expertos
 
+        label_list = []
+        boards_dict = {}
+        for number in range(1, self.tableros+1): # inicializar boards
+            list_data = self.data[(3*2*(number-1)):(3*2*(number-1))+5]
 
-        # paths de matrices de rewards etiquetadas por expertos
-        rewards_csv_filepath='./environments/evolution/evolution/envs/evo2_reinforcement_learning_matrices - rewards de exploracion 20.csv'
-        
-        # TODO initialize all 10 boards
-        # inicializar boards
-        self.board1 = Board(Token('⬜', 0), 1, 
-                            'avance_solucion', 'modelo_negocio', 
-                            ['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'],
-                            ['producto', 'servicio', 'plataforma', 'ecosistema'],
-                            rewards_csv_filepath=rewards_csv_filepath)
-        self.board2 = Board(Token('⬜', 0), 2, 
-                            'total_fundadores', 'horas_dedicacion', 
-                            ['1', '2', '3', '4', '5', '6'],
-                            ['0-5', '6-10', '10-30', '30-45'],
-                            rewards_csv_filepath=rewards_csv_filepath)
-        self.board3 = Board(Token('⬜', 0), 3, 
-                            'problema_organico', 'punto_equilibrio', 
-                            ['no', 'si'],
-                            ['no', 'pronto', 'si'],
-                            rewards_csv_filepath=rewards_csv_filepath)
-        self.boards = [self.board1,self.board2,self.board3]
-        self.players = [Player('Startup1', Token('🔴', 1))] #se inicializan los players con su toquen y numero de jugador
+            x_value_list = list_data[0].split(',')
+            y_value_list = list_data[3].split(',')
 
-        # TODO set starting position for every variable of the 10 boards
-        # start player at certain default position in vevery board
-        # define attribute that contains position coords
-        self.position = {"avance_solucion":0,
-                        "modelo_negocio":0,
-                        "total_fundadores":0,
-                        "horas_dedicacion":0,
-                        "problema_organico":0,
-                        "punto_equilibrio":0
-        
-                        }
-        if self.verbose:                        
+            c_x = 0
+            for value in x_value_list:
+                if value != '' and value != '\n':
+                    c_x += 1
+            c_y = 0
+            for value in y_value_list:
+                if value != '' and value != '\n':
+                    c_y += 1
+
+            x_label = list_data[1].split(',')[1]
+            y_label = list_data[4].split(',')[1]
+            label_list.append(x_label)
+            label_list.append(y_label)
+
+            x_values = x_value_list[2:2+c_x]
+            y_values = y_value_list[2:2+c_y]
+
+            boards_dict["board{0}".format(number)] = Board(Token('⬜', 0), number,
+                                                           x_label, y_label,
+                                                           x_values, y_values,
+                                                           rewards_csv_filepath=rewards_csv_filepath) 
+
+        self.label_list = label_list
+        self.boards_dict = boards_dict
+
+        board_list = []
+        for board in boards_dict.values():
+            board_list.append(board)
+
+        self.boards = board_list
+
+        self.players = [Player('Startup1', Token('🔴', 1))]  #se inicializan los players con su toquen y numero de jugador
+
+        position_dict = {} # start player at certain default position in vevery board, define attribute that contains position coords
+        for label_name in self.label_list:
+            position_dict[label_name] = 0
+        self.position = position_dict
+
+        if self.verbose:
             print(self.position)
-        self.board1.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
-        self.board2.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
-        self.board3.set_player_position(0,0,self.players[0].token) #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
-        
-        
-        if self.render_lib == 'pygame':
-            # Start grid 
+
+        for number in range(1, self.tableros+1): #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
+            self.boards_dict["board{0}".format(number)].set_player_position(
+                0, 0, self.players[0].token)
+
+        if self.render_lib == 'pygame': # Start grid
             global rows, cols, size, x, y, running
             size = 100
             rows = len(self.board1.get_options_var_1())
@@ -420,21 +410,20 @@ class EvolutionEnv(gym.Env):
             print(rows)
             print(cols)
 
-            game = multiprocessing.Process(target=game, args=(running,size, rows, cols, x, y))
+            game = multiprocessing.Process(
+                target=game, args=(running, size, rows, cols, x, y))
 
-        # set starting position rewards to 0
-        r, done = self.get_new_position_reward()
+        r, done = self.get_new_position_reward() # set starting position rewards to 0
 
         self.current_player_num = 0  #player que esta en el turno
         self.turns_taken = 0  #la cantidad de turnos 
-        self.done = False #cuando se acabo el juego total
-        self.actions_logs=[] # reset actions log
+        self.done = False  #cuando se acabo el juego total
+        self.actions_logs = []  # reset actions log
         self.premes = self.all_premes.copy()
         logger.debug(f'\n\n---- NEW GAME ----')
         return self.observation
 
-
-    def render(self, mode='human', close=False, verbose = False):
+    def render(self, mode='human', close=False, verbose=False):
         global cols, rows, size
         logger.debug('')
         if close:
@@ -442,100 +431,104 @@ class EvolutionEnv(gym.Env):
         if self.done:
             logger.debug(f'GAME OVER')
             if self.render_lib == 'pygame':
-                running.value = 0 #se finaliza render
+                running.value = 0  #se finaliza render
         else:
-            logger.debug(f"It is Player {self.current_player.id}'s turn to move")
-
-        # TODO refactor to render all boards independentrly of number of boards
-        board1 = self.board1.get_symbol_grid()
-        board2 = self.board2.get_symbol_grid()
-        board3 = self.board3.get_symbol_grid()
-        
-        board1_df = pd.DataFrame(data =board1,
-                                    index=['producto', 'servicio', 'plataforma', 'ecosistema'],
-                                    columns=['idea', 'concepto', 'prototipo', 'mvp', 'ventas', 'crecimiento'])
-        board2_df = pd.DataFrame(data =board2,
-                                    index=['0-5', '6-10', '10-30', '30-45'],
-                                    columns=['1', '2', '3', '4', '5', '6'])
-        board3_df = pd.DataFrame(data =board3,
-                                    index=['no', 'pronto', 'si'],
-                                    columns=['no', 'si'])
-        #Render on window
-        #labels = [self.board1.get_var_1(), self.board1.get_var_2()]
-        #opt1 = self.board1.get_options_var_1()
-        #opt2 = self.board1.get_options_var_2()
+            logger.debug(
+                f"It is Player {self.current_player.id}'s turn to move")
 
         if self.render_lib == 'pygame':
             x.value = self.board1.get_player_x()
             y.value = self.board1.get_player_y()
 
-        #draw_grid(self.window, size, rows, cols, labels, opt1, opt2, self.board1.get_player_x(),self.board1.get_player_y())
-        #pygame.event.get()
+        if self.verbose: # actualizar tablero
+            for number in range(1, self.tableros+1):
+                print(self.boards_dict["board{0}".format(
+                    number)].get_rewards_grid(), '\n')
 
-        if self.verbose:
-            print("## Reward Boards ##")
-            print(self.board1.get_rewards_grid(),'\n')                            
-            print(self.board2.get_rewards_grid(),'\n')                            
-            print(self.board3.get_rewards_grid(),'\n')   
+        pos_size = self.max_features  
 
-            # actualizar tablero
+        pos_grid_dict = {} # OPENCV render approach
+        for number in range(1, self.tableros+1):
+            pos_grid_dict["pos_grid_{0}".format(
+                number)] = self.boards_dict["board{0}".format(number)].get_position_grid()*255
+            pos_grid_dict["pos_grid_{0}".format(number)] = np.lib.pad(pos_grid_dict["pos_grid_{0}".format(number)], ((
+                0, pos_size-pos_grid_dict["pos_grid_{0}".format(number)].shape[0]), (0, pos_size-pos_grid_dict["pos_grid_{0}".format(number)].shape[1])), 'constant', constant_values=(0))
 
-        # print("## Game Boards ##")
-        # print("X: avance_solucion, Y: modelo_negocio")
-        # print(tabulate(board1_df, headers='keys', tablefmt='grid'))
-        # print("X: total_fundadores, Y: horas_dedicacion")
-        # print(tabulate(board2_df, headers='keys', tablefmt='grid'))
-        # print("X: problema_organico, Y: punto_equilibrio")
-        # print(tabulate(board3_df, headers='keys', tablefmt='grid'))
+        board_pixel_size = self.max_features*2*10
 
-        # OPENCV render approach
-        # get three boards
-        pos_grid_1 = self.board1.get_position_grid()*255
-        pos_grid_1 = np.lib.pad(pos_grid_1, ((0,10-pos_grid_1.shape[0]),(0,10-pos_grid_1.shape[1])), 'constant', constant_values=(0))
-        pos_grid_2 = self.board2.get_position_grid()*255
-        pos_grid_2 = np.lib.pad(pos_grid_2, ((0,10-pos_grid_2.shape[0]),(0,10-pos_grid_2.shape[1])), 'constant', constant_values=(0))
-        pos_grid_3 = self.board3.get_position_grid()*255
-        pos_grid_3 = np.lib.pad(pos_grid_3, ((0,10-pos_grid_3.shape[0]),(0,10-pos_grid_3.shape[1])), 'constant', constant_values=(0))
-        
-        # resize and inverse to show position in black
-        resized_1 = cv2.resize(pos_grid_1, (200,200), interpolation = cv2.INTER_AREA)
-        resized_2 = cv2.resize(pos_grid_2, (200,200), interpolation = cv2.INTER_AREA)
-        resized_3 = cv2.resize(pos_grid_3, (200,200), interpolation = cv2.INTER_AREA)
+        resized_dict = {} # resize and inverse to show position in black
+        for number in range(1, self.tableros+1):
+            resized_dict["resized_{0}".format(number)] = cv2.resize(pos_grid_dict["pos_grid_{0}".format(
+                number)], (board_pixel_size, board_pixel_size), interpolation=cv2.INTER_AREA)
 
-        boards = [resized_1,resized_2,resized_3]
+        boards = list(resized_dict.values())
 
-        # draw lines on every board
-        # TODO add axis labels
-        # TODO differentiate one grid from another
-        # TODO differentiate usable squares vs padding
-        for board in boards:
-            for i in range(0,200,20):
-                # horizontal
-                cv2.line(board, (0, i), (200, i), (255, 255, 255), thickness=1)
-                # vertical
-                cv2.line(board, (i, 0), (i, 200), (255, 255, 255), thickness=1)
+        cont = 0
+        for board in boards: # draw lines on every board
+            font                   = cv2.FONT_HERSHEY_SIMPLEX
+            fontScale              = 0.7
+            fontColor              = (255, 0, 0)
+            thickness              = 2
 
-        # concatenate
-        concat_boards = np.hstack((resized_1,resized_2,resized_3))
+            x_label = self.label_list[cont]
+            y_label = self.label_list[cont+1]
 
-        # inverse to show black square over white grid
-        inverse = (255-concat_boards)
+            x_label_cont = 0
+            for label in x_label.split('_'): # draw x labels
+                cv2.putText(board,label, 
+                        (0,60+x_label_cont*20),
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness)
+                x_label_cont += 1
 
+            y_label_cont = 0
+            for label in y_label.split('_'): # draw y labels
+                cv2.putText(board,label, 
+                        (0,200+y_label_cont*20),
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness)
+                y_label_cont += 1
 
-        # cv2.waitKey(10) & 0XFF
-        # cv2.waitKey(0)
-        # cv2.destroyWindow('grid')
-        # keep window open and wait to update
-        cv2.imshow('grid',inverse)
+            cv2.putText(board,'VS', 
+                        (100,140),
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness)
+            cont+=2
+            for i in range(0, board_pixel_size, 20): #ojo con el 20 y con el range ya que va desde [0,board_pixel_size[
+                if i == board_pixel_size-20:
+                    cv2.line(board, (i, 0), (i, board_pixel_size),(255, 255, 255), thickness=2) # vertical lines
+                    cv2.line(board, (0, i), (board_pixel_size, i),(255, 255, 255), thickness=2) # horizontal lines
+                else:
+                    cv2.line(board, (i, 0), (i, board_pixel_size),(255, 255, 255), thickness=1) # vertical lines
+                    cv2.line(board, (0, i), (board_pixel_size, i),(255, 255, 255), thickness=1) # horizontal lines
+                
+        n_tableros = 5
+        tuple_list = []
+        for i in range(int(len(boards)/n_tableros)): # concatenate horizontal boards
+            tuple_list.append(np.hstack(tuple(boards[(n_tableros*i):(n_tableros*i)+n_tableros])))
+
+        concat_boards = np.vstack(tuple_list) # concatenate vertical boards
+
+        inverse = (255-concat_boards) # inverse to show black square over white grid
+
+        cv2.imshow('grid', inverse)
         cv2.setWindowProperty('grid', cv2.WND_PROP_TOPMOST, 1)
-        # if test waitKey(100)
-        k=cv2.waitKey(1) & 0XFF
-            # if k== 27 :
-            #     break
+
+        if self.env_test: # if env is test, wait for key press
+            wait_key_value = 100
+        else: # if env is train, wait for 1 second
+            wait_key_value = 1
+        k = cv2.waitKey(wait_key_value) & 0XFF
 
         if self.verbose:
             logger.debug(f'\nObservation: \n{self.observation}')
-        
+
         if not self.done:
             legal_actions_ui_list = []
             for legal_preme in self.legal_actions:
@@ -544,24 +537,26 @@ class EvolutionEnv(gym.Env):
                 legal_actions_ui_list.append(str(id)+': '+name)
             logger.debug(f"\nLegal actions: {legal_actions_ui_list}")
 
-def read_reward_board_csv(filepath,varx_name, vary_name,width,height):
+
+def read_reward_board_csv(filepath, varx_name, vary_name, width, height):
     board_array = [line.split(',') for line in open(filepath)]
+
     new_board = []
     for line in board_array:
-        new_line = [word.replace('\n','') for word in line]
+        new_line = [word.replace('\n', '') for word in line]
         new_board.append(new_line)
-    board_array=np.array(new_board)
+    board_array = np.array(new_board)
 
-    # find the variable row
-    varx_itemindex = np.where(board_array==varx_name)
-    vary_itemindex = np.where(board_array==vary_name)
-    # extract the values
-    horizontal_values = board_array[varx_itemindex[0][0],varx_itemindex[1][0]+1:varx_itemindex[1][0]+1+width]
-    vertical_values = board_array[vary_itemindex[0][0],vary_itemindex[1][0]+1:vary_itemindex[1][0]+1+height]
+    varx_itemindex = np.where(board_array == varx_name) # find the variable row 
+    vary_itemindex = np.where(board_array == vary_name) # find the variable column
 
-    # convert to matrix
-    a=np.tile(horizontal_values, (height, 1)).astype(int)
-    b=np.tile(vertical_values, (width,1)).T.astype(int)
-    
+    horizontal_values = board_array[varx_itemindex[0][0],
+                                    varx_itemindex[1][0]+1:varx_itemindex[1][0]+1+width] # extract the values of the variable
+    vertical_values = board_array[vary_itemindex[0][0],
+                                  vary_itemindex[1][0]+1:vary_itemindex[1][0]+1+height] # extract the values of the variable
+
+    a = np.tile(horizontal_values, (height, 1)).astype(int) # convert to matrix
+    b = np.tile(vertical_values, (width, 1)).T.astype(int) # convert to matrix
+
     rewards_board = a+b
     return rewards_board
