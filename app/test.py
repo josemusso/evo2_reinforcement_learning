@@ -30,7 +30,7 @@ def main(args):
     logger.set_level(config.INFO)
     
   #make environment
-  env = get_environment(args.env_name)(verbose = args.verbose, manual = args.manual)
+  env = get_environment(args.env_name)(verbose = args.verbose, manual = args.manual, env_test=True)
   env.seed(args.seed)
   set_global_seeds(args.seed)
 
