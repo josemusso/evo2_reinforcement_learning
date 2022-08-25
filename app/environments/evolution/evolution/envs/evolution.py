@@ -149,11 +149,11 @@ class EvolutionEnv(gym.Env):
 
         self.data = lines
 
-        self.tableros = int((len(lines)+1)/6) 
+        self.n_tableros = int((len(lines)+1)/6) 
         self.max_features = int(len(lines[0].split(',')))
 
         self.observation_space = gym.spaces.Box(low=0, high=1, shape=(
-            self.tableros, self.max_features*2, self.max_features), dtype=np.int32)  
+            self.n_tableros, self.max_features*2, self.max_features), dtype=np.int32)  
 
         self.verbose = verbose
 
@@ -168,11 +168,9 @@ class EvolutionEnv(gym.Env):
         board_size = self.max_features
 
         position_grid = {} #board de posicion actual
-        for number in range(1, self.tableros+1):
-            position_grid["position_grid_board{0}".format(
-                number)] = self.boards_dict["board{0}".format(number)].get_position_grid()
-            position_grid["position_grid_board{0}".format(number)] = np.lib.pad(position_grid["position_grid_board{0}".format(number)], ((
-                0, board_size-position_grid["position_grid_board{0}".format(number)].shape[0]), (0, board_size-position_grid["position_grid_board{0}".format(number)].shape[1])), 'constant', constant_values=(0))
+        for number in range(1, self.n_tableros+1):
+            position_grid[f'position_grid_board{number}'] = self.boards_dict[f"board{number}"].get_position_grid()
+            position_grid[f'position_grid_board{number}'] = np.lib.pad(position_grid[f'position_grid_board{number}'], ((0, board_size-position_grid[f'position_grid_board{number}'].shape[0]), (0, board_size-position_grid[f'position_grid_board{number}'].shape[1])), 'constant', constant_values=(0))
 
         grid_list = []
         for position_grid_value in position_grid.values():
@@ -180,11 +178,9 @@ class EvolutionEnv(gym.Env):
         final_position_grid = np.block(grid_list)
 
         la_grid = {} # in board set 1 to legal positions
-        for number in range(1, self.tableros+1):
-            la_grid["la_grid_board{0}".format(number)] = self.boards_dict["board{0}".format(
-                number)].get_la_grid(self.legal_positions)
-            la_grid["la_grid_board{0}".format(number)] = np.lib.pad(la_grid["la_grid_board{0}".format(number)], ((
-                0, board_size-la_grid["la_grid_board{0}".format(number)].shape[0]), (0, board_size-la_grid["la_grid_board{0}".format(number)].shape[1])), 'constant', constant_values=(0))
+        for number in range(1, self.n_tableros+1):
+            la_grid[f"la_grid_board{number}"] = self.boards_dict[f"board{number}"].get_la_grid(self.legal_positions)
+            la_grid[f"la_grid_board{number}"] = np.lib.pad(la_grid[f"la_grid_board{number}"], ((0, board_size-la_grid[f"la_grid_board{number}"].shape[0]), (0, board_size-la_grid[f"la_grid_board{number}"].shape[1])), 'constant', constant_values=(0))
 
         la_list = []
         for la_value in la_grid.values():
@@ -312,8 +308,8 @@ class EvolutionEnv(gym.Env):
             if self.verbose: # update board
                 print('new position dict: ', self.position)
 
-            for number in range(1, self.tableros+1):
-                self.boards_dict["board{0}".format(number)].set_player_position(self.position[self.label_list[2*number-2]],
+            for number in range(1, self.n_tableros+1):
+                self.boards_dict[f"board{number}"].set_player_position(self.position[self.label_list[2*number-2]],
                                                                                 self.position[self.label_list[2*number-1]],
                                                                                 self.players[0].token)
 
@@ -342,7 +338,7 @@ class EvolutionEnv(gym.Env):
 
         label_list = []
         boards_dict = {}
-        for number in range(1, self.tableros+1): # inicializar boards
+        for number in range(1, self.n_tableros+1): # inicializar boards
             list_data = self.data[(3*2*(number-1)):(3*2*(number-1))+5]
 
             x_value_list = list_data[0].split(',')
@@ -365,7 +361,7 @@ class EvolutionEnv(gym.Env):
             x_values = x_value_list[2:2+c_x]
             y_values = y_value_list[2:2+c_y]
 
-            boards_dict["board{0}".format(number)] = Board(Token('⬜', 0), number,
+            boards_dict[f"board{number}"] = Board(Token('⬜', 0), number,
                                                            x_label, y_label,
                                                            x_values, y_values,
                                                            rewards_csv_filepath=rewards_csv_filepath) 
@@ -389,8 +385,8 @@ class EvolutionEnv(gym.Env):
         if self.verbose:
             print(self.position)
 
-        for number in range(1, self.tableros+1): #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
-            self.boards_dict["board{0}".format(number)].set_player_position(
+        for number in range(1, self.n_tableros+1): #se posiciona el token circulo en la posicion 0,0 para el player 1 (solo hay un player)
+            self.boards_dict[f"board{number}"].set_player_position(
                 0, 0, self.players[0].token)
 
         if self.render_lib == 'pygame': # Start grid
@@ -441,25 +437,22 @@ class EvolutionEnv(gym.Env):
             y.value = self.board1.get_player_y()
 
         if self.verbose: # actualizar tablero
-            for number in range(1, self.tableros+1):
-                print(self.boards_dict["board{0}".format(
-                    number)].get_rewards_grid(), '\n')
+            for number in range(1, self.n_tableros+1):
+                print(self.boards_dict[f"board{number}"].get_rewards_grid(), '\n')
 
         pos_size = self.max_features  
 
         pos_grid_dict = {} # OPENCV render approach
-        for number in range(1, self.tableros+1):
-            pos_grid_dict["pos_grid_{0}".format(
-                number)] = self.boards_dict["board{0}".format(number)].get_position_grid()*255
-            pos_grid_dict["pos_grid_{0}".format(number)] = np.lib.pad(pos_grid_dict["pos_grid_{0}".format(number)], ((
-                0, pos_size-pos_grid_dict["pos_grid_{0}".format(number)].shape[0]), (0, pos_size-pos_grid_dict["pos_grid_{0}".format(number)].shape[1])), 'constant', constant_values=(0))
+        for number in range(1, self.n_tableros+1):
+            pos_grid_dict[f"pos_grid_{number}"] = self.boards_dict[f"board{number}"].get_position_grid()*255
+            pos_grid_dict[f"pos_grid_{number}"] = np.lib.pad(pos_grid_dict[f"pos_grid_{number}"], ((
+                0, pos_size-pos_grid_dict[f"pos_grid_{number}"].shape[0]), (0, pos_size-pos_grid_dict[f"pos_grid_{number}"].shape[1])), 'constant', constant_values=(0))
 
         board_pixel_size = self.max_features*2*10
 
         resized_dict = {} # resize and inverse to show position in black
-        for number in range(1, self.tableros+1):
-            resized_dict["resized_{0}".format(number)] = cv2.resize(pos_grid_dict["pos_grid_{0}".format(
-                number)], (board_pixel_size, board_pixel_size), interpolation=cv2.INTER_AREA)
+        for number in range(1, self.n_tableros+1):
+            resized_dict[f"resized_{number}"] = cv2.resize(pos_grid_dict[f"pos_grid_{number}"], (board_pixel_size, board_pixel_size), interpolation=cv2.INTER_AREA)
 
         boards = list(resized_dict.values())
 
