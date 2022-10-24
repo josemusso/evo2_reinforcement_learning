@@ -64,21 +64,10 @@ def main(args):
   
   CustomPolicy = get_network_arch(args.env_name)
 
-  params = {
-  	'gamma':args.gamma,
-  	#'timesteps_per_actorbatch':args.timesteps_per_actorbatch ,
-            #'n_steps':args.n_steps, 
-	#'entcoeff':args.entcoeff, 
-            #'learning_rate':args.learning_rate, 
-            #'vf_coef':args.optim_stepsize, 
-            #'max_grad_norm':args.max_grad_norm, 
-        #'lam':args.lam, 
-            #'nminibatches':args.nminibatches,
-            #'noptepochs':args.noptepochs,
-            #'cliprange':args.cliprange,
-            #'cliprange_vf':args.cliprange_vf,
-        'verbose':1, 
-        'tensorboard_log':config.LOGDIR
+  params = { 
+        'verbose':1,
+        'tensorboard_log':config.LOGDIR,
+        'seed':workerseed,
   }
 
   ''' PPO1
@@ -100,7 +89,7 @@ def main(args):
   time.sleep(5) # allow time for the base model to be saved out when the environment is created
 
   logger.info('\Creating model to train...')
-  model = DQN(MlpPolicy, env, **params)
+  model = ACER(MlpPolicy, env, **params)
   logger.info('\nModel generated succesfully...')
 
   #Callbacks
