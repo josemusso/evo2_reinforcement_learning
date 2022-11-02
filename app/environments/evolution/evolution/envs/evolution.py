@@ -148,13 +148,15 @@ class Board():
 
 class EvolutionEnv(gym.Env):
 
-    def __init__(self, verbose=False, manual=False, env_test=False):
+    def __init__(self, verbose=False, manual=False, env_test=False, initial_state=None):
 
         super(EvolutionEnv, self).__init__()
         
         self.name = 'evolution'
         self.manual = manual
         self.render_lib = 'opencv'
+
+        self.initial_state = initial_state
 
         self.env_test = env_test
 
@@ -417,7 +419,7 @@ class EvolutionEnv(gym.Env):
             y_values = y_value_list[2:2+(c_y-1)]
 
 
-            boards_dict[f"board{number}"] = Board(Token('⬜', 0), number,
+            boards_dict[f"board{number}"] = Board(Token('⬜', 0), number, 
                                                   x_label, y_label,
                                                   x_values, y_values,
                                                   rewards_csv_filepath=rewards_csv_filepath)
@@ -435,8 +437,12 @@ class EvolutionEnv(gym.Env):
         self.players = [Player('Startup1', Token('🔴', 1))]
 
         position_dict = {}  # start player at certain default position in vevery board, define attribute that contains position coords
+        
         for label_name in self.label_list:
-            position_dict[label_name] = 0
+            if self.env_test:
+                position_dict[label_name] = self.initial_state[label_name]
+            else:
+                position_dict[label_name] = 0
         self.position = position_dict
 
         if self.verbose:

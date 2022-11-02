@@ -112,6 +112,8 @@ def main(args):
 
   model.learn(total_timesteps=int(1e9), callback=[eval_callback], reset_num_timesteps = False, tb_log_name="tb")
 
+  model.save("ACER_evo_2.0")
+
   env.close()
   del env
 
