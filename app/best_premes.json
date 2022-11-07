@@ -1,0 +1,26 @@
+{
+  "pred_preme1": {
+    "confidence": 81.678,
+    "preme": "pr_create_one_pager"
+  },
+  "pred_preme2": {
+    "confidence": 6.954,
+    "preme": "pr_build_pitch_onepager"
+  },
+  "pred_preme3": {
+    "confidence": 3.741,
+    "preme": "pr_preliminar_business_model"
+  },
+  "pred_preme4": {
+    "confidence": 2.471,
+    "preme": "pr_know_entrepreneur_process"
+  },
+  "pred_preme5": {
+    "confidence": 0.719,
+    "preme": "pr_implement_nfx"
+  },
+  "pred_preme6": {
+    "confidence": 0.559,
+    "preme": "pr_initial_assestment12"
+  }
+}

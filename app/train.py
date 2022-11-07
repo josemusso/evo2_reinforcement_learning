@@ -14,6 +14,7 @@ from shutil import copyfile
 from mpi4py import MPI
 
 from stable_baselines.ppo1 import PPO1
+from stable_baselines import PPO2, TRPO, HER, DQN, ACKTR, ACER, A2C
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.common.callbacks import EvalCallback
 
@@ -63,6 +64,13 @@ def main(args):
   
   CustomPolicy = get_network_arch(args.env_name)
 
+  params = { 
+        'verbose':1,
+        'tensorboard_log':config.LOGDIR,
+        'seed':workerseed,
+  }
+
+  ''' PPO1
   params = {'gamma':args.gamma
     , 'timesteps_per_actorbatch':args.timesteps_per_actorbatch
     , 'clip_param':args.clip_param
@@ -76,11 +84,12 @@ def main(args):
       , 'verbose':1
       , 'tensorboard_log':config.LOGDIR
   }
+  '''
 
   time.sleep(5) # allow time for the base model to be saved out when the environment is created
 
   logger.info('\Creating model to train...')
-  model = PPO1(MlpPolicy, env, **params)
+  model = ACER(MlpPolicy, env, **params)
   logger.info('\nModel generated succesfully...')
 
   #Callbacks
@@ -102,6 +111,8 @@ def main(args):
   logger.info('\nSetup complete - commencing learning...\n')
 
   model.learn(total_timesteps=int(1e9), callback=[eval_callback], reset_num_timesteps = False, tb_log_name="tb")
+
+  model.save("ACER_evo_2.0")
 
   env.close()
   del env
