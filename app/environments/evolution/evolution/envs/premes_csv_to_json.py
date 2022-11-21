@@ -60,10 +60,11 @@ def premes_csv_to_json(filepath):
         premes_dict[preme]["id"] = int(df[df['nombre_tecnico_preme']==preme]["id"].values[0])
         premes_dict[preme]["name"] = str(df[df['nombre_tecnico_preme']==preme]["nombre_preme"].values[0])
         repetitity = int(df[df['nombre_tecnico_preme']==preme]["repetitividad"].values[0])
-        if repetitity == 1:
-            premes_dict[preme]["repetitive"] = True
-        else:
-            premes_dict[preme]["repetitive"] = False
+        premes_dict[preme]["repetitive"] = repetitity
+        #if repetitity == 1:
+        #    premes_dict[preme]["repetitive"] = True
+        #else:
+        #    premes_dict[preme]["repetitive"] = False
         premes_dict[preme]["restrictions"] = restrictions_serie[preme]
         premes_dict[preme]["effects"] = effects_serie[preme]
         premes_dict[preme]["id_preme"] = int(df[df['nombre_tecnico_preme']==preme]["id_preme"].values[0])
@@ -73,9 +74,9 @@ def premes_csv_to_json(filepath):
     #print(json.dumps(premes_dict, indent=4, ensure_ascii=False))
 
         
-    with open('premes_lower.json', 'w') as fp:
+    with open('premes.json', 'w') as fp:
         json.dump(premes_dict,fp,indent=4,ensure_ascii=False)
 
     return
 
-premes_csv_to_json("premes_lower.csv")
+premes_csv_to_json("premes.csv")
