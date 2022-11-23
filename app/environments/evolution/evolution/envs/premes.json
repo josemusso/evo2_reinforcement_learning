@@ -2,7 +2,7 @@
     "pr_initial_assestment12": {
         "id": 0,
         "name": "Assessment Inicial (dim1 y dim2)",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [],
         "effects": [
             {
@@ -146,7 +146,7 @@
                 "inc_dim": 0.059
             },
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "operator": "random",
                 "value": 3.0,
                 "dimension": 1.0,
@@ -186,17 +186,12 @@
     "pr_incorporate_mindset": {
         "id": 1,
         "name": "Incorporar mindset emprendedor de impacto",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_big_thinking",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_big_thinking",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -213,14 +208,8 @@
     "pr_know_entrepreneur_process": {
         "id": 2,
         "name": "Conocer el proceso emprendedor",
-        "repetitive": false,
-        "restrictions": [
-            {
-                "var_name": "pm_exposition",
-                "condition": "lower",
-                "value": 3.0
-            }
-        ],
+        "repetitive": 0,
+        "restrictions": [],
         "effects": [
             {
                 "var_name": "pm_exposition",
@@ -235,22 +224,12 @@
     "pr_focus_in_balance": {
         "id": 3,
         "name": "Enfocar en equilibrio",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_breakeven",
                 "condition": "equal",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_prudence",
-                "condition": "lower",
-                "value": 5.0
-            },
-            {
-                "var_name": "pm_agility",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -274,7 +253,7 @@
     "pr_lean_knowledge": {
         "id": 4,
         "name": "Saber de lean",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_lean_ability",
@@ -285,11 +264,6 @@
                 "var_name": "pm_agility",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_agility",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -313,7 +287,7 @@
     "pr_risk_reduction": {
         "id": 5,
         "name": "Adoptar Modelo de Reducción de Riesgos",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_prudence",
@@ -335,7 +309,7 @@
     "pr_emerging_financing_model": {
         "id": 6,
         "name": "Adoptar Modelo de Financiamiento Emergente",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_lean_ability",
@@ -346,11 +320,6 @@
                 "var_name": "pm_big_thinking",
                 "condition": "higher",
                 "value": 3.0
-            },
-            {
-                "var_name": "pm_big_thinking",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -367,7 +336,7 @@
     "pr_agility_practices": {
         "id": 7,
         "name": "Aplicar Prácticas de Efectividad y Agilidad",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_lean_ability",
@@ -378,16 +347,6 @@
                 "var_name": "pm_agility",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_lean_ability",
-                "condition": "lower",
-                "value": 2.0
-            },
-            {
-                "var_name": "pm_agility",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -411,9 +370,8 @@
     "pr_self_knowledge": {
         "id": 8,
         "name": "Lograr autoconocimiento",
-        "repetitive": false,
-        "restrictions": [
-        ],
+        "repetitive": 0,
+        "restrictions": [],
         "effects": [
             {
                 "var_name": "pm_professional_profile",
@@ -435,27 +393,12 @@
     "pr_structure_team": {
         "id": 9,
         "name": "Estructurar el Equipo",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
                 "condition": "equal",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_founders_total",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_founders_english",
-                "condition": "lower",
-                "value": 11.0
-            },
-            {
-                "var_name": "pm_founders_leadership",
-                "condition": "lower",
-                "value": 11.0
             }
         ],
         "effects": [
@@ -514,7 +457,7 @@
     "pr_distribute_startup": {
         "id": 10,
         "name": "Distribuir teóricamente la propiedad del Startup",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_founders_total",
@@ -541,16 +484,11 @@
     "pr_search_mentors": {
         "id": 11,
         "name": "Buscar mentores",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_dedication_time",
                 "condition": "higher",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_open_feedback",
-                "condition": "lower",
                 "value": 3.0
             }
         ],
@@ -575,7 +513,7 @@
     "pr_know_industry": {
         "id": 12,
         "name": "Conocer profundamente tu industria",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_industry",
@@ -586,11 +524,6 @@
                 "var_name": "pm_founders_total",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_importance",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -614,7 +547,7 @@
     "pr_technological_trends": {
         "id": 13,
         "name": "Estar actualizado con tendencias tecnológicas",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_industry",
@@ -636,22 +569,12 @@
     "pr_identify_stakeholders": {
         "id": 14,
         "name": "Identificar stakeholders",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_scope",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_actors",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_problem_competitors",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -675,27 +598,12 @@
     "pr_analyze_industry_forces": {
         "id": 15,
         "name": "Analizar fuerzas de industria para determinar estructuras de poder",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_actors",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_problem_competitors",
-                "condition": "lower",
-                "value": 5.0
-            },
-            {
-                "var_name": "pm_affected ",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_competitors",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -707,7 +615,7 @@
                 "inc_dim": 0.059
             },
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "operator": "increase",
                 "value": 1.0,
                 "dimension": 1.0,
@@ -733,7 +641,7 @@
     "pr_identify_disruptors": {
         "id": 16,
         "name": "Identificar disruptores",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_actors",
@@ -749,16 +657,6 @@
                 "var_name": "pm_problem_competitors",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_industry_maturation",
-                "condition": "lower",
-                "value": 5.0
-            },
-            {
-                "var_name": "pm_problem_competitors",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -782,7 +680,7 @@
     "pr_own_actives": {
         "id": 17,
         "name": "Inventariar activos propios o de terceros a orquestar",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_industry_maturation",
@@ -821,7 +719,7 @@
     "pr_identify_problems": {
         "id": 18,
         "name": "Identificar y seleccionar posibles problemas a resolver",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_problem_competitors",
@@ -843,7 +741,7 @@
     "pr_identify_user_pain": {
         "id": 19,
         "name": "identificar dolores del usuario",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_actors",
@@ -854,16 +752,6 @@
                 "var_name": "pm_importance",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_urgency",
-                "condition": "lower",
-                "value": 5.0
-            },
-            {
-                "var_name": "pm_protected_problem",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -894,7 +782,7 @@
     "pr_list_oportunities_hipothesis": {
         "id": 20,
         "name": "Listar hipótesis para iterar sobre oportunidad/es",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_lean_ability",
@@ -925,16 +813,6 @@
                 "var_name": "pm_scope",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_lean_ability",
-                "condition": "lower",
-                "value": 2.0
-            },
-            {
-                "var_name": "pm_solution_progress",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -958,7 +836,7 @@
     "pr_lean_cycles": {
         "id": 21,
         "name": "Experimentar ciclos lean iniciales",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_lean_ability",
@@ -989,16 +867,6 @@
                 "var_name": "pm_scope",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_lean_ability",
-                "condition": "lower",
-                "value": 2.0
-            },
-            {
-                "var_name": "pm_solution_progress",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -1022,7 +890,7 @@
     "pr_market_size": {
         "id": 22,
         "name": "Definir tamaño mercado",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
@@ -1051,7 +919,7 @@
     "pr_rate_opportunity": {
         "id": 23,
         "name": "Calificar la oportunidad seleccionada",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_scope",
@@ -1072,11 +940,6 @@
                 "var_name": "pm_organic_problem",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_potential_solution",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -1100,7 +963,7 @@
     "pr_segment_clients": {
         "id": 24,
         "name": "Determinar segmento de clientes objetivo",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_actors",
@@ -1146,7 +1009,7 @@
     "pr_offer_density": {
         "id": 25,
         "name": "Analizar la densidad de oferta en espacio elegido",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_problem_competitors",
@@ -1162,16 +1025,11 @@
                 "var_name": "pm_industry_maturation",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_industry_maturation",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
             {
-                "var_name": "pm_price ",
+                "var_name": "pm_price",
                 "operator": "random",
                 "value": 5.0,
                 "dimension": 1.0,
@@ -1204,7 +1062,7 @@
     "pr_oportunity_understanding": {
         "id": 26,
         "name": "Lograr comprensión profunda de la oportunidad, a nivel técnico, sistémico y dinámico",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_scope",
@@ -1212,7 +1070,7 @@
                 "value": 1.0
             },
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "condition": "not_null",
                 "value": 0.0
             },
@@ -1220,21 +1078,6 @@
                 "var_name": "pm_competitors",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_importance",
-                "condition": "lower",
-                "value": 5.0
-            },
-            {
-                "var_name": "pm_urgency",
-                "condition": "lower",
-                "value": 5.0
-            },
-            {
-                "var_name": "pm_affected ",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -1253,7 +1096,7 @@
                 "inc_dim": 0.059
             },
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "operator": "increase",
                 "value": 1.0,
                 "dimension": 1.0,
@@ -1279,7 +1122,7 @@
     "pr_techno_state_art": {
         "id": 27,
         "name": "Determinar estado del arte tecnológico",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_techno_level",
@@ -1305,11 +1148,6 @@
                 "var_name": "pm_industry",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_techno_level",
-                "condition": "lower",
-                "value": 4.0
             }
         ],
         "effects": [
@@ -1333,22 +1171,12 @@
     "pr_protected_problem": {
         "id": 28,
         "name": "Asegurar atributo de Problema Protegido",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_benefited_people",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_scope",
-                "condition": "lower",
-                "value": 4.0
-            },
-            {
-                "var_name": "pm_importance",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -1379,7 +1207,7 @@
     "pr_generate_alternatives": {
         "id": 29,
         "name": "Idear y generar alternativas",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_competitors",
@@ -1390,11 +1218,6 @@
                 "var_name": "pm_solution_progress",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_solution_progress",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -1425,7 +1248,7 @@
     "pr_create_solution": {
         "id": 30,
         "name": "Crear una solución disruptiva y escalable",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_potential_solution",
@@ -1441,16 +1264,6 @@
                 "var_name": "pm_ia_knowledge",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_potential_solution",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_ia_knowledge",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -1502,7 +1315,7 @@
     "pr_define_ideas": {
         "id": 31,
         "name": "Definición y selección de ideas",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
@@ -1513,16 +1326,6 @@
                 "var_name": "pm_potential_solution",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_solution_progress",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_potential_solution",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -1574,17 +1377,12 @@
     "pr_stregthen_solution_hipothesis": {
         "id": 32,
         "name": "Robustecer las hipótesis de la solución",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
                 "condition": "higher",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_importance",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -1601,22 +1399,17 @@
     "pr_problem_solution_fit": {
         "id": 33,
         "name": "Encajar mapa valor (Problem Solution Fit) teórico",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_affected ",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "operator": "increase",
                 "value": 1.0,
                 "dimension": 1.0,
@@ -1642,7 +1435,7 @@
     "pr_define_buyer_profile": {
         "id": 34,
         "name": "Definir Buyer Persona",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_actors",
@@ -1650,7 +1443,7 @@
                 "value": 1.0
             },
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "condition": "not_null",
                 "value": 0.0
             },
@@ -1663,16 +1456,11 @@
                 "var_name": "pm_organic_problem",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_affected ",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
             {
-                "var_name": "pm_affected ",
+                "var_name": "pm_affected",
                 "operator": "increase",
                 "value": 1.0,
                 "dimension": 1.0,
@@ -1691,7 +1479,7 @@
     "pr_define_preliminar_business_model": {
         "id": 35,
         "name": "Definir Modelo de negocios preliminar",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_tam",
@@ -1707,11 +1495,6 @@
                 "var_name": "pm_business_models",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_defined_business_model",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -1749,17 +1532,12 @@
     "pr_ai_oportunities": {
         "id": 36,
         "name": "Determinar oportunidades de aporte de IA",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_ia_knowledge",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_ia_knowledge",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -1783,7 +1561,7 @@
     "pr_pitch_state_promotion": {
         "id": 37,
         "name": "Construir pitch para Agente de Fomento Estatal",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Equipo",
@@ -1829,22 +1607,12 @@
     "pr_founder_mkt_fit": {
         "id": 38,
         "name": "Asegurar Founder Market Fit (o Product Owner Fit)",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_organic_problem",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_founders_startup",
-                "condition": "lower",
-                "value": 11.0
-            },
-            {
-                "var_name": "pm_founders_years",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -1882,27 +1650,12 @@
     "pr_test_hypothesis_experiments": {
         "id": 39,
         "name": "Diseñar y testear experimentos de hipótesis planteadas",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_lean_ability",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_open_feedback",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_agility",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_potential_solution",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -1933,7 +1686,7 @@
     "pr_out_of_building": {
         "id": 40,
         "name": "Getting out of the building",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_open_feedback",
@@ -1944,11 +1697,6 @@
                 "var_name": "pm_exposition",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_big_thinking",
-                "condition": "lower",
-                "value": 5.0
             }
         ],
         "effects": [
@@ -1965,7 +1713,7 @@
     "pr_check_value_proposal": {
         "id": 41,
         "name": "Revisar formalmente propuesta de valor",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -1999,7 +1747,7 @@
     "pr_build_competitors_benchmark": {
         "id": 42,
         "name": "Construir benchmark competidores directos/indirectos",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_competitors",
@@ -2038,7 +1786,7 @@
                 "inc_dim": 0.045
             },
             {
-                "var_name": "pm_price ",
+                "var_name": "pm_price",
                 "operator": "random",
                 "value": 5.0,
                 "dimension": 1.0,
@@ -2057,7 +1805,7 @@
     "pr_preliminar_business_model": {
         "id": 43,
         "name": "Modelo de negocios preliminar",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -2068,11 +1816,6 @@
                 "var_name": "Solución",
                 "condition": "dim_complete",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_defined_business_model",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -2117,7 +1860,7 @@
     "pr_build_pitch_onepager": {
         "id": 44,
         "name": "Construir Pitch Deck inicial y One Pager",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -2198,7 +1941,7 @@
     "pr_define_mantra_mtp": {
         "id": 45,
         "name": "Definir mantra y MTP",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_motivation",
@@ -2220,7 +1963,7 @@
     "pr_name_startup": {
         "id": 46,
         "name": "Nombrar Startup",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_company_constitution",
@@ -2242,17 +1985,12 @@
     "pr_start_countable_registry": {
         "id": 47,
         "name": "Iniciar registro contable",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_declared_sales",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_statement_incomes",
-                "condition": "lower",
-                "value": 4.0
             }
         ],
         "effects": [
@@ -2269,7 +2007,7 @@
     "pr_formalize_startup": {
         "id": 48,
         "name": "Formalizar startup (constituir, iniciar actividades formales y tributarias)",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_company_constitution",
@@ -2315,7 +2053,7 @@
     "pr_vdm": {
         "id": 49,
         "name": "Activar foco específico en sobrevivir (VdM)",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_statement_incomes",
@@ -2326,11 +2064,6 @@
                 "var_name": "pm_declared_sales",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_statement_incomes",
-                "condition": "lower",
-                "value": 4.0
             }
         ],
         "effects": [
@@ -2382,7 +2115,7 @@
     "pr_theoric_costumer_journey": {
         "id": 50,
         "name": "Realizar Customer Journey Teórico",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "solución",
@@ -2393,11 +2126,6 @@
                 "var_name": "problema",
                 "condition": "dim_complete",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_solution_progress",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -2428,7 +2156,7 @@
     "pr_define_mvp_ux": {
         "id": 51,
         "name": "Definir UX del MVP (preliminar)",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "solución",
@@ -2472,7 +2200,7 @@
     "pr_atributes_use_cases": {
         "id": 52,
         "name": "Especificar atributos y casos de uso",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
@@ -2488,11 +2216,6 @@
                 "var_name": "Problema",
                 "condition": "dim_complete",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_solution_progress",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -2509,7 +2232,7 @@
     "pr_design_techno_arquitecture": {
         "id": 53,
         "name": "Diseñar arquitectura tecnológica preliminar",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_technology_core",
@@ -2520,11 +2243,6 @@
                 "var_name": "pm_professional_profile",
                 "condition": "equal",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_technology_core",
-                "condition": "lower",
-                "value": 7.0
             }
         ],
         "effects": [
@@ -2541,7 +2259,7 @@
     "pr_identify_key_actives": {
         "id": 54,
         "name": "Identificar activos de data clave",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
@@ -2573,7 +2291,7 @@
     "pr_identify_ia": {
         "id": 55,
         "name": "Identificar activos potenciales de procesamiento clave: algoritmos y modelos IA",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
@@ -2589,11 +2307,6 @@
                 "var_name": "pm_technology_core",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_ia_knowledge",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -2617,7 +2330,7 @@
     "pr_design_demand_activities": {
         "id": 56,
         "name": "Diseñar actividades de generación de demanda (marketing preliminar)",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_acquisition_channels",
@@ -2663,7 +2376,7 @@
     "pr_develop_launch_mvp": {
         "id": 57,
         "name": "Desarrollar y lanzar MVP",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -2679,11 +2392,6 @@
                 "var_name": "pm_solution_progress",
                 "condition": "higher",
                 "value": 3.0
-            },
-            {
-                "var_name": "pm_solution_progress",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -2700,7 +2408,7 @@
     "pr_validate_offer_features": {
         "id": 58,
         "name": "Validar atributos de la oferta en terreno",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -2732,7 +2440,7 @@
     "pr_incorporate_adquisition_economics": {
         "id": 59,
         "name": "Incorporar economics de adquisición",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_monthly_sales",
@@ -2785,7 +2493,7 @@
     "pr_pivoting": {
         "id": 60,
         "name": "Pivotear",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_business_models",
@@ -2819,7 +2527,7 @@
     "pr_validate_journey_and_buyer": {
         "id": 61,
         "name": "Validar supuestos, Customer Journey real y verificar Buyer Persona",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
@@ -2851,7 +2559,7 @@
     "pr_assure_correct_ux": {
         "id": 62,
         "name": "Asegurar UX correcto",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
@@ -2890,7 +2598,7 @@
     "pr_define_operational_flow": {
         "id": 63,
         "name": "Establecer flujo operacional",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_monthly_sales",
@@ -2919,7 +2627,7 @@
     "pr_refine_business_model": {
         "id": 64,
         "name": "Refinar modelo de negocios",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_business_models",
@@ -2992,7 +2700,7 @@
     "pr_define_price_strat": {
         "id": 65,
         "name": "Establecer estrategia de precios",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_acquisition_channels",
@@ -3038,7 +2746,7 @@
     "pr_build_business_case": {
         "id": 66,
         "name": "Construir EERR proyectado / Caso de negocios",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_monthly_sales",
@@ -3069,21 +2777,6 @@
                 "var_name": "pm_sales_channels",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_contribution_margin",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_burning_rate",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
             }
         ],
         "effects": [
@@ -3149,7 +2842,7 @@
     "pr_define_required_investment": {
         "id": 67,
         "name": "Determinar inversión requerida",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_monthly_sales",
@@ -3229,22 +2922,12 @@
     "pr_strategy_first_version": {
         "id": 68,
         "name": "Diseñar primera versión de estrategia",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_orchestration_level",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_formal_strategy",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_orchestration_level",
-                "condition": "lower",
-                "value": 4.0
             }
         ],
         "effects": [
@@ -3268,7 +2951,7 @@
     "pr_strategic_multi_roadmap": {
         "id": 69,
         "name": "Diseñar Roadmap estratégico multidimensional",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -3284,11 +2967,6 @@
                 "var_name": "Equipo",
                 "condition": "dim_complete",
                 "value": 3.0
-            },
-            {
-                "var_name": "pm_appropriability",
-                "condition": "lower",
-                "value": 9.0
             }
         ],
         "effects": [
@@ -3312,7 +2990,7 @@
     "pr_define_balance_tactic": {
         "id": 70,
         "name": "Explicitar táctica para alcanzar equilibrio",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_breakeven",
@@ -3346,7 +3024,7 @@
     "pr_strat_to_execution": {
         "id": 71,
         "name": "[De la estrategia a la ejecución] Bajar estrategia a Producto, Tecnología, Talento, Canales, Marketing, Finanzas",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_formal_strategy",
@@ -3416,7 +3094,7 @@
     "pr_design_data_strat": {
         "id": 72,
         "name": "Esbozar estrategia de data",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_ia_knowledge",
@@ -3437,11 +3115,6 @@
                 "var_name": "pm_professional_profile",
                 "condition": "equal",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_ia_knowledge",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -3458,7 +3131,7 @@
     "pr_design_ai_factory": {
         "id": 73,
         "name": "Diseñar fábrica de IA",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "pm_ia_knowledge",
@@ -3479,11 +3152,6 @@
                 "var_name": "pm_professional_profile",
                 "condition": "equal",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_ia_knowledge",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -3514,7 +3182,7 @@
     "pr_appropriateness_differentiation_strat": {
         "id": 74,
         "name": "Diseñar estrategia de apropiabilidad y diferenciación",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -3553,7 +3221,7 @@
     "pr_design_network_effects": {
         "id": 75,
         "name": "Diseñar Efectos de Red",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_exposition",
@@ -3564,16 +3232,6 @@
                 "var_name": "pm_open_feedback",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_exposition",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_open_feedback",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -3604,7 +3262,7 @@
     "pr_design_kpis_northstar": {
         "id": 76,
         "name": "Definir KPI's y Northstar",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_declared_sales",
@@ -3640,26 +3298,6 @@
                 "var_name": "pm_user_maintenance",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -3697,7 +3335,7 @@
     "pr_consolidate_solution": {
         "id": 77,
         "name": "Consolidar solución",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
@@ -3712,11 +3350,6 @@
             {
                 "var_name": "Solución",
                 "condition": "dim_complete",
-                "value": 2.0
-            },
-            {
-                "var_name": "pm_lean_ability",
-                "condition": "lower",
                 "value": 2.0
             }
         ],
@@ -3741,27 +3374,12 @@
     "pr_adjust_product_features": {
         "id": 78,
         "name": "Ajustar atributos de producto (para permitir escalamiento futuro)",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_solution_progress",
                 "condition": "higher",
                 "value": 4.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -3792,7 +3410,7 @@
     "pr_define_operational_model": {
         "id": 79,
         "name": "Definir modelo operacional",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Equipo",
@@ -3803,11 +3421,6 @@
                 "var_name": "pm_formal_strategy",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_formal_strategy",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -3824,7 +3437,7 @@
     "pr_improve_operational_flow": {
         "id": 80,
         "name": "Perfeccionar flujo operacional",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Equipo",
@@ -3835,11 +3448,6 @@
                 "var_name": "pm_formal_strategy",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_formal_strategy",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -3863,7 +3471,7 @@
     "pr_improve_data_strategy": {
         "id": 81,
         "name": "Mejorar e implementar estrategia de data",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
@@ -3874,11 +3482,6 @@
                 "var_name": "pm_ia_knowledge",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_ia_knowledge",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -3895,7 +3498,7 @@
     "pr_activate_survival_mode": {
         "id": 82,
         "name": "Activar Modo Sobrevivir",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_prudence",
@@ -3921,26 +3524,6 @@
                 "var_name": "pm_burning_rate",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_burning_rate",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -3978,7 +3561,7 @@
     "pr_build_channels_strategy": {
         "id": 83,
         "name": "Construir estrategia de canales",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_monthly_sales",
@@ -3989,7 +3572,7 @@
         "effects": [
             {
                 "var_name": "pm_acquisition_channels",
-                "operator": "random",
+                "operator": 0,
                 "value": 5.0,
                 "dimension": 5.0,
                 "inc_dim": 0.143
@@ -4007,7 +3590,7 @@
     "pr_build_demand_marketing": {
         "id": 84,
         "name": "Construir estrategia y capacidades de marketing digital para generación de demanda",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_nps",
@@ -4023,21 +3606,6 @@
                 "var_name": "pm_user_maintenance",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -4068,7 +3636,7 @@
     "pr_define_qualified_leads": {
         "id": 85,
         "name": "Definir leads calificados",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_nps",
@@ -4084,21 +3652,6 @@
                 "var_name": "pm_user_maintenance",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -4136,7 +3689,7 @@
     "pr_build_sales_process": {
         "id": 86,
         "name": "Construir un proceso de ventas",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_sales_channels",
@@ -4157,21 +3710,6 @@
                 "var_name": "pm_user_maintenance",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -4209,7 +3747,7 @@
     "pr_build_sales_kit": {
         "id": 87,
         "name": "Armar Kit de ventas",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_sales_channels",
@@ -4230,21 +3768,6 @@
                 "var_name": "pm_user_maintenance",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -4282,7 +3805,7 @@
     "pr_refine_operational_model": {
         "id": 88,
         "name": "Refinar modelo operacional",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Equipo",
@@ -4293,11 +3816,6 @@
                 "var_name": "pm_formal_strategy",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_formal_strategy",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -4321,27 +3839,12 @@
     "pr_pitch_many_publics": {
         "id": 89,
         "name": "Pitchear a diferentes públicos",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "proceso emprendedor",
                 "condition": "dim_complete",
                 "value": 4.0
-            },
-            {
-                "var_name": "pm_public_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_private_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_other_funds",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -4372,7 +3875,7 @@
     "pr_iterate_channels_strategy": {
         "id": 90,
         "name": "Iterar estrategia de canales",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -4408,26 +3911,6 @@
                 "var_name": "pm_cac_ltv",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_exposition",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -4465,7 +3948,7 @@
     "pr_design_virality_model": {
         "id": 91,
         "name": "Diseñar modelo de Viralidad",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -4501,26 +3984,6 @@
                 "var_name": "pm_cac_ltv",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_exposition",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -4565,7 +4028,7 @@
     "pr_structure_finance_control": {
         "id": 92,
         "name": "Estructurar control financiero",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_burning_rate",
@@ -4606,41 +4069,6 @@
                 "var_name": "pm_declared_sales",
                 "condition": "equal",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_burning_rate",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_roi",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_cac_ltv",
-                "condition": "lower",
-                "value": 3.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -4699,7 +4127,7 @@
     "pr_ensure_income": {
         "id": 93,
         "name": "Asegurar ingresos",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_company_constitution",
@@ -4745,21 +4173,6 @@
                 "var_name": "pm_breakeven",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_statement_incomes",
-                "condition": "lower",
-                "value": 4.0
-            },
-            {
-                "var_name": "pm_contribution_margin",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -4790,7 +4203,7 @@
     "pr_define_contribution_margin": {
         "id": 94,
         "name": "Determinar Margen de Contribución",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "pm_declared_sales",
@@ -4834,7 +4247,7 @@
     "pr_define_key_profiles": {
         "id": 95,
         "name": "Definir perfiles clave",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "equipo",
@@ -4871,7 +4284,7 @@
     "pr_build_talents_plan": {
         "id": 96,
         "name": "Construir un plan de atracción y retención de talentos",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
@@ -4882,11 +4295,6 @@
                 "var_name": "pm_motivation",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_founders_leadership",
-                "condition": "lower",
-                "value": 11.0
             }
         ],
         "effects": [
@@ -4903,7 +4311,7 @@
     "pr_stablish_organizational_culture": {
         "id": 97,
         "name": "Diseñar y establecer la cultura organizacional",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
@@ -4914,11 +4322,6 @@
                 "var_name": "pm_motivation",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_founders_leadership",
-                "condition": "lower",
-                "value": 11.0
             }
         ],
         "effects": [
@@ -4935,7 +4338,7 @@
     "pr_stablish_internal_policy": {
         "id": 98,
         "name": "Establecer una política interna",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
@@ -4946,11 +4349,6 @@
                 "var_name": "pm_motivation",
                 "condition": "not_null",
                 "value": 0.0
-            },
-            {
-                "var_name": "pm_founders_leadership",
-                "condition": "lower",
-                "value": 11.0
             }
         ],
         "effects": [
@@ -4967,7 +4365,7 @@
     "pr_build_incentives_plan": {
         "id": 99,
         "name": "Construir plan de incentivos",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_professional_profile",
@@ -4983,11 +4381,6 @@
                 "var_name": "pm_monthly_sales",
                 "condition": "higher",
                 "value": 3.0
-            },
-            {
-                "var_name": "pm_founders_leadership",
-                "condition": "lower",
-                "value": 11.0
             }
         ],
         "effects": [
@@ -5004,7 +4397,7 @@
     "pr_create_strategic_directory": {
         "id": 100,
         "name": "Crear directorio estratégico",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_company_constitution",
@@ -5053,7 +4446,7 @@
     "pr_design_directories_structure": {
         "id": 101,
         "name": "Diseñar la estructura de directorios",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_company_constitution",
@@ -5089,11 +4482,6 @@
                 "var_name": "proceso emprendedor",
                 "condition": "dim_complete",
                 "value": 4.0
-            },
-            {
-                "var_name": "pm_dedication_time",
-                "condition": "lower",
-                "value": 4.0
             }
         ],
         "effects": [
@@ -5117,7 +4505,7 @@
     "pr_stablish_dir_compensation_model": {
         "id": 102,
         "name": "Establecer modelo de compensación de directores",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "pm_company_constitution",
@@ -5169,7 +4557,7 @@
     "pr_build_expansion_strategy": {
         "id": 103,
         "name": "Construir estrategia de expansión",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "equipo",
@@ -5210,16 +4598,6 @@
                 "var_name": "pm_company_formalization",
                 "condition": "equal",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_n_countries",
-                "condition": "lower",
-                "value": 11.0
-            },
-            {
-                "var_name": "pm_valuation",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -5264,7 +4642,7 @@
     "pr_define_finance_scaling_strategy": {
         "id": 104,
         "name": "Definir estrategia de financiamiento de escalamiento",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "equipo",
@@ -5305,26 +4683,6 @@
                 "var_name": "pm_company_formalization",
                 "condition": "equal",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_valuation",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_public_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_private_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_other_funds",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -5362,7 +4720,7 @@
     "pr_implement_nfx": {
         "id": 105,
         "name": "Implementar NfX",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -5373,11 +4731,6 @@
                 "var_name": "Solución",
                 "condition": "dim_complete",
                 "value": 2.0
-            },
-            {
-                "var_name": "pm_appropriability",
-                "condition": "lower",
-                "value": 9.0
             }
         ],
         "effects": [
@@ -5408,7 +4761,7 @@
     "pr_execute_client_adquisition": {
         "id": 106,
         "name": "Efectuar adquisición de clientes",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -5449,26 +4802,6 @@
                 "var_name": "pm_user_traction",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_breakeven",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -5506,7 +4839,7 @@
     "pr_build_investing_plan": {
         "id": 107,
         "name": "Construir un plan de inversión",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -5562,36 +4895,6 @@
                 "var_name": "pm_burning_rate",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_public_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_private_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_other_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_contribution_margin",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_roi",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_burning_rate",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -5643,7 +4946,7 @@
     "pr_establish_investing_instrument": {
         "id": 108,
         "name": "Establecer Instrumento de inversión",
-        "repetitive": false,
+        "repetitive": 2,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -5699,36 +5002,6 @@
                 "var_name": "pm_burning_rate",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_public_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_private_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_other_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_contribution_margin",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_roi",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_burning_rate",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -5780,7 +5053,7 @@
     "pr_valorize_enterprise": {
         "id": 109,
         "name": "Valorizar empresa",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "equipo",
@@ -5851,16 +5124,6 @@
                 "var_name": "pm_burning_rate",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_valuation",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_breakeven",
-                "condition": "lower",
-                "value": 3.0
             }
         ],
         "effects": [
@@ -5884,7 +5147,7 @@
     "pr_create_one_pager": {
         "id": 110,
         "name": "Elaborar un one pager de inversión",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -5900,46 +5163,6 @@
                 "var_name": "equipo",
                 "condition": "dim_complete",
                 "value": 3.0
-            },
-            {
-                "var_name": "pm_burning_rate",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_roi",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_type_financing",
-                "condition": "lower",
-                "value": 7.0
-            },
-            {
-                "var_name": "pm_total_financing",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -6012,7 +5235,7 @@
     "pr_pitch": {
         "id": 111,
         "name": "Construir pitch para VCs",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -6073,51 +5296,6 @@
                 "var_name": "pm_total_financing",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_burning_rate",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_roi",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_nps",
-                "condition": "lower",
-                "value": 10.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_user_maintenance",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_type_financing",
-                "condition": "lower",
-                "value": 7.0
-            },
-            {
-                "var_name": "pm_total_financing",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_private_funds",
-                "condition": "lower",
-                "value": 6.0
             }
         ],
         "effects": [
@@ -6197,7 +5375,7 @@
     "pr_execute_due_diligence": {
         "id": 112,
         "name": "Efectuar Due Diligence",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -6263,21 +5441,6 @@
                 "var_name": "pm_valuation",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_valuation",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_private_funds",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_type_financing",
-                "condition": "lower",
-                "value": 7.0
             }
         ],
         "effects": [
@@ -6308,7 +5471,7 @@
     "pr_prospect_new_markets": {
         "id": 113,
         "name": "Prospectar nuevos mercados",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -6339,11 +5502,6 @@
                 "var_name": "pm_monthly_sales",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_n_countries",
-                "condition": "lower",
-                "value": 11.0
             }
         ],
         "effects": [
@@ -6360,7 +5518,7 @@
     "pr_define_scaling_requirements": {
         "id": 114,
         "name": "Definir necesidades de escalamiento",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "Solución",
@@ -6386,16 +5544,6 @@
                 "var_name": "pm_monthly_sales",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_n_countries",
-                "condition": "lower",
-                "value": 11.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
             }
         ],
         "effects": [
@@ -6419,7 +5567,7 @@
     "pr_define_expected_revenue": {
         "id": 115,
         "name": "Establecer revenue esperado",
-        "repetitive": false,
+        "repetitive": 1,
         "restrictions": [
             {
                 "var_name": "Solución",
@@ -6445,26 +5593,6 @@
                 "var_name": "pm_monthly_sales",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_n_countries",
-                "condition": "lower",
-                "value": 11.0
-            },
-            {
-                "var_name": "pm_user_traction",
-                "condition": "lower",
-                "value": 8.0
-            },
-            {
-                "var_name": "pm_monthly_sales",
-                "condition": "lower",
-                "value": 6.0
-            },
-            {
-                "var_name": "pm_roi",
-                "condition": "lower",
-                "value": 8.0
             }
         ],
         "effects": [
@@ -6509,7 +5637,7 @@
     "pr_execute_scaling_plan": {
         "id": 116,
         "name": "Ejecutar plan de escalamiento",
-        "repetitive": false,
+        "repetitive": 0,
         "restrictions": [
             {
                 "var_name": "Problema",
@@ -6540,11 +5668,6 @@
                 "var_name": "pm_monthly_sales",
                 "condition": "higher",
                 "value": 1.0
-            },
-            {
-                "var_name": "pm_n_countries",
-                "condition": "lower",
-                "value": 11.0
             }
         ],
         "effects": [

@@ -1,26 +1,19 @@
-import json
-import numpy as np
-import pandas as pd
-import config
-from utils.agents import Agent
-from utils.register import get_environment
-from utils.files import load_model, write_results
-from stable_baselines.common import set_global_seeds
+# optional dependencies
 from stable_baselines import logger
-import argparse
-import random
+import config
 import tensorflow as tf
-import gym
-
-from stable_baselines.common.policies import MlpPolicy, MlpLstmPolicy, MlpLnLstmPolicy
-from stable_baselines.common import make_vec_env
-from stable_baselines import ACER
-
+import time
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
 tf.get_logger().setLevel('INFO')
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+# critical dependencies
+import json
+import pandas as pd
+from utils.register import get_environment
+from utils.files import load_model
+from stable_baselines.common import set_global_seeds
 
 
 def get_mapping(df):
@@ -91,12 +84,12 @@ def output_pipeline(probs):
         data = json.load(f)
 
     best_premes = get_best_premes(probs, data)
-    # print(json.dumps(best_premes,indent=2))
     with open('best_premes.json', 'w') as f:
         json.dump(best_premes, f, indent=2)
 
 
-def main(args):
+def main(input_json):
+    start_time = time.time()
 
     dic_front = {
         "data": {
@@ -110,29 +103,30 @@ def main(args):
         }
     }
 
-    initial_state = input_pipeline(dic_front)
+    json_file = dic_front
+    #input_json = json_file
 
-    logger.configure(config.LOGDIR)
+    initial_state = input_pipeline(json_file)
 
-    if args.debug:
-        logger.set_level(config.DEBUG)
-    else:
-        logger.set_level(config.INFO)
+    seed = 17
+
+    #logger.configure(config.LOGDIR)
 
     # make environment
-    env = get_environment(args.env_name)(
-        verbose=args.verbose, manual=args.manual, env_test=True, initial_state=initial_state)
-    env.seed(args.seed)
-    set_global_seeds(args.seed)
+    env = get_environment('evolution')(
+        verbose=False, manual=False, env_test=True, initial_state=initial_state)
+    env.seed(seed)
+    set_global_seeds(seed)
 
     acer_model = load_model(env, 'best_model.zip')
 
     obs = env.reset()
 
     while True:
-        input("Press Enter to generate a prediction...")
         probs = acer_model.action_probability(obs)
         output_pipeline(probs)
+        print("\n--- %s seconds ---" % (time.time() - start_time))
+        input("\nPress Enter to generate next prediction...")
         action, _states = acer_model.predict(obs)
         obs, rewards, dones, info = env.step(action)
         # with open('state.txt', 'w') as f:
@@ -140,59 +134,5 @@ def main(args):
         env.render()
 
 
-def cli() -> None:
-    """Handles argument extraction from CLI and passing to main().
-    Note that a separate function is used rather than in __name__ == '__main__'
-    to allow unit testing of cli().
-    """
-    # Setup argparse to show defaults on help
-    formatter_class = argparse.ArgumentDefaultsHelpFormatter
-    parser = argparse.ArgumentParser(formatter_class=formatter_class)
-
-    parser.add_argument("--agents", "-a", nargs='+', type=str,
-                        default=['human', 'human'], help="Player Agents (human, ppo version)")
-
-    parser.add_argument("--best", "-b", action='store_true', default=False,
-                        help="Make AI agents choose the best move (rather than sampling)")
-
-    parser.add_argument("--games", "-g", type=int, default=1,
-                        help="Number of games to play)")
-
-    # parser.add_argument("--n_players", "-n", type = int, default = 3
-    #               , help="Number of players in the game (if applicable)")
-    parser.add_argument("--debug", "-d",  action='store_true',
-                        default=False, help="Show logs to debug level")
-
-    parser.add_argument("--verbose", "-v",  action='store_true',
-                        default=False, help="Show observation on debug logging")
-
-    parser.add_argument("--manual", "-m",  action='store_true',
-                        default=False, help="Manual update of the game state on step")
-
-    parser.add_argument("--randomise_players", "-r",  action='store_true',
-                        default=False, help="Randomise the player order")
-    parser.add_argument("--recommend", "-re",  action='store_true',
-                        default=False, help="Make recommendations on humans turns")
-
-    parser.add_argument("--cont", "-c",  action='store_true', default=False,
-                        help="Pause after each turn to wait for user to continue")
-
-    parser.add_argument("--env_name", "-e",  type=str,
-                        default='TicTacToe', help="Which game to play?")
-
-    parser.add_argument("--write_results", "-w",  action='store_true',
-                        default=False, help="Write results to a file?")
-
-    parser.add_argument("--seed", "-s",  type=int,
-                        default=17, help="Random seed")
-
-    # Extract args
-    args = parser.parse_args()
-
-    # Enter main
-    main(args)
-    return
-
-
 if __name__ == '__main__':
-    cli()
+    main(0)

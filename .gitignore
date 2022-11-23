@@ -115,6 +115,10 @@ venv.bak/
 # vscode
 .vscode/
 
-# PyCharm / IDEA
+# PyCharm / IDEA 
 .idea/
+
+#others
+app/best_premes.json
+app/environments/evolution/evolution/envs/others/*
 

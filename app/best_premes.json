@@ -1,26 +1,26 @@
 {
   "pred_preme1": {
-    "confidence": 81.678,
-    "preme": "pr_create_one_pager"
+    "confidence": 12.734,
+    "preme": "pr_initial_assestment12"
   },
   "pred_preme2": {
-    "confidence": 6.954,
-    "preme": "pr_build_pitch_onepager"
+    "confidence": 1.266,
+    "preme": "pr_create_strategic_directory"
   },
   "pred_preme3": {
-    "confidence": 3.741,
-    "preme": "pr_preliminar_business_model"
+    "confidence": 1.152,
+    "preme": "pr_name_startup"
   },
   "pred_preme4": {
-    "confidence": 2.471,
-    "preme": "pr_know_entrepreneur_process"
+    "confidence": 1.13,
+    "preme": "pr_define_operational_flow"
   },
   "pred_preme5": {
-    "confidence": 0.719,
-    "preme": "pr_implement_nfx"
+    "confidence": 1.116,
+    "preme": "pr_establish_investing_instrument"
   },
   "pred_preme6": {
-    "confidence": 0.559,
-    "preme": "pr_initial_assestment12"
+    "confidence": 1.109,
+    "preme": "pr_stablish_internal_policy"
   }
 }

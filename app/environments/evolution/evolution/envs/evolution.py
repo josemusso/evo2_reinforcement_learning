@@ -21,9 +21,10 @@ import random
 import multiprocessing
 
 # Variables Globales
-var_tableros_path = './environments/evolution/evolution/envs/var2.0.csv'
-premes_path = './environments/evolution/evolution/envs/premes_lower.json'
+var_tableros_path = './environments/evolution/evolution/envs/tableros.csv'
+premes_path = './environments/evolution/evolution/envs/premes.json'
 cantidad_tableros_por_fila = 9
+var_max_path = './environments/evolution/evolution/envs/var_max.json'
 
 
 class Player():
@@ -91,26 +92,20 @@ class Board():
         return position_grid
 
     def get_la_grid(self, legal_positions):
-        #print(legal_positions[self.var_y])
-        #print(self.var_y)
-        #print(legal_positions)
         grid_shape = (len(self.vals_y), len(self.vals_x))
 
         # board de legal actions, a que posiciones te puedes mover
         la_grid = np.zeros(grid_shape)
 
-        #print(la_grid.shape)
-
         # update with legal positions for var_x
-        for x in legal_positions[self.var_x]:  
+        for x in legal_positions[self.var_x]:
             y = self.player_y
+            la_grid[y, x] = 1
 
-            la_grid[y, x] = 1 #dim_error: cuando se pasa de los limites de la dimension genera un error
         # update with legal positions for var_y
         for y in legal_positions[self.var_y]:
             x = self.player_x
-
-            la_grid[y, x] = 1 #dim_error: cuando se pasa de los limites de la dimension genera un error
+            la_grid[y, x] = 1
         return la_grid
 
     def get_player_x(self):
@@ -151,7 +146,7 @@ class EvolutionEnv(gym.Env):
     def __init__(self, verbose=False, manual=False, env_test=False, initial_state=None):
 
         super(EvolutionEnv, self).__init__()
-        
+
         self.name = 'evolution'
         self.manual = manual
         self.render_lib = 'opencv'
@@ -171,12 +166,13 @@ class EvolutionEnv(gym.Env):
         self.data = lines
 
         self.n_tableros = int((len(lines)+1)/6)
+
         self.max_features = int(len(lines[0].split(',')))
 
         self.dim_complete = {1.0: 0, 2.0: 0, 3.0: 0, 4.0: 0, 5.0: 0}
         self.dim_name = {1.0: [], 2.0: [], 3.0: [], 4.0: [], 5.0: []}
 
-        self.observation_space = gym.spaces.Box(low=0, high=1, shape=(
+        self.observation_space = gym.spaces.Box(low=-1, high=1, shape=(
             self.n_tableros, self.max_features*2, self.max_features), dtype=np.int32)
 
         self.verbose = verbose
@@ -194,8 +190,10 @@ class EvolutionEnv(gym.Env):
 
         position_grid = {}  # board de posicion actual
         for number in range(1, self.n_tableros+1):
-            position_grid[f'position_grid_board{number}'] = self.boards_dict[f"board{number}"].get_position_grid()
-            position_grid[f'position_grid_board{number}'] = np.lib.pad(position_grid[f'position_grid_board{number}'], ((0, board_size-position_grid[f'position_grid_board{number}'].shape[0]), (0, board_size-position_grid[f'position_grid_board{number}'].shape[1])), 'constant', constant_values=(0))
+            position_grid[f'position_grid_board{number}'] = self.boards_dict[f"board{number}"].get_position_grid(
+            )
+            position_grid[f'position_grid_board{number}'] = np.lib.pad(position_grid[f'position_grid_board{number}'], ((
+                0, board_size-position_grid[f'position_grid_board{number}'].shape[0]), (0, board_size-position_grid[f'position_grid_board{number}'].shape[1])), 'constant', constant_values=(0))
 
         grid_list = []
         for position_grid_value in position_grid.values():
@@ -204,8 +202,10 @@ class EvolutionEnv(gym.Env):
 
         la_grid = {}  # in board set 1 to legal positions
         for number in range(1, self.n_tableros+1):
-            la_grid[f"la_grid_board{number}"] = self.boards_dict[f"board{number}"].get_la_grid(self.legal_positions) #dim_error: cuando se pasa de los limites de la dimension genera un error
-            la_grid[f"la_grid_board{number}"] = np.lib.pad(la_grid[f"la_grid_board{number}"], ((0, board_size-la_grid[f"la_grid_board{number}"].shape[0]), (0, board_size-la_grid[f"la_grid_board{number}"].shape[1])), 'constant', constant_values=(0))
+            la_grid[f"la_grid_board{number}"] = self.boards_dict[f"board{number}"].get_la_grid(
+                self.legal_positions)  # dim_error: cuando se pasa de los limites de la dimension genera un error
+            la_grid[f"la_grid_board{number}"] = np.lib.pad(la_grid[f"la_grid_board{number}"], ((
+                0, board_size-la_grid[f"la_grid_board{number}"].shape[0]), (0, board_size-la_grid[f"la_grid_board{number}"].shape[1])), 'constant', constant_values=(0))
 
         la_list = []
         for la_value in la_grid.values():
@@ -227,11 +227,9 @@ class EvolutionEnv(gym.Env):
             # TODO check if restriction is complete
             preme_legality = True
             restrictions = self.premes[preme_name]["restrictions"]
-            
+
             for restriction in restrictions:
-                # if restriction["var_name"] == "":
-                #     continue
-                if restriction["condition"] == "dim_complete":        
+                if restriction["condition"] == "dim_complete":
                     preme_legality = preme_legality and self.dim_complete[restriction["value"]] >= 0.8
                 elif restriction["condition"] == "not_null":
                     preme_legality = preme_legality and self.position[
@@ -252,6 +250,9 @@ class EvolutionEnv(gym.Env):
     @property
     def legal_positions(self):
 
+        with open(var_max_path, 'r') as f:
+            max_var = json.loads(f.read())
+
         legal_positions = {}
         for label_name in self.label_list:
             legal_positions[label_name] = []
@@ -260,12 +261,19 @@ class EvolutionEnv(gym.Env):
             legal_preme = list(legal_preme.values())[0]
             for preme_effect in legal_preme["effects"]:
                 preme_effect["value"] = int(preme_effect["value"])
-                if preme_effect["operator"] == "increase": #dim_error: lograr que cuando este al maximo no se incremente mas el valor
-                    legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]+preme_effect["value"])
+
+                if preme_effect["operator"] == "increase":
+                    if self.position[preme_effect["var_name"]] >= max_var[preme_effect["var_name"]]-1:
+                        continue
+                    else:
+                        legal_positions[preme_effect["var_name"]].append(
+                            self.position[preme_effect["var_name"]]+preme_effect["value"])
                 if preme_effect["operator"] == "decrease":
-                    legal_positions[preme_effect["var_name"]].append(self.position[preme_effect["var_name"]]-preme_effect["value"])
+                    legal_positions[preme_effect["var_name"]].append(
+                        self.position[preme_effect["var_name"]]-preme_effect["value"])
                 if preme_effect["operator"] == "set":
-                    legal_positions[preme_effect["var_name"]].append(preme_effect["value"])
+                    legal_positions[preme_effect["var_name"]].append(
+                        preme_effect["value"])
                 if preme_effect["operator"] == "random":
                     value = random.randint(1, preme_effect["value"])
                     legal_positions[preme_effect["var_name"]].append(value)
@@ -313,12 +321,8 @@ class EvolutionEnv(gym.Env):
         reward = [0]
         ids = []
         names = []
-        #action_list = []
-        #if action not in action_list:
-        #    action_list.append(action)
-        #    print(action_list)
-        # check effect of selected action
 
+        # check effect of selected action
         for i, legal_preme in enumerate(self.legal_actions):
             preme_name = list(legal_preme.keys())[0]
             ids.append(list(legal_preme.values())[0]['id'])
@@ -326,25 +330,33 @@ class EvolutionEnv(gym.Env):
 
             if (action == list(legal_preme.values())[0]['id']):
                 pos = i
-                break     
+                break
+
+        with open(var_max_path, 'r') as f:
+            max_var = json.loads(f.read())
 
         if action not in ids:  # ilegal action, ends game, punishment
             if self.verbose:
                 print(action, "Action not in list")
             done = True
-            reward = [-100]  # TODO dejar en -1 o cambiar
+            reward = [-100]  # TODO Evaluate negative reward
         else:  # legal action proceed, apply all effects related to chosen action preme
             action_preme_name = names[pos]
             effects = self.premes[action_preme_name]["effects"]
             for effect in effects:
-                #print(effect["var_name"], effect["operator"], effect["value"])
                 if effect["var_name"] not in self.dim_name[effect["dimension"]]:
-                    self.dim_name[effect["dimension"]].append(effect["var_name"])
+                    self.dim_name[effect["dimension"]].append(
+                        effect["var_name"])
                     self.dim_complete[effect["dimension"]] += effect["inc_dim"]
-                if effect["operator"] == "increase": #dim_error: lograr que cuando este al maximo no se incremente mas el valor
-                    self.position[effect["var_name"]] = self.position[effect["var_name"]]+effect["value"]
+                if effect["operator"] == "increase":
+                    if self.position[effect["var_name"]] >= max_var[effect["var_name"]]-1:
+                        continue
+                    else:
+                        self.position[effect["var_name"]
+                                      ] = self.position[effect["var_name"]]+effect["value"]
                 if effect["operator"] == "decrease":
-                    self.position[effect["var_name"]] = self.position[effect["var_name"]]-effect["value"]
+                    self.position[effect["var_name"]
+                                  ] = self.position[effect["var_name"]]-effect["value"]
                 if effect["operator"] == "set":
                     self.position[effect["var_name"]] = effect["value"]
                 if effect["operator"] == "random":
@@ -370,8 +382,11 @@ class EvolutionEnv(gym.Env):
 
             self.done = done
 
-            # remove preme once used if not repetitive
-            if not list(legal_preme.values())[0]['repetitive']:
+            # substract repeated actions
+            # TODO Evaluate substract reward for repeated actions
+            if legal_preme[preme_name]['repetitive'] > 0:
+                legal_preme[preme_name]['repetitive'] -= 1
+            else:
                 self.premes.pop(preme_name, None)
 
             if not self.premes:  # game over condition: no more premes for now
@@ -387,7 +402,7 @@ class EvolutionEnv(gym.Env):
             with open('logs/current_actions_log.txt', 'a') as new_log:
                 new_log.write("\n"+str(self.actions_logs))
 
-        return self.observation, reward, done, {} #dim_error: cuando se pasa de los limites de la dimension genera un error
+        return self.observation, reward, done, {}
 
     def reset(self):
         # paths de matrices de rewards etiquetadas por expertos
@@ -418,8 +433,7 @@ class EvolutionEnv(gym.Env):
             x_values = x_value_list[2:2+(c_x-1)]
             y_values = y_value_list[2:2+(c_y-1)]
 
-
-            boards_dict[f"board{number}"] = Board(Token('⬜', 0), number, 
+            boards_dict[f"board{number}"] = Board(Token('⬜', 0), number,
                                                   x_label, y_label,
                                                   x_values, y_values,
                                                   rewards_csv_filepath=rewards_csv_filepath)
@@ -437,7 +451,7 @@ class EvolutionEnv(gym.Env):
         self.players = [Player('Startup1', Token('🔴', 1))]
 
         position_dict = {}  # start player at certain default position in vevery board, define attribute that contains position coords
-        
+
         for label_name in self.label_list:
             if self.env_test:
                 position_dict[label_name] = self.initial_state[label_name]
@@ -624,8 +638,10 @@ def read_reward_board_csv(filepath, varx_name, vary_name, width, height):
     vertical_values = board_array[vary_itemindex[0][0],
                                   vary_itemindex[1][0]+1:vary_itemindex[1][0]+1+height]  # extract the values of the variable
 
-    a = np.tile(horizontal_values, (height, 1)).astype(float)  # convert to matrix
-    b = np.tile(vertical_values, (width, 1)).T.astype(float)  # convert to matrix
+    a = np.tile(horizontal_values, (height, 1)).astype(
+        float)  # convert to matrix
+    b = np.tile(vertical_values, (width, 1)).T.astype(
+        float)  # convert to matrix
 
     rewards_board = a+b
     return rewards_board
