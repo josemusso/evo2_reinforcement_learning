@@ -10,28 +10,26 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 import argparse
 import time
-from shutil import copyfile
+#from shutil import copyfile
 from mpi4py import MPI
 
-from stable_baselines3 import PPO, A2C
-from sb3_contrib import TRPO, RecurrentPPO
+from stable_baselines3 import A2C
 
-from sb3_contrib import ARS,MaskablePPO,QRDQN,TQC
-from stable_baselines3 import DDPG,DQN,SAC,TD3
-
-
-from stable_baselines3.common.sb2_compat.rmsprop_tf_like import RMSpropTFLike
+#from sb3_contrib import TRPO, RecurrentPPO
+#from sb3_contrib import ARS,MaskablePPO,QRDQN,TQC
+#from stable_baselines3 import DDPG,DQN,SAC,TD3
+#from stable_baselines3.common.sb2_compat.rmsprop_tf_like import RMSpropTFLike
 
 import stable_baselines3 as sb3
-from stable_baselines3.common.callbacks import EvalCallback,StopTrainingOnNoModelImprovement, ProgressBarCallback, EveryNTimesteps
+from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnNoModelImprovement, ProgressBarCallback, EveryNTimesteps
 from stable_baselines3.common.logger import configure
 from stable_baselines3.common.monitor import Monitor
 
 #from stable_baselines3.common.logger import Logger
 
-from utils.callbacks import SelfPlayCallback
+#from utils.callbacks import SelfPlayCallback
 from utils.files import reset_logs, reset_models
-from utils.register import get_network_arch, get_environment
+from utils.register import get_environment
 from utils.selfplay import selfplay_wrapper
 
 import config
@@ -76,24 +74,6 @@ def main(args):
         #'normalize_advantage':True,
   }
 
-  #policy_kwargs=dict(optimizer_class=RMSpropTFLike)
-
-  ''' PPO1
-  params = {'gamma':args.gamma
-    , 'timesteps_per_actorbatch':args.timesteps_per_actorbatch
-    , 'clip_param':args.clip_param
-      , 'entcoeff':args.entcoeff
-      , 'optim_epochs':args.optim_epochs
-      , 'optim_stepsize':args.optim_stepsize
-      , 'optim_batchsize':args.optim_batchsize
-      , 'lam':args.lam
-      , 'adam_epsilon':args.adam_epsilon
-      , 'schedule':'linear'
-      , 'verbose':1
-      , 'tensorboard_log':config.LOGDIR
-  }
-  '''
-
   time.sleep(5) # allow time for the base model to be saved out when the environment is created
 
   #Logger.info('\Creating model to train...')
@@ -103,23 +83,20 @@ def main(args):
               #policy_kwargs=policy_kwargs, 
               **params)
 
-  #model = RecurrentPPO("MlpLstmPolicy", env, device=device, **params)
-  #Logger.info('\nModel generated succesfully...')
-
   #Callbacks
   #Logger.info('\nSetting up the selfplay evaluation environment opponents...')
 
   # Stop training if there is no improvement after more than 5 evaluations
-  #stop_train_callback = StopTrainingOnNoModelImprovement(max_no_improvement_evals=5, min_evals=5, verbose=1)
+  stop_train_callback = StopTrainingOnNoModelImprovement(max_no_improvement_evals=10, min_evals=5, verbose=1)
 
-  eval_freq = 10000
+  eval_freq = 5000
 
   #print("eval_freq:",eval_freq)
 
   callback_args = {
     #'eval_env': selfplay_wrapper(base_env)(opponent_type = args.opponent_type, verbose = args.verbose),
     'eval_env': Monitor(env=env, filename=config.LOGDIR, allow_early_resets=True),
-    #'callback_after_eval' : stop_train_callback,
+    'callback_after_eval' : stop_train_callback,
     'best_model_save_path' : config.TMPMODELDIR,
     'log_path' : config.LOGDIR,
     'eval_freq' : eval_freq,
@@ -130,13 +107,12 @@ def main(args):
   }
 
   eval_callback = EvalCallback(**callback_args)
-  #event_callback = EveryNTimesteps(n_steps=eval_freq)
 
   #Logger.info('\nSetup complete - commencing learning...\n')
 
   model.set_logger(new_logger)
 
-  model.learn(total_timesteps=70000, reset_num_timesteps = False, tb_log_name="tb", callback=eval_callback, progress_bar=True)
+  model.learn(total_timesteps=1000000, reset_num_timesteps = False, tb_log_name="tb", callback=eval_callback, progress_bar=True)
 
   model.save("logs/model")
 
