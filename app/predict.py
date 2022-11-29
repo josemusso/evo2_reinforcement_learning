@@ -15,6 +15,26 @@ from utils.register import get_environment
 from utils.files import load_model
 from stable_baselines.common import set_global_seeds
 
+def premes_to_list(df):
+    list_dict = []
+
+    for i in range(len(df)):
+        d1 = {}
+        d2 = {}
+        for name, value in df.iloc[i].items():
+            #print(name,value)
+            if 'Unnamed' not in name:
+                value_clean = str(value).replace('[','')
+                value_clean = value_clean.replace(']','')
+                value_clean = value_clean.replace("'",'')
+                value_clean = value_clean.split(',')[0]
+                #print(value_clean)
+                d2[name] = value_clean
+        d1['data'] = d2
+        list_dict.append(d1)
+
+    return list_dict
+
 
 def get_mapping(df):
     d = {}
@@ -50,7 +70,7 @@ def input_pipeline(json_front):
                 'col10', 'col11', 'col12', 'col13', 'col14', 'col15', 'col16', 'col17', 'col18', 'col19']
 
     df = pd.read_csv(
-        'environments/evolution/evolution/envs/var2.0.csv', names=colnames, header=None)
+        'environments/evolution/evolution/envs/tableros.csv', names=colnames, header=None)
 
     d = get_mapping(df)
     init_state = create_dict(d, json_front)
@@ -80,58 +100,60 @@ def get_best_premes(probs, preme_json):
 
 
 def output_pipeline(probs):
-    with open('environments/evolution/evolution/envs/premes_lower.json', 'r') as f:
+    with open('environments/evolution/evolution/envs/premes.json', 'r') as f:
         data = json.load(f)
 
     best_premes = get_best_premes(probs, data)
-    with open('best_premes.json', 'w') as f:
-        json.dump(best_premes, f, indent=2)
+
+    return best_premes
+    #with open('best_premes.json', 'w') as f:
+    #    json.dump(best_premes, f, indent=2)
 
 
 def main(input_json):
     start_time = time.time()
 
-    dic_front = {
-        "data": {
-            "pm_scope": "LATAM",
-            "pm_actors": "Consumidor final",
-            "pm_importance": "Neutral",
-            "pm_affected": "Estable",
-            'pm_urgency': "Este mes",
-            "pm_frequency": "Semanal",
-            "pm_industry": "Minería",
-        }
-    }
+    premes_cov = []
 
-    json_file = dic_front
-    #input_json = json_file
+    test_premes = '/home/felipe/Desktop/trabajo/digevo/benchmarks/Startups_test_1.xlsx'
 
-    initial_state = input_pipeline(json_file)
+    df = pd.read_excel(test_premes)
+    list_test = premes_to_list(df)
 
-    seed = 17
+    for state in list_test:
 
-    #logger.configure(config.LOGDIR)
+        json_file = state
+        #input_json = json_file
 
-    # make environment
-    env = get_environment('evolution')(
-        verbose=False, manual=False, env_test=True, initial_state=initial_state)
-    env.seed(seed)
-    set_global_seeds(seed)
+        initial_state = input_pipeline(json_file)
 
-    acer_model = load_model(env, 'best_model.zip')
+        seed = 17
 
-    obs = env.reset()
+        #logger.configure(config.LOGDIR)
 
-    while True:
+        # make environment
+        env = get_environment('evolution')(
+            verbose=False, manual=False, env_test=True, initial_state=initial_state)
+        env.seed(seed)
+        set_global_seeds(seed)
+
+        acer_model = load_model(env, 'best_model.zip')
+
+        obs = env.reset()
+
         probs = acer_model.action_probability(obs)
-        output_pipeline(probs)
-        print("\n--- %s seconds ---" % (time.time() - start_time))
-        input("\nPress Enter to generate next prediction...")
-        action, _states = acer_model.predict(obs)
-        obs, rewards, dones, info = env.step(action)
+
+        top_six_premes = output_pipeline(probs)
+        premes_cov.append(top_six_premes)
+
+        #output_pipeline(probs)
+        #print("\n--- %s seconds ---" % (time.time() - start_time))
+        #input("\nPress Enter to generate next prediction...")
+        #action, _states = acer_model.predict(obs)
+        #obs, rewards, dones, info = env.step(action)
         # with open('state.txt', 'w') as f:
         #    f.write(str(obs))
-        env.render()
+        #env.render()
 
 
 if __name__ == '__main__':
