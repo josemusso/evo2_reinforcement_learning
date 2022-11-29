@@ -14,6 +14,17 @@ import pandas as pd
 from utils.register import get_environment
 from utils.files import load_model
 from stable_baselines.common import set_global_seeds
+from stable_baselines3 import A2C
+from unidecode import unidecode
+import numpy as np
+from stable_baselines3.common.policies import obs_as_tensor
+
+def predict_proba(model, state):
+    obs = obs_as_tensor(state, model.policy.device)
+    dis = model.policy.get_distribution(obs)
+    probs = dis.distribution.probs
+    probs_np = probs.detach().numpy()
+    return probs_np
 
 def premes_to_list(df):
     list_dict = []
@@ -50,12 +61,17 @@ def get_mapping(df):
     return d
 
 
-def create_dict(d1, d2):
+def create_dict(dict_from_variables, dict_from_front):
     d = {}
-    for i in d1:
-        if i in d2["data"]:
-            var = d2["data"][i]
-            value = d1[i][var]
+    for i in dict_from_variables:
+        if i in dict_from_front["data"]:
+            #var = unidecode(dict_from_front["data"][i]).lower()
+            var = unidecode(dict_from_front["data"][i])
+            #labels = [x.lower() for x in dict_from_variables[i].keys()]
+            if var in  dict_from_variables[i].keys():
+                value = dict_from_variables[i][var]
+            else:
+                value = 0 
             d[i] = value
         else:
             d[i] = 0
@@ -122,38 +138,89 @@ def main(input_json):
 
     for state in list_test:
 
+
         json_file = state
         #input_json = json_file
+        #print(state)
 
         initial_state = input_pipeline(json_file)
+
+        #print(initial_state)
 
         seed = 17
 
         #logger.configure(config.LOGDIR)
 
         # make environment
-        env = get_environment('evolution')(
-            verbose=False, manual=False, env_test=True, initial_state=initial_state)
-        env.seed(seed)
-        set_global_seeds(seed)
+        mc_dict = {}
 
-        acer_model = load_model(env, 'best_model.zip')
+        for i in range(100):
+            env = get_environment('evolution')(
+                verbose=False, manual=False, env_test=True, initial_state=initial_state)
+            env.seed(seed)
+            set_global_seeds(seed)
+            #print('1')
 
-        obs = env.reset()
+            #model = load_model(env, 'best_model.zip')
+            model = A2C.load('best_model', env=env)
 
-        probs = acer_model.action_probability(obs)
+            #print('2')
 
-        top_six_premes = output_pipeline(probs)
-        premes_cov.append(top_six_premes)
+            obs = env.reset()
+            action, _states = model.predict(obs)
+            #print(action.dtype)
+            if str(action) not in mc_dict.keys():
+                mc_dict[str(action)] = 1
+            else:
+                mc_dict[str(action)] += 1
+        
+        premes_cov.append(mc_dict)
+
+        #probs = predict_proba(model, obs)
+        #print(probs)
+        '''  
+        action, _states = model.predict(obs, deterministic=True)
+        #category = env.action_map[int(action)]
+        obs = obs_as_tensor(obs, model.policy.device)
+        latent_pi, _, latent_sde = model.policy._get_latent(obs)
+        distribution = model.policy._get_action_dist_from_latent(latent_pi, latent_sde)
+        actions = distribution.get_actions(deterministic=True)
+        values, log_prob, dis = model.policy.evaluate_actions(obs, actions)
+        log_prob = log_prob.cpu()
+        prob = np.exp(log_prob.detach().numpy())[0]
+        print(values, log_prob, dis)
+        print ("Probability: ", prob)
+        #print ("Category: ", category)
+        '''
+
+        #action, _states = model.predict(obs, deterministic=True)
+
+        #print(action, _states)
+
+
+
+        #print('3')
+
+        #probs = model.action_probability(obs)
+        #print(probs)
+
+        #top_six_premes = output_pipeline(probs)
+        #premes_cov.append(top_six_premes)
+        #print(top_six_premes)
 
         #output_pipeline(probs)
         #print("\n--- %s seconds ---" % (time.time() - start_time))
         #input("\nPress Enter to generate next prediction...")
-        #action, _states = acer_model.predict(obs)
+        #action, _states = model.predict(obs)
         #obs, rewards, dones, info = env.step(action)
         # with open('state.txt', 'w') as f:
         #    f.write(str(obs))
         #env.render()
+    
+    with open('premes_cov.json', 'w') as f:
+        for line in premes_cov:
+            f.write(f"{line}\n")
+            
 
 
 if __name__ == '__main__':
