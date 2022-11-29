@@ -21,10 +21,10 @@ import random
 import multiprocessing
 
 # Variables Globales
-var_tableros_path = './environments/evolution/evolution/envs/tableros.csv'
-premes_path = './environments/evolution/evolution/envs/premes.json'
-cantidad_tableros_por_fila = 9
-var_max_path = './environments/evolution/evolution/envs/var_max.json'
+var_tableros_path = './environments/evolution/evolution/envs/tableros.csv' # csv con los tableros, no deberia ser necesario modificar
+premes_path = './environments/evolution/evolution/envs/premes.json' # json con las premes, cambiar segun sea necesario
+cantidad_tableros_por_fila = 9 #numero de tableros por fila, no deberia ser necesario modificar
+var_max_path = './environments/evolution/evolution/envs/var_max.json' # diccionario con los valores maximos de cada preme, modificar al cambiar el json de premes
 
 
 class Player():
@@ -452,10 +452,12 @@ class EvolutionEnv(gym.Env):
 
         position_dict = {}  # start player at certain default position in vevery board, define attribute that contains position coords
 
+
+        # Inicializacion de los tableros, por defecto se inicializa en la posicion 0, si es test se inicializa segun el initial_state, pero si se quiere inicializar en otra posicion se puede hacer aqui
         for label_name in self.label_list:
-            if self.env_test:
+            if self.env_test: # test environment
                 position_dict[label_name] = self.initial_state[label_name]
-            else:
+            else: #default environment
                 position_dict[label_name] = 0
         self.position = position_dict
 

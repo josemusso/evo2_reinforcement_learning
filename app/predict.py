@@ -131,7 +131,7 @@ def main(input_json):
         obs, rewards, dones, info = env.step(action)
         # with open('state.txt', 'w') as f:
         #    f.write(str(obs))
-        env.render()
+        #env.render() # Descomentar para renderizar el modelo por pantalla
 
 
 if __name__ == '__main__':
