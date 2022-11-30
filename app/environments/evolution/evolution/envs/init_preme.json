@@ -1,0 +1,186 @@
+{
+    "pr_initial_assestment": {
+        "id": 0,
+        "name": "Assessment Inicial (dim1 y dim2)",
+        "repetitive": 0,
+        "restrictions": [],
+        "effects": [
+            {
+                "var_name": "pm_dedication_time",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_big_thinking",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_breakeven",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 4.0,
+                "inc_dim": 0.045
+            },
+            {
+                "var_name": "pm_lean_ability",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 4.0,
+                "inc_dim": 0.045
+            },
+            {
+                "var_name": "pm_agility",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_prudence",
+                "operator": "random",
+                "value": 5.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_professional_profile",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_dedication_time",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "set",
+                "value": 1.0,
+                "dimension": 3.0,
+                "inc_dim": 0.052
+            },
+            {
+                "var_name": "pm_industry",
+                "operator": "random",
+                "value": 17.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_scope",
+                "operator": "random",
+                "value": 4.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_actors",
+                "operator": "random",
+                "value": 3.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_techno_level",
+                "operator": "random",
+                "value": 4.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_problem_competitors",
+                "operator": "random",
+                "value": 5.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_industry_maturation",
+                "operator": "random",
+                "value": 5.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_importance",
+                "operator": "random",
+                "value": 5.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_urgency",
+                "operator": "random",
+                "value": 5.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_solution_progress",
+                "operator": "random",
+                "value": 6.0,
+                "dimension": 2.0,
+                "inc_dim": 0.125
+            },
+            {
+                "var_name": "pm_organic_problem",
+                "operator": "random",
+                "value": 2.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_affected",
+                "operator": "random",
+                "value": 3.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_competitors",
+                "operator": "random",
+                "value": 6.0,
+                "dimension": 1.0,
+                "inc_dim": 0.059
+            },
+            {
+                "var_name": "pm_technology_core",
+                "operator": "random",
+                "value": 7.0,
+                "dimension": 2.0,
+                "inc_dim": 0.125
+            },
+            {
+                "var_name": "pm_degree_innovation",
+                "operator": "random",
+                "value": 4.0,
+                "dimension": 2.0,
+                "inc_dim": 0.125
+            },
+            {
+                "var_name": "pm_benefited_people",
+                "operator": "random",
+                "value": 3.0,
+                "dimension": 2.0,
+                "inc_dim": 0.125
+            }
+        ],
+        "id_preme": 0
+    }
+}

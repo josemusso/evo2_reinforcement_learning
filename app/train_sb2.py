@@ -29,11 +29,13 @@ from utils.selfplay import selfplay_wrapper
 
 import config
 
+time_now = time.strftime("%Y%m%d-%H%M%S")
+
 #variables Globales
 model_to_use = ACER #modelo a usar
-timesteps_to_train = 1000000 #iteraciones de entrenamiento
+timesteps_to_train = 10 #iteraciones de entrenamiento
 eval_freq = 5000 #frecuencia de evaluacion (mientras mas bajo sea mas lento sera el entrenamiento)
-model_name = 'best_model' #nombre del modelo con el que se guardara en .zip (tambien se le puede agregar una ruta para guardar el modelo)
+model_name = f'model_{time_now}' #nombre del modelo con el que se guardara en .zip (tambien se le puede agregar una ruta para guardar el modelo)
 
 def main(args):
 

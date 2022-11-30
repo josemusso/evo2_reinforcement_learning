@@ -50,10 +50,14 @@ def input_pipeline(json_front):
                 'col10', 'col11', 'col12', 'col13', 'col14', 'col15', 'col16', 'col17', 'col18', 'col19']
 
     df = pd.read_csv(
-        'environments/evolution/evolution/envs/var2.0.csv', names=colnames, header=None)
+        'environments/evolution/evolution/envs/tableros.csv', names=colnames, header=None)
 
     d = get_mapping(df)
+    
     init_state = create_dict(d, json_front)
+
+    with open('init_state.json', 'w', encoding='utf8') as f:
+        json.dump(init_state, f, indent=2)
 
     return init_state
 

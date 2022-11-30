@@ -25,6 +25,8 @@ var_tableros_path = './environments/evolution/evolution/envs/tableros.csv' # csv
 premes_path = './environments/evolution/evolution/envs/premes.json' # json con las premes, cambiar segun sea necesario
 cantidad_tableros_por_fila = 9 #numero de tableros por fila, no deberia ser necesario modificar
 var_max_path = './environments/evolution/evolution/envs/var_max.json' # diccionario con los valores maximos de cada preme, modificar al cambiar el json de premes
+assestment_json = './environments/evolution/evolution/envs/init_preme.json' #json con el assesment inicial
+use_custom_assestment = True # si es True, se usa el json de assestment, si es False los tableros se inicializan en 0
 
 
 class Player():
@@ -150,11 +152,10 @@ class EvolutionEnv(gym.Env):
         self.name = 'evolution'
         self.manual = manual
         self.render_lib = 'opencv'
-
-        self.initial_state = initial_state
-
+        
         self.env_test = env_test
-
+        self.initial_state = initial_state
+                
         self.n_players = 1
 
         f = open('logs/current_actions_log.txt', 'w')
@@ -280,6 +281,9 @@ class EvolutionEnv(gym.Env):
                 if preme_effect["operator"] == "exclusive_random":
                     value = random.randint(2, preme_effect["value"])
                     legal_positions[preme_effect["var_name"]].append(value)
+        
+
+
 
         # keep only set of positions
         legal_positions = {k: list(set(v)) for k, v in legal_positions.items()}
@@ -395,10 +399,6 @@ class EvolutionEnv(gym.Env):
                 done = True
 
         if done:  # if done write self.actions_log to file
-            f = open("actions_log.txt", "a")
-            f.write("\n"+str(self.actions_logs))
-            f.close()
-
             with open('logs/current_actions_log.txt', 'a') as new_log:
                 new_log.write("\n"+str(self.actions_logs))
 
@@ -410,6 +410,25 @@ class EvolutionEnv(gym.Env):
 
         label_list = []
         boards_dict = {}
+
+        if self.env_test == False:
+            if use_custom_assestment == True:
+                with open(assestment_json, 'r') as f:
+                    assestment = json.loads(f.read())
+
+                with open('./environments/evolution/evolution/envs/init_state.json', 'r') as f:
+                    init_state_preme = json.loads(f.read())
+
+                effects = assestment['pr_initial_assestment']["effects"]
+                for effect in effects:
+                    if effect["operator"] == "set":
+                        value = int(effect["value"])
+                    elif effect["operator"] == "random":
+                        value = int(random.randint(1, effect["value"]))
+                    elif effect["operator"] == "exclusive_random":
+                        value = int(random.randint(2, effect["value"]))
+                    init_state_preme[effect["var_name"]] = value
+
         for number in range(1, self.n_tableros+1):  # inicializar boards
             list_data = self.data[(3*2*(number-1)):(3*2*(number-1))+5]
 
@@ -452,12 +471,13 @@ class EvolutionEnv(gym.Env):
 
         position_dict = {}  # start player at certain default position in vevery board, define attribute that contains position coords
 
-
-        # Inicializacion de los tableros, por defecto se inicializa en la posicion 0, si es test se inicializa segun el initial_state, pero si se quiere inicializar en otra posicion se puede hacer aqui
+        # Inicializacion de los tableros, por defecto se inicializa en la posicion 0, si es test se inicializa segun el initial_state, y si es custom se inicializa segun el assestment
         for label_name in self.label_list:
             if self.env_test: # test environment
                 position_dict[label_name] = self.initial_state[label_name]
-            else: #default environment
+            elif use_custom_assestment: # custom initial state
+                position_dict[label_name] = init_state_preme[label_name]
+            else: #default state
                 position_dict[label_name] = 0
         self.position = position_dict
 
