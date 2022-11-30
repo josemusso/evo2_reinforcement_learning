@@ -84,11 +84,11 @@ def get_best_premes(probs, preme_json):
 
 
 def output_pipeline(probs):
-    with open('environments/evolution/evolution/envs/premes_lower.json', 'r') as f:
+    with open('environments/evolution/evolution/envs/premes.json', 'r') as f:
         data = json.load(f)
 
     best_premes = get_best_premes(probs, data)
-    with open('best_premes.json', 'w') as f:
+    with open('best_premes.json', 'w') as f:  # aca se escribe las mejores premes con sus probabilidades en un .json pero aca habria que hacer un requests y mandarlo al servidor en vez de escribirlo localmente
         json.dump(best_premes, f, indent=2)
 
 

@@ -110,7 +110,7 @@ def main(args):
     'log_path' : config.LOGDIR,
     'eval_freq' : eval_freq,
     'n_eval_episodes' : args.n_eval_episodes,
-    'deterministic' : True,
+    'deterministic' : True, # cambiar a False para evaluar con probabilidad (no determinista significa que los resultados no siempre seran los mismos)
     'render' : True,
     'verbose' : 0
   }
