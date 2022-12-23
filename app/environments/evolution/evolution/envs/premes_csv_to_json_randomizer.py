@@ -67,34 +67,51 @@ def premes_csv_to_json(filepath):
     # reformatear restirctions y effects
     premes_list = list(df["nombre_tecnico_preme"].unique())
     # print(list(df['nombre_tecnico_preme'].unique()))
-    premes_dict = {key: {} for key in premes_list}
-    for preme in premes_list:
-        premes_dict[preme]["id"] = int(
-            df[df["nombre_tecnico_preme"] == preme]["id"].values[0]
-        )
-        premes_dict[preme]["name"] = str(
-            df[df["nombre_tecnico_preme"] == preme]["nombre_preme"].values[0]
-        )
-        repetitity = int(
-            df[df["nombre_tecnico_preme"] == preme]["repetitividad"].values[0]
-        )
-        premes_dict[preme]["repetitive"] = repetitity
-        # if repetitity == 1:
-        #    premes_dict[preme]["repetitive"] = True
-        # else:
-        #    premes_dict[preme]["repetitive"] = False
-        premes_dict[preme]["restrictions"] = restrictions_serie[preme]
-        premes_dict[preme]["effects"] = effects_serie[preme]
-        premes_dict[preme]["id_preme"] = int(
-            df[df["nombre_tecnico_preme"] == preme]["id_preme"].values[0]
-        )
+    # premes_dict = {key: {} for key in premes_list}
+
+    # select which assesments gets chosen, each with equal probability
+    random_number = np.random.rand(1)[0] * 7
+    chosen_assesment = int(random_number)
+
+    # for preme in premes_list:
+    preme = premes_list[chosen_assesment]
+    print(f"Preme {preme} was chosen")
+    premes_dict = {preme: {}}
+
+    premes_dict[preme]["id"] = int(
+        df[df["nombre_tecnico_preme"] == preme]["id"].values[0]
+    )
+    premes_dict[preme]["name"] = str(
+        df[df["nombre_tecnico_preme"] == preme]["nombre_preme"].values[0]
+    )
+    repetitity = int(df[df["nombre_tecnico_preme"] == preme]["repetitividad"].values[0])
+    premes_dict[preme]["repetitive"] = repetitity
+    # if repetitity == 1:
+    #    premes_dict[preme]["repetitive"] = True
+    # else:
+    #    premes_dict[preme]["repetitive"] = False
+
+    # randomly choose effects
+    # each has 0.5 chance of being chosen
+    chosen_effects = []
+    for effect in effects_serie[preme]:
+        if int(np.random.rand(1)[0] * 2):
+            chosen_effects.append(effect)
+    print(f"Chosen {len(chosen_effects)} effects out of {len(effects_serie[preme])}")
+    premes_dict[preme]["effects"] = chosen_effects
+
+    premes_dict[preme]["restrictions"] = restrictions_serie[preme]
+    premes_dict[preme]["id_preme"] = int(
+        df[df["nombre_tecnico_preme"] == preme]["id_preme"].values[0]
+    )
 
     # mapear json
     # print(premes_dict)
     # print(json.dumps(premes_dict, indent=4, ensure_ascii=False))
 
-    with open("premes.json", "w") as fp:
+    with open("random_initial_assesment.json", "w") as fp:
         json.dump(premes_dict, fp, indent=4, ensure_ascii=False)
+    print(f"Initial assesment generated and written at random_initial_assesment.json")
 
     return
 

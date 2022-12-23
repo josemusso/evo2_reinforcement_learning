@@ -1,0 +1,252 @@
+{
+    "pr_initial_assestment3": {
+        "id": 0,
+        "name": "Assessment Inicial (modulo 3)",
+        "repetitive": 0,
+        "restrictions": [
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            }
+        ],
+        "effects": [
+            {
+                "var_name": "pm_competitors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_solution_progress",
+                "operator": "random_min",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_potential_solution",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "random_min",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_ia_knowledge",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_affected",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_actors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_benefited_people",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_organic_problem",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_tam",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_sam",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_business_models",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_lean_ability",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_open_feedback",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_exposition",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_problem_competitors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_degree_innovation",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "Equipo",
+                "operator": "dim_complete",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "Problema",
+                "operator": "dim_complete",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "Solución",
+                "operator": "dim_complete",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            }
+        ],
+        "id_preme": 0
+    }
+}

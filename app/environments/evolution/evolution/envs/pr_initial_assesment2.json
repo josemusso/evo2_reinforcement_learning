@@ -1,0 +1,192 @@
+{
+    "pr_initial_assestment2": {
+        "id": 0,
+        "name": "Assessment Inicial (modulo 2)",
+        "repetitive": 0,
+        "restrictions": [
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            }
+        ],
+        "effects": [
+            {
+                "var_name": "pm_industry",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_scope",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_actors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_techno_level",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_problem_competitors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_industry_maturation",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_importance",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_lean_ability",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_urgency",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_solution_progress",
+                "operator": "random_min",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_organic_problem",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_affected",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_competitors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_competitors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            }
+        ],
+        "id_preme": 0
+    }
+}

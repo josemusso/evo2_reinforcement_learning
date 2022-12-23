@@ -1,0 +1,108 @@
+{
+    "pr_initial_assesment1": {
+        "id": 0,
+        "name": "Assessment Inicial (modulo 1)",
+        "repetitive": 0,
+        "restrictions": [
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            }
+        ],
+        "effects": [
+            {
+                "var_name": "pm_big_thinking",
+                "operator": "random_min",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_breakeven",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_lean_ability",
+                "operator": "random_min",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_agility",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_prudence",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_professional_profile",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "random_min",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_dedication_time",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            }
+        ],
+        "id_preme": 0
+    }
+}

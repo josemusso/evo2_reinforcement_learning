@@ -1,0 +1,276 @@
+{
+    "pr_initial_assestment6": {
+        "id": 0,
+        "name": "Assessment Inicial (modulo 6)",
+        "repetitive": 0,
+        "restrictions": [
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            },
+            {
+                "var_name": 0.0,
+                "condition": 0.0,
+                "value": 0.0
+            }
+        ],
+        "effects": [
+            {
+                "var_name": "Problema",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "Solución",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_sales_channels",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_acquisition_channels",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_monthly_sales",
+                "operator": "random_min",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_declared_sales",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_cac_ltv",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_burning_rate",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_roi",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_nps",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_user_traction",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_user_maintenance",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_company_constitution",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_company_formalization",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_statement_incomes",
+                "operator": "random_min",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_contribution_margin",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_breakeven",
+                "operator": "random_min",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "equipo",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_mentors",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_professional_profile",
+                "operator": "random_min",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_dedication_time",
+                "operator": "random_min",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_motivation",
+                "operator": "random_min",
+                "value": 1,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            }
+        ],
+        "id_preme": 0
+    }
+}
