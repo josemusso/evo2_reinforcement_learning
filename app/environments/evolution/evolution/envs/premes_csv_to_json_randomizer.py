@@ -70,39 +70,51 @@ def premes_csv_to_json(filepath):
     # premes_dict = {key: {} for key in premes_list}
 
     # select which assesments gets chosen, each with equal probability
-    random_number = np.random.rand(1)[0] * 7
+    random_number = int(np.random.uniform(0, 7))
     chosen_assesment = int(random_number)
 
-    # for preme in premes_list:
-    preme = premes_list[chosen_assesment]
-    print(f"Preme {preme} was chosen")
-    premes_dict = {preme: {}}
+    # for preme_name in premes_list:
+    print(f"Assesment {chosen_assesment} was chosen")
 
-    premes_dict[preme]["id"] = int(
-        df[df["nombre_tecnico_preme"] == preme]["id"].values[0]
-    )
-    premes_dict[preme]["name"] = str(
-        df[df["nombre_tecnico_preme"] == preme]["nombre_preme"].values[0]
-    )
-    repetitity = int(df[df["nombre_tecnico_preme"] == preme]["repetitividad"].values[0])
-    premes_dict[preme]["repetitive"] = repetitity
-    # if repetitity == 1:
-    #    premes_dict[preme]["repetitive"] = True
-    # else:
-    #    premes_dict[preme]["repetitive"] = False
-
+    print(f"Generating effects of previous assessments: {np.arange(chosen_assesment)}")
+    preme_name = premes_list[chosen_assesment]
+    premes_dict = {
+        "pr_initial_assessment": {
+            "id": int(df[df["nombre_tecnico_preme"] == preme_name]["id"].values[0]),
+            "name": str(
+                df[df["nombre_tecnico_preme"] == preme_name]["nombre_preme"].values[0]
+            ),
+            "repetitive": int(
+                df[df["nombre_tecnico_preme"] == preme_name]["repetitividad"].values[0]
+            ),
+        }
+    }
     # randomly choose effects
     # each has 0.5 chance of being chosen
-    chosen_effects = []
-    for effect in effects_serie[preme]:
-        if int(np.random.rand(1)[0] * 2):
-            chosen_effects.append(effect)
-    print(f"Chosen {len(chosen_effects)} effects out of {len(effects_serie[preme])}")
-    premes_dict[preme]["effects"] = chosen_effects
+    all_effects = []
+    for i in np.arange(chosen_assesment):
+        chosen_effects = []
+        previous_preme_name = premes_list[i]
+        for effect in effects_serie[previous_preme_name]:
+            # only apply random to last assessment, to simulate all other assesments 100% complete
+            if i == chosen_assesment - 1:
+                rand = int(np.random.uniform(0, 2))
+            else:
+                rand = 1
+            if rand:
+                chosen_effects.append(effect)
+        print(
+            f"{previous_preme_name}: Chosen {len(chosen_effects)} effects out of {len(effects_serie[previous_preme_name])}"
+        )
+        all_effects.extend(chosen_effects)
 
-    premes_dict[preme]["restrictions"] = restrictions_serie[preme]
-    premes_dict[preme]["id_preme"] = int(
-        df[df["nombre_tecnico_preme"] == preme]["id_preme"].values[0]
+    print(f"Total effects: {len(all_effects)}")
+
+    premes_dict["pr_initial_assessment"]["effects"] = all_effects
+
+    premes_dict["pr_initial_assessment"]["restrictions"] = []
+    premes_dict["pr_initial_assessment"]["id_preme"] = int(
+        df[df["nombre_tecnico_preme"] == preme_name]["id_preme"].values[0]
     )
 
     # mapear json
