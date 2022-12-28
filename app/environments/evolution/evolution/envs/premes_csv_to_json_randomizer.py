@@ -71,13 +71,18 @@ def premes_csv_to_json(filepath):
 
     # select which assesments gets chosen, each with equal probability
     random_number = int(np.random.uniform(0, 7))
-    chosen_assesment = int(random_number)
+    chosen_assesment_index = int(random_number)
+    chosen_assessment_number = chosen_assesment_index + 1
 
     # for preme_name in premes_list:
-    print(f"Assesment {chosen_assesment} was chosen")
+    print(
+        f"Assessment number {chosen_assessment_number} was chosen, index {chosen_assesment_index}"
+    )
 
-    print(f"Generating effects of previous assessments: {np.arange(chosen_assesment)}")
-    preme_name = premes_list[chosen_assesment]
+    print(
+        f"Generating effects of previous assessments: {np.arange(chosen_assesment_index)}"
+    )
+    preme_name = premes_list[chosen_assesment_index]
     premes_dict = {
         "pr_initial_assessment": {
             "id": int(df[df["nombre_tecnico_preme"] == preme_name]["id"].values[0]),
@@ -92,12 +97,12 @@ def premes_csv_to_json(filepath):
     # randomly choose effects
     # each has 0.5 chance of being chosen
     all_effects = []
-    for i in np.arange(chosen_assesment):
+    for i in np.arange(chosen_assesment_index + 1):
         chosen_effects = []
         previous_preme_name = premes_list[i]
         for effect in effects_serie[previous_preme_name]:
             # only apply random to last assessment, to simulate all other assesments 100% complete
-            if i == chosen_assesment - 1:
+            if i == chosen_assesment_index:
                 rand = int(np.random.uniform(0, 2))
             else:
                 rand = 1
