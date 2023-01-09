@@ -1,0 +1,340 @@
+{
+    "pr_initial_assessment": {
+        "id": 0,
+        "name": "Assessment Inicial (modulo 4)",
+        "repetitive": 0,
+        "effects": [
+            {
+                "var_name": "pm_big_thinking",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_breakeven",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_lean_ability",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_agility",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_prudence",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_professional_profile",
+                "operator": "random",
+                "value": 7,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "random",
+                "value": 10,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_dedication_time",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_industry",
+                "operator": "random",
+                "value": 17,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "random",
+                "value": 7,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_scope",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_actors",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_techno_level",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_problem_competitors",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_industry_maturation",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_importance",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_lean_ability",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_urgency",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_solution_progress",
+                "operator": "random",
+                "value": 6,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_organic_problem",
+                "operator": "random",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_affected",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_competitors",
+                "operator": "random",
+                "value": 6,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_competitors",
+                "operator": "random",
+                "value": 6,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_solution_progress",
+                "operator": "random",
+                "value": 6,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_potential_solution",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_founders_total",
+                "operator": "random",
+                "value": 7,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_ia_knowledge",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_affected",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_actors",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_benefited_people",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_organic_problem",
+                "operator": "random",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_tam",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_sam",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_business_models",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_lean_ability",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_open_feedback",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_exposition",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_problem_competitors",
+                "operator": "random",
+                "value": 5,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_degree_innovation",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_declared_sales",
+                "operator": "random",
+                "value": 2,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_statement_incomes",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_degree_innovation",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_solution_progress",
+                "operator": "random",
+                "value": 6,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_ia_knowledge",
+                "operator": "random",
+                "value": 3,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_monthly_sales",
+                "operator": "random",
+                "value": 6,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_contribution_margin",
+                "operator": "random",
+                "value": 8,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            },
+            {
+                "var_name": "pm_business_models",
+                "operator": "random",
+                "value": 4,
+                "dimension": 0.0,
+                "inc_dim": 0.0
+            }
+        ],
+        "restrictions": [],
+        "id_preme": 0
+    }
+}
